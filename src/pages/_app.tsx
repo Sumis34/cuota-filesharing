@@ -1,18 +1,29 @@
 // src/pages/_app.tsx
 import { withTRPC } from "@trpc/next";
 import type { AppRouter } from "../server/router";
-import type { AppType } from "next/dist/shared/lib/utils";
 import superjson from "superjson";
 import { SessionProvider } from "next-auth/react";
 import "../styles/globals.css";
+import { NextPage } from "next";
+import { ReactElement, ReactNode } from "react";
+import { AppProps } from "next/app";
 
-const MyApp: AppType = ({
+export type NextPageWithLayout<T = {}> = NextPage<T> & {
+  getLayout?: (page: ReactElement) => ReactNode;
+};
+
+type AppPropsWithLayout = AppProps & {
+  Component: NextPageWithLayout;
+};
+
+const MyApp = ({
   Component,
   pageProps: { session, ...pageProps },
-}) => {
+}: AppPropsWithLayout) => {
+  const getLayout = Component.getLayout ?? ((page) => page);
   return (
     <SessionProvider session={session}>
-      <Component {...pageProps} />
+      <div className="light">{getLayout(<Component {...pageProps} />)}</div>
     </SessionProvider>
   );
 };
