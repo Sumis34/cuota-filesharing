@@ -1,4 +1,4 @@
-![Alt text](public/assets/images/banner.png%253Fraw=true "Quota")
+![Alt text](public/assets/images/banner.png "Quota")
 
 # Quota File sharing
 
