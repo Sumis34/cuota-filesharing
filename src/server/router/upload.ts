@@ -1,24 +1,27 @@
 import { createRouter } from "./context";
 import { z } from "zod";
 import s3 from "../../utils/s3/s3";
+import { ListObjectsRequest } from "@aws-sdk/client-s3";
 
 export const exampleRouter = createRouter()
   .mutation("request", {
     input: z.object({
       name: z.string().min(3).max(100),
     }),
-    resolve({ input }) {
-      // putObject operation.
+    async resolve({ input, ctx }) {
+      const { prisma } = ctx;
 
-      const URL = s3.getSignedUrl("putObject", {
+      const upload = await prisma.upload.create({
+        data: {},
+      });
+
+      const url = s3.getSignedUrl("putObject", {
         Bucket: "data",
-        Key: input.name, //filename
+        Key: `${upload.id}/${input.name}`, //filename
         Expires: 100, //time to expire in seconds
       });
 
-      return {
-        url: URL,
-      };
+      return { url };
     },
   })
   .query("getAll", {

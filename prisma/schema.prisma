@@ -7,8 +7,8 @@ generator client {
 }
 
 datasource db {
-    provider = "mysql"
-    url      = env("DATABASE_URL")
+    provider             = "mysql"
+    url                  = env("DATABASE_URL")
     referentialIntegrity = "prisma"
 }
 
@@ -51,6 +51,7 @@ model User {
     image         String?
     accounts      Account[]
     sessions      Session[]
+    uploads       Upload[]
 }
 
 model VerificationToken {
@@ -59,4 +60,13 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([identifier, token])
+}
+
+model Upload {
+    id     String  @id @default(cuid())
+    url    String?
+    userId String?
+    user   User?   @relation(fields: [userId], references: [id])
+
+    @@unique([id])
 }
