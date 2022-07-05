@@ -7,7 +7,7 @@ import { trpc } from "../utils/trpc";
 import { NextPageWithLayout } from "./_app";
 
 const Home: NextPageWithLayout = () => {
-  const hello = trpc.useQuery(["example.hello", { text: "from tRPC" }]);
+
 
   return (
     <div className="relative w-full h-full">
