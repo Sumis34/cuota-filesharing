@@ -1,5 +1,5 @@
 ![Alt text](public/assets/images/banner.png "Quota")
 
-# Quota File sharing
+# Cuota File sharing
 
 This is an app bootstrapped according to the [init.tips](https://init.tips) stack, also known as the T3-Stack.
