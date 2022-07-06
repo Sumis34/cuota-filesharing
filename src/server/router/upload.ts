@@ -38,8 +38,11 @@ export const exampleRouter = createRouter()
         s3,
         new PutObjectCommand({
           Bucket: process.env.S3_BUCKET,
-          Key: `${upload.id}/${filenamify(input.name, { replacement: "_" })}`, //filename,
-        })
+          Key: `${upload.id}/${filenamify(input.name, { replacement: "_" })}`, //filename
+        }),
+        {
+          expiresIn: 100,
+        }
       );
 
       if (input.close)

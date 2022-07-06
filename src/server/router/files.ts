@@ -1,8 +1,13 @@
 import { createRouter } from "./context";
 import { z } from "zod";
 import { s3 } from "../../utils/s3/s3";
-import { ListObjectsCommand, GetObjectCommand } from "@aws-sdk/client-s3";
+import {
+  ListObjectsCommand,
+  GetObjectCommand,
+  HeadObjectCommand,
+} from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import Uploader from "../../components/Uploader";
 
 export const filesRouter = createRouter()
   .mutation("request", {
@@ -18,6 +23,7 @@ export const filesRouter = createRouter()
       id: z.string().cuid(),
     }),
     async resolve({ input, ctx }) {
+      const { prisma } = ctx;
       const command = new ListObjectsCommand({
         Bucket: process.env.S3_BUCKET,
         Prefix: input.id,
@@ -25,20 +31,30 @@ export const filesRouter = createRouter()
 
       const { Contents, Prefix, IsTruncated, MaxKeys } = await s3.send(command);
 
+      const uploadInfo = await prisma.upload.findUnique({
+        where: { id: input.id },
+      });
+
       const files = !Contents
         ? []
         : await Promise.all(
             Contents?.map(async ({ Key }) => {
-              const url = await getSignedUrl(
-                s3,
-                new GetObjectCommand({
-                  Bucket: process.env.S3_BUCKET,
-                  Key,
-                })
-              );
+              const params = {
+                Bucket: process.env.S3_BUCKET,
+                Key,
+              };
+              const url = await getSignedUrl(s3, new GetObjectCommand(params));
+
+              const { ContentType, ContentLength, LastModified, Metadata } =
+                await s3.send(new HeadObjectCommand(params));
+
               return {
                 url,
                 key: Key,
+                contentType: ContentType,
+                contentLength: ContentLength,
+                lastModified: LastModified,
+                metadata: Metadata,
               };
             })
           );
@@ -48,6 +64,7 @@ export const filesRouter = createRouter()
         isTruncated: IsTruncated,
         maxKeys: MaxKeys,
         prefix: Prefix,
+        poolCreatedAt: uploadInfo?.uploadTime,
       };
     },
   });

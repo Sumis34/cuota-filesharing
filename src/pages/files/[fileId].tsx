@@ -15,13 +15,15 @@ const Files: NextPageWithLayout = () => {
   ]);
 
   return (
-    <div className="mt-32">
+    <div className="my-32">
       <pre>{JSON.stringify(data, null, 2)}</pre>
-      {data?.files.map((file) => (
-        <Button href={file.url} key={file.key}>
-          {file.key?.split("/")[file.key.split("/").length - 1]}
-        </Button>
-      ))}
+      <div className="flex gap-5">
+        {data?.files.map((file) => (
+          <Button href={file.url} key={file.key}>
+            {file.key?.split("/")[file.key.split("/").length - 1]}
+          </Button>
+        ))}
+      </div>
       {isLoading && (
         <div>
           <Ring color="#dddddd" />
