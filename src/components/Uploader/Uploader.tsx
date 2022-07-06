@@ -24,23 +24,26 @@ const calcUploadProgress = (progressEvent: ProgressEvent) => {
   return percentCompleted;
 };
 
+const handleFocus = (event: any) => event.target.select();
+
 export default function Uploader() {
   const [file, setFile] = useState<File | undefined | null>(null);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [downloadUrl, setDownloadUrl] = useState("");
 
   const getUploadUrlMutation = trpc.useMutation(["upload.request"], {
     onSuccess: async (data) => {
-      const { url } = data;
+      const { url, uploadId } = data;
 
-      if (!file) return;
+      if (!file) return console.log("No file to upload");
 
       const res = await uploadFile(file, url, {
-        onUploadProgress: (e) => {
-          setUploadProgress(calcUploadProgress(e));
-        },
+        onUploadProgress: (e) => setUploadProgress(calcUploadProgress(e)),
       });
 
-      console.log(res.status === 200 ? "success" : "fail");
+      if (res.status !== 200) return console.log("upload failed");
+
+      setDownloadUrl(`${window.location.origin}/files/${uploadId}`);
     },
   });
 
@@ -61,6 +64,15 @@ export default function Uploader() {
     >
       <h2>Select files ({uploadProgress}%)</h2>
       <input type="file" onChange={(e) => setFile(e.target.files?.[0])} />
+      {downloadUrl && (
+        <input
+          value={downloadUrl}
+          className="select-all"
+          type="text"
+          readOnly
+          onFocus={handleFocus}
+        />
+      )}
       <Button variant="primary" className="mt-3">
         Get Link
       </Button>

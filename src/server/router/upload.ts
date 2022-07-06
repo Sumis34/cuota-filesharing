@@ -31,7 +31,7 @@ export const exampleRouter = createRouter()
         })
       );
 
-      return { url };
+      return { url, uploadId: upload.id };
     },
   })
   .query("getAll", {

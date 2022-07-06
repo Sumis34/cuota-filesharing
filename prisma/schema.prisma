@@ -63,10 +63,11 @@ model VerificationToken {
 }
 
 model Upload {
-    id     String  @id @default(cuid())
-    url    String?
-    userId String?
-    user   User?   @relation(fields: [userId], references: [id])
+    id         String   @id @default(cuid())
+    url        String?
+    uploadTime DateTime @default(now())
+    userId     String?
+    user       User?    @relation(fields: [userId], references: [id])
 
     @@unique([id])
 }
