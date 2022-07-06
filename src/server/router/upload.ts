@@ -1,7 +1,9 @@
 import { createRouter } from "./context";
 import { z } from "zod";
-import s3 from "../../utils/s3/s3";
-import { ListObjectsRequest } from "@aws-sdk/client-s3";
+import { s3 } from "../../utils/s3/s3";
+import filenamify from "filenamify";
+import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 export const exampleRouter = createRouter()
   .mutation("request", {
@@ -15,11 +17,19 @@ export const exampleRouter = createRouter()
         data: {},
       });
 
-      const url = s3.getSignedUrl("putObject", {
-        Bucket: "data",
-        Key: `${upload.id}/${input.name}`, //filename
-        Expires: 100, //time to expire in seconds
-      });
+      // const url = s3.getSignedUrl("putObject", {
+      //   Bucket: "data",
+      //   Key: `${filenamify(input.name, { replacement: "_" })}`, //filename
+      //   Expires: 100, //time to expire in seconds
+      // });
+
+      const url = await getSignedUrl(
+        s3,
+        new PutObjectCommand({
+          Bucket: "data",
+          Key: `${upload.id}/${filenamify(input.name, { replacement: "_" })}`, //filename,
+        })
+      );
 
       return { url };
     },

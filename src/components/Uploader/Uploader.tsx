@@ -29,16 +29,18 @@ export default function Uploader() {
   const [uploadProgress, setUploadProgress] = useState(0);
 
   const getUploadUrlMutation = trpc.useMutation(["upload.request"], {
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       const { url } = data;
 
       if (!file) return;
 
-      uploadFile(file, url, {
+      const res = await uploadFile(file, url, {
         onUploadProgress: (e) => {
           setUploadProgress(calcUploadProgress(e));
         },
       });
+
+      console.log(res.status === 200 ? "success" : "fail");
     },
   });
 
