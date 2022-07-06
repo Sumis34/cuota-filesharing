@@ -25,7 +25,6 @@ const Files: NextPageWithLayout = () => {
       <div className="flex gap-5">
         {data?.files.map((file) => (
           <div key={file.key}>
-            {file.contentType === pdf && <PDFViewer path={file.url} />}
             <Button href={file.url}>
               {file.key?.split("/")[file.key.split("/").length - 1]}
             </Button>
