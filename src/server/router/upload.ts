@@ -17,12 +17,6 @@ export const exampleRouter = createRouter()
         data: {},
       });
 
-      // const url = s3.getSignedUrl("putObject", {
-      //   Bucket: "data",
-      //   Key: `${filenamify(input.name, { replacement: "_" })}`, //filename
-      //   Expires: 100, //time to expire in seconds
-      // });
-
       const url = await getSignedUrl(
         s3,
         new PutObjectCommand({

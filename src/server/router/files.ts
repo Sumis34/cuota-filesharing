@@ -34,7 +34,6 @@ export const filesRouter = createRouter()
                 new GetObjectCommand({
                   Bucket: process.env.S3_BUCKET,
                   Key,
-                  
                 })
               );
               return {
