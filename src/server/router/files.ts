@@ -19,7 +19,7 @@ export const filesRouter = createRouter()
     }),
     async resolve({ input, ctx }) {
       const command = new ListObjectsCommand({
-        Bucket: process.env.AWS_BUCKET,
+        Bucket: process.env.S3_BUCKET,
         Prefix: input.id,
       });
 
@@ -32,7 +32,7 @@ export const filesRouter = createRouter()
               const url = await getSignedUrl(
                 s3,
                 new GetObjectCommand({
-                  Bucket: process.env.AWS_BUCKET,
+                  Bucket: process.env.S3_BUCKET,
                   Key,
                   
                 })

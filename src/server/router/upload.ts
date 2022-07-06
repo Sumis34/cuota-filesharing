@@ -26,7 +26,7 @@ export const exampleRouter = createRouter()
       const url = await getSignedUrl(
         s3,
         new PutObjectCommand({
-          Bucket: process.env.AWS_BUCKET,
+          Bucket: process.env.S3_BUCKET,
           Key: `${upload.id}/${filenamify(input.name, { replacement: "_" })}`, //filename,
         })
       );
