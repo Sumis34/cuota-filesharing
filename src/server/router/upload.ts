@@ -42,10 +42,11 @@ export const exampleRouter = createRouter()
         })
       );
 
-      await prisma.upload.update({
-        where: { id: input.id },
-        data: { closed: !input.close ? false : true },
-      });
+      if (input.close)
+        await prisma.upload.update({
+          where: { id: input.id },
+          data: { closed: true },
+        });
 
       return { url, uploadId: upload.id };
     },
