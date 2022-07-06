@@ -4,9 +4,14 @@ import { getDefaultLayout } from "../../components/Layout/DefaultLayout";
 import Button from "../../components/UI/Button";
 import { trpc } from "../../utils/trpc";
 import { NextPageWithLayout } from "../_app";
+import mime from "mime-types";
+import PDFViewer from "../../components/PDFViewer";
+
+const pdf = mime.contentType("pdf");
 
 const Files: NextPageWithLayout = () => {
   const { query } = useRouter();
+
   const { data, isLoading } = trpc.useQuery([
     "files.getAll",
     {
@@ -19,9 +24,12 @@ const Files: NextPageWithLayout = () => {
       <pre>{JSON.stringify(data, null, 2)}</pre>
       <div className="flex gap-5">
         {data?.files.map((file) => (
-          <Button href={file.url} key={file.key}>
-            {file.key?.split("/")[file.key.split("/").length - 1]}
-          </Button>
+          <div key={file.key}>
+            {file.contentType === pdf && <PDFViewer path={file.url} />}
+            <Button href={file.url}>
+              {file.key?.split("/")[file.key.split("/").length - 1]}
+            </Button>
+          </div>
         ))}
       </div>
       {isLoading && (

@@ -10,6 +10,9 @@ const uploadFile = async (
 ) => {
   config = {
     ...config,
+    headers: {
+      "Content-Type": file.type,
+    },
   };
   return await axios.put(url, file, config);
 };
