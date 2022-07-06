@@ -8,7 +8,11 @@ export default function LandingNav() {
         <Link href="/">
           <a className="flex items-center gap-2">
             <h2>cuota.</h2>
-            <Badge>Beta</Badge>
+            {process.env.NEXT_PUBLIC_SITE_STATE === "beta" ? (
+              <Badge>Beta</Badge>
+            ) : process.env.NEXT_PUBLIC_SITE_STATE === "dev" ? (
+              <Badge>Dev</Badge>
+            ) : null}
           </a>
         </Link>
       </nav>
