@@ -16,7 +16,9 @@ const Files: NextPageWithLayout = () => {
     <div className="mt-32">
       <pre>{JSON.stringify(data, null, 2)}</pre>
       {data?.files.map((file) => (
-        <a href={file.url}>{file.key}</a>
+        <a href={file.url} key={file.key}>
+          {file.key}
+        </a>
       ))}
     </div>
   );
