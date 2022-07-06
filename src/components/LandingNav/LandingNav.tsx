@@ -11,7 +11,7 @@ export default function LandingNav() {
             {process.env.NEXT_PUBLIC_SITE_STATE === "beta" ? (
               <Badge>Beta</Badge>
             ) : process.env.NEXT_PUBLIC_SITE_STATE === "dev" ? (
-              <Badge>Dev</Badge>
+              <Badge variant="warning">Dev</Badge>
             ) : null}
           </a>
         </Link>
