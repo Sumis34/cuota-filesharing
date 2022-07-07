@@ -1,35 +1,7 @@
-import axios, { AxiosRequestConfig } from "axios";
 import { FormEvent, useState } from "react";
-import { trpc, useMutation } from "../../utils/trpc";
+import { useMutation } from "../../utils/trpc";
+import { calcTotalProgress, uploadFile } from "../../utils/uploader";
 import Button from "../UI/Button";
-
-const uploadFile = async (
-  file: File,
-  url: string,
-  config?: AxiosRequestConfig
-) => {
-  config = {
-    ...config,
-    headers: {
-      "Content-Type": file.type,
-    },
-  };
-  return await axios.put(url, file, config);
-};
-
-const calcTotalProgress = (
-  uploadProgresses: number[] | undefined,
-  totalSize: number | null | undefined
-) => {
-  if (!totalSize || !uploadProgresses) return 0;
-
-  const loaded = uploadProgresses.reduce((acc, curr) => acc + curr, 0);
-  return Math.round((loaded * 100) / totalSize);
-};
-
-const calcUploadProgress = (progressEvent: ProgressEvent) => {
-  return (progressEvent.loaded * 100) / progressEvent.total;
-};
 
 const handleFocus = (event: any) => event.target.select();
 
@@ -68,10 +40,12 @@ export default function Uploader() {
     });
   };
 
+  //Uploads all files and tracks their progress
   const uploadFiles = async (files: FileList, urls: string[]) => {
     const promises = Array.from(files).map(async (file, index) => {
       if (!urls[index]) return;
       totalUploadSize += file.size;
+
       return await uploadFile(file, urls[index] as string, {
         onUploadProgress: (e) => {
           setTotalUploadProgress(
