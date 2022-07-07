@@ -7,10 +7,27 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { Upload } from "@prisma/client";
 import * as trpc from "@trpc/server";
 
+const getUploadUrl = async (uploadId: string, name: string) => {
+  return await getSignedUrl(
+    s3,
+    new PutObjectCommand({
+      Bucket: process.env.S3_BUCKET,
+      Key: `${uploadId}/${filenamify(name, { replacement: "_" })}`, //filename
+    }),
+    {
+      expiresIn: 100,
+    }
+  );
+};
+
+const getUploadUrls = async (uploadId: string, names: string[]) => {
+  return await Promise.all(names.map((name) => getUploadUrl(uploadId, name)));
+};
+
 export const exampleRouter = createRouter()
   .mutation("request", {
     input: z.object({
-      name: z.string().min(3).max(100),
+      names: z.string().min(3).max(100).array(),
       id: z.string().cuid().optional(),
       close: z.boolean().optional(),
     }),
@@ -34,24 +51,15 @@ export const exampleRouter = createRouter()
           message: "Upload for this pool already closed",
         });
 
-      const url = await getSignedUrl(
-        s3,
-        new PutObjectCommand({
-          Bucket: process.env.S3_BUCKET,
-          Key: `${upload.id}/${filenamify(input.name, { replacement: "_" })}`, //filename
-        }),
-        {
-          expiresIn: 100,
-        }
-      );
+      const urls = await getUploadUrls(upload.id, input.names);
 
       if (input.close)
         await prisma.upload.update({
-          where: { id: input.id },
+          where: { id: upload.id },
           data: { closed: true },
         });
 
-      return { url, uploadId: upload.id };
+      return { urls, uploadId: upload.id };
     },
   })
   .query("getAll", {

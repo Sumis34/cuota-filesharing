@@ -8,6 +8,8 @@ import { NextPage } from "next";
 import { ReactElement, ReactNode } from "react";
 import { AppProps } from "next/app";
 import { DefaultSeo } from "next-seo";
+import { httpBatchLink } from "@trpc/client/links/httpBatchLink";
+import { loggerLink } from "@trpc/client/links/loggerLink";
 
 export type NextPageWithLayout<T = {}> = NextPage<T> & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -64,7 +66,17 @@ export default withTRPC<AppRouter>({
     const url = `${getBaseUrl()}/api/trpc`;
 
     return {
-      url,
+      links: [
+        // adds pretty logs to your console in development and logs errors in production
+        loggerLink({
+          enabled: (opts) =>
+            process.env.NODE_ENV === "development" ||
+            (opts.direction === "down" && opts.result instanceof Error),
+        }),
+        httpBatchLink({
+          url: `${getBaseUrl()}/api/trpc`,
+        }),
+      ],
       transformer: superjson,
       /**
        * @link https://react-query.tanstack.com/reference/QueryClient
