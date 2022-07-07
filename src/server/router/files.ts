@@ -24,6 +24,7 @@ export const filesRouter = createRouter()
     }),
     async resolve({ input, ctx }) {
       const { prisma } = ctx;
+      let totalSize = 0;
       const command = new ListObjectsCommand({
         Bucket: process.env.S3_BUCKET,
         Prefix: input.id,
@@ -48,6 +49,8 @@ export const filesRouter = createRouter()
               const { ContentType, ContentLength, LastModified, Metadata } =
                 await s3.send(new HeadObjectCommand(params));
 
+              if (ContentLength) totalSize += ContentLength;
+
               return {
                 url,
                 key: Key,
@@ -60,7 +63,8 @@ export const filesRouter = createRouter()
           );
 
       return {
-        files: files,
+        files,
+        totalSize,
         isTruncated: IsTruncated,
         maxKeys: MaxKeys,
         prefix: Prefix,

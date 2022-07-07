@@ -65,8 +65,3 @@ export const exampleRouter = createRouter()
       return { urls, uploadId: upload.id };
     },
   })
-  .query("getAll", {
-    async resolve({ ctx }) {
-      return await ctx.prisma.example.findMany();
-    },
-  });
