@@ -48,10 +48,10 @@ export default function Uploader() {
 
       return await uploadFile(file, urls[index] as string, {
         onUploadProgress: (e) => {
+          uploadProgresses[index] = e.loaded;
           setTotalUploadProgress(
             calcTotalProgress(uploadProgresses, totalUploadSize)
           );
-          return (uploadProgresses[index] = e.loaded);
         },
       });
     });
