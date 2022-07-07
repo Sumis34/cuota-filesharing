@@ -9,6 +9,7 @@ import { useDropzone } from "react-dropzone";
 import UploadFileList from "../UploadFileList";
 import { HiPlus } from "react-icons/hi";
 import IconButton from "../UI/Button/IconButton";
+import UploadLoadingPanel from "../UploadLoadingPanel";
 
 const handleFocus = (event: any) => event.target.select();
 
@@ -18,11 +19,9 @@ const schema = z.object({
 
 export default function Uploader() {
   const [files, setFiles] = useState<File[] | undefined | null>(null);
-
-  const { register, handleSubmit } = useForm({
-    resolver: zodResolver(schema),
-  });
-
+  const [step, setStep] = useState(0);
+  const [downloadUrl, setDownloadUrl] = useState("");
+  const [totalUploadProgress, setTotalUploadProgress] = useState(0);
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
       if (files) setFiles([...files, ...acceptedFiles]);
@@ -30,13 +29,14 @@ export default function Uploader() {
     },
     [files, setFiles]
   );
-
-  const [downloadUrl, setDownloadUrl] = useState("");
-  const [totalUploadProgress, setTotalUploadProgress] = useState(0);
   const { getRootProps, getInputProps, isDragActive, open, fileRejections } =
     useDropzone({
       onDrop,
     });
+
+  const { register, handleSubmit } = useForm({
+    resolver: zodResolver(schema),
+  });
 
   //Tracks uploaded bytes of each file
   const uploadProgresses: number[] = [];
@@ -91,54 +91,55 @@ export default function Uploader() {
   };
 
   return (
-    <form
-      onSubmit={onSubmit}
-      className="backdrop-blur-xl shadow-white shadow-inner bg-white/50 flex rounded-3xl w-80 p-5 flex-col"
-    >
-      <div className="flex gap-3 items-center justify-between">
-        <h2>Files</h2>
-        {files && (
-          <IconButton onClick={open}>
-            <HiPlus />
-          </IconButton>
-        )}
-      </div>
-      {!files || files.length === 0 ? (
-        <div
-          {...getRootProps()}
-          className={`h-20 border-2 border-dashed flex items-center justify-center p-3 transition-all cursor-pointer mb-2 rounded-xl ${
-            isDragActive ? "border-indigo-500 bg-indigo-500/10" : ""
-          }`}
-        >
-          <input {...getInputProps()} />
-          {isDragActive ? (
-            <p className="text-sm text-black/50">Drop the files here ...</p>
+    <div className="backdrop-blur-xl shadow-white shadow-inner bg-white/50 rounded-3xl w-80 p-5 h-96">
+      {step === 0 ? (
+        <form onSubmit={onSubmit} className={"flex flex-col"}>
+          <div className="flex gap-3 items-center justify-between">
+            <h2>Files</h2>
+            {files && (
+              <IconButton onClick={open}>
+                <HiPlus />
+              </IconButton>
+            )}
+          </div>
+          {!files || files.length === 0 ? (
+            <div
+              {...getRootProps()}
+              className={`h-20 border-2 border-dashed flex items-center justify-center p-3 transition-all cursor-pointer mb-2 rounded-xl ${
+                isDragActive ? "border-indigo-500 bg-indigo-500/10" : ""
+              }`}
+            >
+              <input {...getInputProps()} />
+              {isDragActive ? (
+                <p className="text-sm text-black/50">Drop the files here ...</p>
+              ) : (
+                <p className="text-xs text-black/50 text-center">
+                  Drag &apos;n&apos; drop some files here, or click to select
+                  files
+                </p>
+              )}
+            </div>
           ) : (
-            <p className="text-xs text-black/50 text-center">
-              Drag &apos;n&apos; drop some files here, or click to select files
-            </p>
+            <UploadFileList onRemove={removeFile} files={files} />
           )}
-        </div>
+          <label className="font-serif font-bold text-lg">Message</label>
+          <textarea className="resize-none h-28" {...register("message")} />
+          {downloadUrl && (
+            <input
+              value={downloadUrl}
+              className="select-all"
+              type="text"
+              readOnly
+              onFocus={handleFocus}
+            />
+          )}
+          <Button variant="primary" className="mt-3">
+            Get Link <span>({totalUploadProgress}%)</span>
+          </Button>
+        </form>
       ) : (
-        <UploadFileList onRemove={removeFile} files={files} />
+        <UploadLoadingPanel progress={totalUploadProgress} />
       )}
-      <label className="font-serif font-bold text-lg">Message</label>
-      <textarea
-        className="resize-none h-28"
-        {...register("message")}
-      />
-      {downloadUrl && (
-        <input
-          value={downloadUrl}
-          className="select-all"
-          type="text"
-          readOnly
-          onFocus={handleFocus}
-        />
-      )}
-      <Button variant="primary" className="mt-3">
-        Get Link <span>({totalUploadProgress}%)</span>
-      </Button>
-    </form>
+    </div>
   );
 }
