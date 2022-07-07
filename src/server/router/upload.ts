@@ -24,13 +24,16 @@ const getUploadUrls = async (uploadId: string, names: string[]) => {
   return await Promise.all(names.map((name) => getUploadUrl(uploadId, name)));
 };
 
+export const uploadInputSchema = z.object({
+  names: z.string().min(3).max(100).array(),
+  id: z.string().cuid().optional(),
+  message: z.string().max(100).optional(),
+  close: z.boolean().optional(),
+});
+
 export const exampleRouter = createRouter()
   .mutation("request", {
-    input: z.object({
-      names: z.string().min(3).max(100).array(),
-      id: z.string().cuid().optional(),
-      close: z.boolean().optional(),
-    }),
+    input: uploadInputSchema,
     async resolve({ input, ctx }) {
       const { prisma } = ctx;
       let upload: Upload | null = null;

@@ -2,11 +2,23 @@ import { FormEvent, useState } from "react";
 import { useMutation } from "../../utils/trpc";
 import { calcTotalProgress, uploadFile } from "../../utils/uploader";
 import Button from "../UI/Button";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
 
 const handleFocus = (event: any) => event.target.select();
 
+const schema = z.object({
+  message: z.string().max(255).optional(),
+});
+
 export default function Uploader() {
   const [files, setFile] = useState<FileList | undefined | null>(null);
+
+  const { register, handleSubmit } = useForm({
+    resolver: zodResolver(schema),
+  });
+
   const [downloadUrl, setDownloadUrl] = useState("");
   const [totalUploadProgress, setTotalUploadProgress] = useState(0);
 
@@ -29,16 +41,16 @@ export default function Uploader() {
     },
   });
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
+  const onSubmit = handleSubmit(async (data) => {
     if (!files) return;
+
+    console.log(data);
 
     getUploadUrlMutation.mutate({
       names: Array.from(files).map((file) => file.name),
       close: true,
     });
-  };
+  });
 
   //Uploads all files and tracks their progress
   const uploadFiles = async (files: FileList, urls: string[]) => {
@@ -60,11 +72,12 @@ export default function Uploader() {
 
   return (
     <form
-      onSubmit={(e) => handleSubmit(e)}
+      onSubmit={onSubmit}
       className="backdrop-blur-xl shadow-white shadow-inner bg-white/50 flex rounded-3xl w-80 p-5 flex-col"
     >
       <h2>Select files ({totalUploadProgress}%)</h2>
       <input type="file" multiple onChange={(e) => setFile(e.target.files)} />
+      <input type="text" {...register("message")} />
       {downloadUrl && (
         <input
           value={downloadUrl}
