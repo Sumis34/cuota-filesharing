@@ -1,26 +1,42 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useCallback, useState } from "react";
 import { useMutation } from "../../utils/trpc";
 import { calcTotalProgress, uploadFile } from "../../utils/uploader";
 import Button from "../UI/Button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { useDropzone } from "react-dropzone";
+import UploadFileList from "../UploadFileList";
+import { HiPlus } from "react-icons/hi";
+import IconButton from "../UI/Button/IconButton";
 
 const handleFocus = (event: any) => event.target.select();
 
 const schema = z.object({
-  message: z.string().max(255).optional(),
+  message: z.string().max(150).optional(),
 });
 
 export default function Uploader() {
-  const [files, setFile] = useState<FileList | undefined | null>(null);
+  const [files, setFiles] = useState<File[] | undefined | null>(null);
 
   const { register, handleSubmit } = useForm({
     resolver: zodResolver(schema),
   });
 
+  const onDrop = useCallback(
+    (acceptedFiles: File[]) => {
+      if (files) setFiles([...files, ...acceptedFiles]);
+      else setFiles(acceptedFiles);
+    },
+    [files, setFiles]
+  );
+
   const [downloadUrl, setDownloadUrl] = useState("");
   const [totalUploadProgress, setTotalUploadProgress] = useState(0);
+  const { getRootProps, getInputProps, isDragActive, open, fileRejections } =
+    useDropzone({
+      onDrop,
+    });
 
   //Tracks uploaded bytes of each file
   const uploadProgresses: number[] = [];
@@ -43,18 +59,16 @@ export default function Uploader() {
 
   const onSubmit = handleSubmit(async (data) => {
     if (!files) return;
-
-    console.log(data);
-
     getUploadUrlMutation.mutate({
-      names: Array.from(files).map((file) => file.name),
+      names: files.map((file) => file.name),
+      message: data.message,
       close: true,
     });
   });
 
   //Uploads all files and tracks their progress
-  const uploadFiles = async (files: FileList, urls: string[]) => {
-    const promises = Array.from(files).map(async (file, index) => {
+  const uploadFiles = async (files: File[], urls: string[]) => {
+    const promises = files.map(async (file, index) => {
       if (!urls[index]) return;
       totalUploadSize += file.size;
 
@@ -70,14 +84,49 @@ export default function Uploader() {
     return await Promise.all(promises);
   };
 
+  const removeFile = (index: number) => {
+    const tmpFile = [...(files as File[])];
+    tmpFile?.splice(index, 1);
+    setFiles(tmpFile);
+  };
+
   return (
     <form
       onSubmit={onSubmit}
       className="backdrop-blur-xl shadow-white shadow-inner bg-white/50 flex rounded-3xl w-80 p-5 flex-col"
     >
-      <h2>Select files ({totalUploadProgress}%)</h2>
-      <input type="file" multiple onChange={(e) => setFile(e.target.files)} />
-      <input type="text" {...register("message")} />
+      <div className="flex gap-3 items-center justify-between">
+        <h2>Files</h2>
+        {files && (
+          <IconButton onClick={open}>
+            <HiPlus />
+          </IconButton>
+        )}
+      </div>
+      {!files || files.length === 0 ? (
+        <div
+          {...getRootProps()}
+          className={`h-20 border-2 border-dashed flex items-center justify-center p-3 transition-all cursor-pointer mb-2 rounded-xl ${
+            isDragActive ? "border-indigo-500 bg-indigo-500/10" : ""
+          }`}
+        >
+          <input {...getInputProps()} />
+          {isDragActive ? (
+            <p className="text-sm text-black/50">Drop the files here ...</p>
+          ) : (
+            <p className="text-xs text-black/50 text-center">
+              Drag &apos;n&apos; drop some files here, or click to select files
+            </p>
+          )}
+        </div>
+      ) : (
+        <UploadFileList onRemove={removeFile} files={files} />
+      )}
+      <label className="font-serif font-bold text-lg">Message</label>
+      <textarea
+        className="resize-none h-28"
+        {...register("message")}
+      />
       {downloadUrl && (
         <input
           value={downloadUrl}
@@ -88,7 +137,7 @@ export default function Uploader() {
         />
       )}
       <Button variant="primary" className="mt-3">
-        Get Link
+        Get Link <span>({totalUploadProgress}%)</span>
       </Button>
     </form>
   );

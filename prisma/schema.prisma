@@ -68,6 +68,7 @@ model Upload {
     uploadTime DateTime @default(now())
     userId     String?
     closed     Boolean  @default(false)
+    message    String?
     user       User?    @relation(fields: [userId], references: [id])
 
     @@unique([id])

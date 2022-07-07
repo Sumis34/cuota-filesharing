@@ -24,10 +24,10 @@
     @apply font-serif;
   }
   input {
-    @apply focus-visible:outline-none focus-visible:ring focus-visible:ring-purple-500/40;
+    @apply focus-visible:outline-none border-2 focus-visible:border-indigo-500/70 rounded-xl bg-transparent py-2 px-3;
   }
   textarea {
-    @apply focus-visible:outline-none focus-visible:ring focus-visible:ring-purple-500/40;
+    @apply focus-visible:outline-none border-2 focus-visible:border-indigo-500/70 rounded-xl bg-transparent py-2 px-3;
   }
 }
 @tailwind components;

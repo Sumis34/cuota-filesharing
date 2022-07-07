@@ -31,37 +31,36 @@ export const uploadInputSchema = z.object({
   close: z.boolean().optional(),
 });
 
-export const exampleRouter = createRouter()
-  .mutation("request", {
-    input: uploadInputSchema,
-    async resolve({ input, ctx }) {
-      const { prisma } = ctx;
-      let upload: Upload | null = null;
+export const exampleRouter = createRouter().mutation("request", {
+  input: uploadInputSchema,
+  async resolve({ input, ctx }) {
+    const { prisma } = ctx;
+    let upload: Upload | null = null;
 
-      if (input.id)
-        upload = await prisma.upload.findUnique({ where: { id: input.id } });
+    if (input.id)
+      upload = await prisma.upload.findUnique({ where: { id: input.id } });
 
-      if (!upload)
-        upload = await prisma.upload.create({
-          data: {},
-        });
+    if (!upload)
+      upload = await prisma.upload.create({
+        data: {
+          message: input.message,
+        },
+      });
 
-      console.log(upload);
+    if (upload.closed)
+      throw new trpc.TRPCError({
+        code: "BAD_REQUEST",
+        message: "Upload for this pool already closed",
+      });
 
-      if (upload.closed)
-        throw new trpc.TRPCError({
-          code: "BAD_REQUEST",
-          message: "Upload for this pool already closed",
-        });
+    const urls = await getUploadUrls(upload.id, input.names);
 
-      const urls = await getUploadUrls(upload.id, input.names);
+    if (input.close)
+      await prisma.upload.update({
+        where: { id: upload.id },
+        data: { closed: true },
+      });
 
-      if (input.close)
-        await prisma.upload.update({
-          where: { id: upload.id },
-          data: { closed: true },
-        });
-
-      return { urls, uploadId: upload.id };
-    },
-  })
+    return { urls, uploadId: upload.id };
+  },
+});
