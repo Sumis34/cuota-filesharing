@@ -58,7 +58,7 @@ export default function Uploader() {
   });
 
   const onSubmit = handleSubmit(async (data) => {
-    if (!files) return;
+    if (!files || files.length === 0) return;
     getUploadUrlMutation.mutate({
       names: files.map((file) => file.name),
       message: data.message,
