@@ -10,8 +10,8 @@ import UploadFileList from "../UploadFileList";
 import { HiPlus } from "react-icons/hi";
 import IconButton from "../UI/Button/IconButton";
 import UploadLoadingPanel from "../UploadLoadingPanel";
-
-const handleFocus = (event: any) => event.target.select();
+import { AnimatePresence, motion } from "framer-motion";
+import SharePanel from "../SharePanel";
 
 const schema = z.object({
   message: z.string().max(150).optional(),
@@ -54,6 +54,8 @@ export default function Uploader() {
         console.log("upload of some files may have failed");
 
       setDownloadUrl(`${window.location.origin}/files/${uploadId}`);
+      setStep(2);
+      reset();
     },
   });
 
@@ -64,6 +66,7 @@ export default function Uploader() {
       message: data.message,
       close: true,
     });
+    setStep(1);
   });
 
   //Uploads all files and tracks their progress
@@ -90,56 +93,71 @@ export default function Uploader() {
     setFiles(tmpFile);
   };
 
+  const reset = () => {
+    setFiles([]);
+    setTotalUploadProgress(0);
+  };
+
   return (
-    <div className="backdrop-blur-xl shadow-white shadow-inner bg-white/50 rounded-3xl w-80 p-5 h-96">
+    <AnimatePresence>
       {step === 0 ? (
-        <form onSubmit={onSubmit} className={"flex flex-col"}>
-          <div className="flex gap-3 items-center justify-between">
-            <h2>Files</h2>
-            {files && (
-              <IconButton onClick={open}>
-                <HiPlus />
-              </IconButton>
-            )}
-          </div>
-          {!files || files.length === 0 ? (
-            <div
-              {...getRootProps()}
-              className={`h-20 border-2 border-dashed flex items-center justify-center p-3 transition-all cursor-pointer mb-2 rounded-xl ${
-                isDragActive ? "border-indigo-500 bg-indigo-500/10" : ""
-              }`}
+        <motion.div
+          layoutId="upload-loading-panel"
+          layout
+          className="backdrop-blur-xl shadow-white shadow-inner bg-white/50 rounded-3xl w-80 p-5"
+        >
+          <motion.form layout onSubmit={onSubmit} className={"flex flex-col"}>
+            <motion.div
+              layout
+              className="flex gap-3 items-center justify-between"
             >
-              <input {...getInputProps()} />
-              {isDragActive ? (
-                <p className="text-sm text-black/50">Drop the files here ...</p>
-              ) : (
-                <p className="text-xs text-black/50 text-center">
-                  Drag &apos;n&apos; drop some files here, or click to select
-                  files
-                </p>
+              <h2>Files</h2>
+              {files && (
+                <IconButton onClick={open}>
+                  <HiPlus />
+                </IconButton>
               )}
-            </div>
-          ) : (
-            <UploadFileList onRemove={removeFile} files={files} />
-          )}
-          <label className="font-serif font-bold text-lg">Message</label>
-          <textarea className="resize-none h-28" {...register("message")} />
-          {downloadUrl && (
-            <input
-              value={downloadUrl}
-              className="select-all"
-              type="text"
-              readOnly
-              onFocus={handleFocus}
+            </motion.div>
+            {!files || files.length === 0 ? (
+              <div
+                {...getRootProps()}
+                className={`h-20 border-2 border-dashed flex items-center justify-center p-3 transition-all cursor-pointer mb-2 rounded-xl ${
+                  isDragActive ? "border-indigo-500 bg-indigo-500/10" : ""
+                }`}
+              >
+                <input {...getInputProps()} />
+                {isDragActive ? (
+                  <p className="text-sm text-black/50">
+                    Drop the files here ...
+                  </p>
+                ) : (
+                  <p className="text-xs text-black/50 text-center">
+                    Drag &apos;n&apos; drop some files here, or click to select
+                    files
+                  </p>
+                )}
+              </div>
+            ) : (
+              <UploadFileList onRemove={removeFile} files={files} />
+            )}
+            <motion.label layout className="font-serif font-bold text-lg">
+              Message
+            </motion.label>
+            <motion.textarea
+              layout
+              className="resize-none h-28"
+              {...register("message")}
             />
-          )}
-          <Button variant="primary" className="mt-3">
-            Get Link <span>({totalUploadProgress}%)</span>
-          </Button>
-        </form>
+            <Button variant="primary" className="mt-3">
+              Upload
+            </Button>
+          </motion.form>
+        </motion.div>
+      ) : step === 1 ? (
+        <UploadLoadingPanel progress={totalUploadProgress} setStep={setStep} />
       ) : (
-        <UploadLoadingPanel progress={totalUploadProgress} />
+        <SharePanel url={downloadUrl} setStep={setStep} />
       )}
-    </div>
+    </AnimatePresence>
   );
 }
