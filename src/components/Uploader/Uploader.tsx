@@ -29,6 +29,7 @@ export default function Uploader() {
   const [files, setFiles] = useState<File[] | undefined | null>(null);
   const [step, setStep] = useState(0);
   const [downloadUrl, setDownloadUrl] = useState("");
+  const [totalUploadSize, setTotalUploadSize] = useState(0);
   const [totalUploadProgress, setTotalUploadProgress] = useState(0);
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
@@ -48,7 +49,6 @@ export default function Uploader() {
 
   //Tracks uploaded bytes of each file
   const uploadProgresses: number[] = [];
-  let totalUploadSize = 0;
   const uploadController = new AbortController();
 
   const getUploadUrlMutation = useMutation(["upload.request"], {
@@ -80,15 +80,18 @@ export default function Uploader() {
 
   //Uploads all files and tracks their progress
   const uploadFiles = async (files: File[], urls: string[]) => {
+    let totalSize = 0;
     const promises = files.map(async (file, index) => {
       if (!urls[index]) return;
-      totalUploadSize += file.size;
+      
+      totalSize += file.size;
+      setTotalUploadSize(totalSize);
 
       return await uploadFile(file, urls[index] as string, {
         onUploadProgress: (e) => {
           uploadProgresses[index] = e.loaded;
           setTotalUploadProgress(
-            calcTotalProgress(uploadProgresses, totalUploadSize)
+            calcTotalProgress(uploadProgresses, totalSize)
           );
         },
         signal: uploadController.signal,
@@ -168,6 +171,7 @@ export default function Uploader() {
           </motion.form>
         ) : step === 1 ? (
           <UploadLoadingPanel
+            totalBytes={totalUploadSize}
             progress={totalUploadProgress}
             cancel={cancelUpload}
           />

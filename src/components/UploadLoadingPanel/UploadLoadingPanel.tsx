@@ -1,6 +1,8 @@
 import { motion } from "framer-motion";
-import { HiBackspace } from "react-icons/hi";
+import { useEffect, useState } from "react";
+import { HiBackspace, HiX } from "react-icons/hi";
 import Wave from "react-wavify";
+import Button from "../UI/Button";
 import IconButton from "../UI/Button/IconButton";
 import {
   stepAnimationTransition,
@@ -9,23 +11,65 @@ import {
 
 interface UploadLoadingPanelProps {
   progress: number;
+  totalBytes: number;
   cancel: () => void;
 }
 
 export default function UploadLoadingPanel({
   progress,
+  totalBytes,
   cancel,
 }: UploadLoadingPanelProps) {
+  const [seconds, setSeconds] = useState(0);
+  const [secondsLeft, setSecondsLeft] = useState(0);
+  const uploadedBytes = Math.round(totalBytes * (progress / 100));
+  const [uploadSpeeds, setUploadSpeeds] = useState<number[]>([]);
+
+  useEffect(() => {
+    const interval = setInterval(() => onInterval(), 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const onInterval = () => {
+    setSeconds((seconds) => seconds + 1);
+  };
+
+  useEffect(() => {
+    if (seconds === 0) return;
+
+    const uploadSpeed = uploadedBytes / seconds;
+    const speeds = [...uploadSpeeds, uploadSpeed];
+    const averageSpeed = speeds.reduce((a, b) => a + b, 0) / speeds.length;
+    const timeRemaining = Math.round(
+      (totalBytes - uploadedBytes) / averageSpeed
+    );
+    
+    setSecondsLeft(timeRemaining);
+    setUploadSpeeds(speeds);
+  }, [seconds]);
+
   return (
     <motion.div
       key="upload-loading-panel"
       initial="initial"
       animate="animate"
       exit="exit"
+      className="h-48"
       variants={stepAnimationVariants}
       transition={stepAnimationTransition}
     >
-      <h2>Files</h2>
+      <div className="flex justify-between items-center">
+        <h3 className="text-xl">Uploading {secondsLeft}</h3>
+        <span>
+          <IconButton
+            variant="secondary"
+            onClick={cancel}
+            className="hover:!bg-red-100"
+          >
+            <HiX className="fill-gray-500 hover:fill-red-500" />
+          </IconButton>
+        </span>
+      </div>
       <div className="flex items-center justify-center h-full">
         <div className="relative shadow-xl w-24 h-24 overflow-hidden rounded-full bg-gray-200">
           <div className="absolute z-10 text-white flex items-center justify-center inset-0">
@@ -55,9 +99,6 @@ export default function UploadLoadingPanel({
           </Wave>
         </div>
       </div>
-      <IconButton onClick={cancel}>
-        <HiBackspace />
-      </IconButton>
     </motion.div>
   );
 }

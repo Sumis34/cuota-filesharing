@@ -16,7 +16,13 @@ export default function Button({
   href,
   ...props
 }: ButtonProps) {
-  const styles = `px-6 py-1 w-fit bg-gradient-to-t from-indigo-500 to-indigo-300 text-white font-serif rounded-lg text-lg font-bold cursor-pointer active:translate-y-0.5 transition-all ${className}`;
+  const styles = `px-6 py-1 w-fit text-white font-serif rounded-lg text-lg font-bold cursor-pointer active:translate-y-0.5 transition-all ${className} ${
+    variant === "primary"
+      ? "bg-gradient-to-t from-indigo-500 to-indigo-300"
+      : variant === "secondary"
+      ? "text-indigo-300 border-2 border-indigo-300"
+      : ""
+  }`;
   return href ? (
     <Link href={href}>
       <a>

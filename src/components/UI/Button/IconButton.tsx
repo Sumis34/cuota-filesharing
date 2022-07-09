@@ -8,11 +8,16 @@ export default function IconButton({
   onClick,
   children,
   className,
+  variant = "primary",
 }: IconButtonProps) {
   return (
     <button
       type="button"
-      className={`bg-indigo-100 active:translate-y-0.5 hover:bg-indigo-100/70 transition-all p-1 rounded-md ${className}`}
+      className={`active:translate-y-0.5 transition-all p-1 rounded-md ${className} ${
+        variant === "primary"
+          ? "bg-indigo-100 hover:bg-indigo-100/70"
+          : "bg-gray-200 hover:bg-gray-200/60"
+      }`}
       onClick={onClick}
     >
       {children}
