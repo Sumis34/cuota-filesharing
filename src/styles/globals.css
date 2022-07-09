@@ -31,4 +31,9 @@
   }
 }
 @tailwind components;
+@layer components {
+  .card {
+    @apply backdrop-blur-xl shadow-white shadow-inner bg-white/50 rounded-3xl;
+  }
+}
 @tailwind utilities;

@@ -31,6 +31,7 @@ export default function Uploader() {
   const [downloadUrl, setDownloadUrl] = useState("");
   const [totalUploadSize, setTotalUploadSize] = useState(0);
   const [totalUploadProgress, setTotalUploadProgress] = useState(0);
+
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
       if (files) setFiles([...files, ...acceptedFiles]);
@@ -83,7 +84,7 @@ export default function Uploader() {
     let totalSize = 0;
     const promises = files.map(async (file, index) => {
       if (!urls[index]) return;
-      
+
       totalSize += file.size;
       setTotalUploadSize(totalSize);
 
@@ -120,7 +121,7 @@ export default function Uploader() {
   };
 
   return (
-    <div className="backdrop-blur-xl shadow-white shadow-inner bg-white/50 rounded-3xl w-80 p-5">
+    <div className="card w-80 p-5">
       <AnimatePresence exitBeforeEnter>
         {step === 0 ? (
           <motion.form

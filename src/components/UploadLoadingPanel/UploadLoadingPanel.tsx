@@ -1,13 +1,14 @@
+import { addSeconds, format } from "date-fns";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import { HiBackspace, HiX } from "react-icons/hi";
+import { HiX } from "react-icons/hi";
 import Wave from "react-wavify";
-import Button from "../UI/Button";
 import IconButton from "../UI/Button/IconButton";
 import {
   stepAnimationTransition,
   stepAnimationVariants,
 } from "../Uploader/Uploader";
+import bytes from "pretty-bytes";
 
 interface UploadLoadingPanelProps {
   progress: number;
@@ -22,8 +23,14 @@ export default function UploadLoadingPanel({
 }: UploadLoadingPanelProps) {
   const [seconds, setSeconds] = useState(0);
   const [secondsLeft, setSecondsLeft] = useState(0);
-  const uploadedBytes = Math.round(totalBytes * (progress / 100));
   const [uploadSpeeds, setUploadSpeeds] = useState<number[]>([]);
+  const [averageSpeed, setAverageSpeed] = useState(0);
+  const uploadedBytes = Math.round(totalBytes * (progress / 100));
+
+  const duration =
+    secondsLeft > 0
+      ? format(addSeconds(new Date(0), secondsLeft), "mm:ss")
+      : "00:00";
 
   useEffect(() => {
     const interval = setInterval(() => onInterval(), 1000);
@@ -39,18 +46,23 @@ export default function UploadLoadingPanel({
 
     const uploadSpeed = uploadedBytes / seconds;
     const speeds = [...uploadSpeeds, uploadSpeed];
-    const averageSpeed = speeds.reduce((a, b) => a + b, 0) / speeds.length;
+
+    const averageSpeed = Math.round(
+      speeds.reduce((a, b) => a + b, 0) / speeds.length
+    );
+
     const timeRemaining = Math.round(
       (totalBytes - uploadedBytes) / averageSpeed
     );
-    
+
+    setAverageSpeed(averageSpeed);
     setSecondsLeft(timeRemaining);
     setUploadSpeeds(speeds);
   }, [seconds]);
 
   return (
     <motion.div
-      key="upload-loading-panel"
+      key="upload-loading-panel-2"
       initial="initial"
       animate="animate"
       exit="exit"
@@ -59,7 +71,8 @@ export default function UploadLoadingPanel({
       transition={stepAnimationTransition}
     >
       <div className="flex justify-between items-center">
-        <h3 className="text-xl">Uploading {secondsLeft}</h3>
+        <h3 className="text-xl">Uploading</h3>
+
         <span>
           <IconButton
             variant="secondary"
@@ -70,7 +83,7 @@ export default function UploadLoadingPanel({
           </IconButton>
         </span>
       </div>
-      <div className="flex items-center justify-center h-full">
+      <div className="flex items-center justify-center h-full flex-col gap-3">
         <div className="relative shadow-xl w-24 h-24 overflow-hidden rounded-full bg-gray-200">
           <div className="absolute z-10 text-white flex items-center justify-center inset-0">
             <span className="font-serif font-bold text-2xl">{progress}%</span>
@@ -97,6 +110,17 @@ export default function UploadLoadingPanel({
               </linearGradient>
             </defs>
           </Wave>
+        </div>
+        <div className="flex gap-2">
+          <span className="bg-green-200 px-2 rounded-md text-sm text-green-800">
+            {bytes(averageSpeed)}/s
+          </span>
+          <span
+            title={`Upload finished in ${duration}`}
+            className="bg-indigo-200 px-2 rounded-md text-sm text-indigo-800"
+          >
+            {duration}
+          </span>
         </div>
       </div>
     </motion.div>
