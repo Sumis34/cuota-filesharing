@@ -17,6 +17,14 @@ const schema = z.object({
   message: z.string().max(150).optional(),
 });
 
+const stepAnimationVariants = {
+  initial: { opacity: 0, x: "-10%" },
+  animate: { opacity: 1, x: "0%" },
+  exit: { opacity: 0, x: "10%" },
+};
+
+const stepAnimationTransition = { duration: 0.3, delay: 0.2 };
+
 export default function Uploader() {
   const [files, setFiles] = useState<File[] | undefined | null>(null);
   const [step, setStep] = useState(0);
@@ -99,25 +107,27 @@ export default function Uploader() {
   };
 
   return (
-    <AnimatePresence>
-      {step === 0 ? (
-        <motion.div
-          layoutId="upload-loading-panel"
-          layout
-          className="backdrop-blur-xl shadow-white shadow-inner bg-white/50 rounded-3xl w-80 p-5"
-        >
-          <motion.form layout onSubmit={onSubmit} className={"flex flex-col"}>
-            <motion.div
-              layout
-              className="flex gap-3 items-center justify-between"
-            >
+    <div className="backdrop-blur-xl shadow-white shadow-inner bg-white/50 rounded-3xl w-80 p-5">
+      <AnimatePresence exitBeforeEnter>
+        {step === 0 ? (
+          <motion.form
+            key="upload-form"
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            variants={stepAnimationVariants}
+            transition={stepAnimationTransition}
+            onSubmit={onSubmit}
+            className={"flex flex-col"}
+          >
+            <div className="flex gap-3 items-center justify-between">
               <h2>Files</h2>
               {files && (
                 <IconButton onClick={open}>
                   <HiPlus />
                 </IconButton>
               )}
-            </motion.div>
+            </div>
             {!files || files.length === 0 ? (
               <div
                 {...getRootProps()}
@@ -140,24 +150,23 @@ export default function Uploader() {
             ) : (
               <UploadFileList onRemove={removeFile} files={files} />
             )}
-            <motion.label layout className="font-serif font-bold text-lg">
-              Message
-            </motion.label>
-            <motion.textarea
-              layout
-              className="resize-none h-28"
-              {...register("message")}
-            />
+            <label className="font-serif font-bold text-lg">Message</label>
+            <textarea className="resize-none h-28" {...register("message")} />
             <Button variant="primary" className="mt-3">
               Upload
             </Button>
           </motion.form>
-        </motion.div>
-      ) : step === 1 ? (
-        <UploadLoadingPanel progress={totalUploadProgress} setStep={setStep} />
-      ) : (
-        <SharePanel url={downloadUrl} setStep={setStep} />
-      )}
-    </AnimatePresence>
+        ) : step === 1 ? (
+          <UploadLoadingPanel
+            progress={totalUploadProgress}
+            setStep={setStep}
+          />
+        ) : (
+          <SharePanel url={downloadUrl} setStep={setStep} />
+        )}
+      </AnimatePresence>
+    </div>
   );
 }
+
+export { stepAnimationTransition, stepAnimationVariants };

@@ -1,5 +1,9 @@
 import { motion } from "framer-motion";
 import Button from "../UI/Button";
+import {
+  stepAnimationTransition,
+  stepAnimationVariants,
+} from "../Uploader/Uploader";
 
 interface SharePanelProps {
   url: string;
@@ -11,8 +15,12 @@ const handleFocus = (event: any) => event.target.select();
 export default function SharePanel({ url, setStep }: SharePanelProps) {
   return (
     <motion.div
-      layoutId="upload-loading-panel"
-      className="justify-center backdrop-blur-xl shadow-white shadow-inner bg-white/50 rounded-3xl w-80 p-5 h-72 overflow-hidden"
+      key="upload-share"
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      variants={stepAnimationVariants}
+      transition={stepAnimationTransition}
     >
       <h2>Configure Link</h2>
       <input
