@@ -9,12 +9,12 @@ import {
 
 interface UploadLoadingPanelProps {
   progress: number;
-  setStep: (step: number) => void;
+  cancel: () => void;
 }
 
 export default function UploadLoadingPanel({
   progress,
-  setStep,
+  cancel,
 }: UploadLoadingPanelProps) {
   return (
     <motion.div
@@ -55,7 +55,7 @@ export default function UploadLoadingPanel({
           </Wave>
         </div>
       </div>
-      <IconButton onClick={() => setStep(0)}>
+      <IconButton onClick={cancel}>
         <HiBackspace />
       </IconButton>
     </motion.div>

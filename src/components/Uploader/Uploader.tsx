@@ -49,6 +49,7 @@ export default function Uploader() {
   //Tracks uploaded bytes of each file
   const uploadProgresses: number[] = [];
   let totalUploadSize = 0;
+  const uploadController = new AbortController();
 
   const getUploadUrlMutation = useMutation(["upload.request"], {
     onSuccess: async (data) => {
@@ -90,6 +91,7 @@ export default function Uploader() {
             calcTotalProgress(uploadProgresses, totalUploadSize)
           );
         },
+        signal: uploadController.signal,
       });
     });
     return await Promise.all(promises);
@@ -104,6 +106,14 @@ export default function Uploader() {
   const reset = () => {
     setFiles([]);
     setTotalUploadProgress(0);
+  };
+
+  //FIXME: #3 The upload controller dose not correctly abort the upload
+  const cancelUpload = () => {
+    uploadController.abort();
+    console.log("Upload aborted");
+    setStep(0);
+    reset();
   };
 
   return (
@@ -159,7 +169,7 @@ export default function Uploader() {
         ) : step === 1 ? (
           <UploadLoadingPanel
             progress={totalUploadProgress}
-            setStep={setStep}
+            cancel={cancelUpload}
           />
         ) : (
           <SharePanel url={downloadUrl} setStep={setStep} />
