@@ -7,3 +7,4 @@ This is an app bootstrapped according to the [init.tips](https://init.tips) stac
 # Ideas
 
 - [ ] show if server is bottleneck
+- [ ] Showcase. Option to create showcase whre you can shoqcase your work. Includes option for custom branding in form of a image.
