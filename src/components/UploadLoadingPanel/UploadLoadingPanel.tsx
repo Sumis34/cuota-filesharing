@@ -27,10 +27,7 @@ export default function UploadLoadingPanel({
   const [averageSpeed, setAverageSpeed] = useState(0);
   const uploadedBytes = Math.round(totalBytes * (progress / 100));
 
-  const duration =
-    secondsLeft > 0
-      ? format(addSeconds(new Date(0), secondsLeft), "mm:ss")
-      : "00:00";
+  const duration = format(addSeconds(new Date(0), secondsLeft || 0), "mm:ss");
 
   useEffect(() => {
     const interval = setInterval(() => onInterval(), 1000);
