@@ -45,12 +45,12 @@ export default function SharePanel({ url, setStep }: SharePanelProps) {
           <AnimatePresence>
             {copied && (
               <motion.span
-                initial={{ opacity: 0, y: -40 }}
+                initial={{ opacity: 0, y: -30 }}
                 animate={{ opacity: 1, y: -40 }}
                 exit={{ opacity: 0, y: -60 }}
                 style={{ x: "-10%" }}
                 transition={{ duration: 0.2 }}
-                className="bg-green-200 text-green-800 px-2 text-xs absolute rounded-md z-40"
+                className="bg-green-200 text-green-800 px-2 absolute rounded-md z-40 whitespace-nowrap py-1"
               >
                 Copied 🥳
               </motion.span>
