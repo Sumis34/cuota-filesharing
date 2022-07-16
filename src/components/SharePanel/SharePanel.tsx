@@ -50,7 +50,7 @@ export default function SharePanel({ url, setStep }: SharePanelProps) {
                 exit={{ opacity: 0, y: -60 }}
                 style={{ x: "-25%" }}
                 transition={{ duration: 0.2 }}
-                className="bg-green-200 text-green-800 px-2 absolute rounded-md z-40 whitespace-nowrap py-1"
+                className="bg-green-200 text-green-800 px-2 absolute rounded-md z-40 whitespace-nowrap py-1 shadow-md shadow-black/5"
               >
                 Copied 🥳
               </motion.span>
@@ -60,7 +60,7 @@ export default function SharePanel({ url, setStep }: SharePanelProps) {
             className="aspect-square px-3 group"
             onClick={() => copyToClipboard(url)}
           >
-            <FiCopy className="text-xl group-hover:text-indigo-500 transition-all" />
+            <FiCopy className="text-xl group-hover:text-indigo-500 transition-all text-indigo-800" />
           </IconButton>
         </div>
       </div>
