@@ -20,7 +20,7 @@ export default function Button({
     variant === "primary"
       ? "bg-gradient-to-t from-indigo-500 to-indigo-300"
       : variant === "secondary"
-      ? "text-indigo-300 border-2 border-indigo-300"
+      ? "text-indigo-500 border-2 border-indigo-500"
       : ""
   }`;
   return href ? (

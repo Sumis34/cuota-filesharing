@@ -6,8 +6,9 @@ import {
   stepAnimationTransition,
   stepAnimationVariants,
 } from "../Uploader/Uploader";
-import { useEffect, useState } from "react";
 import useTimeoutToggle from "../../hooks/useTimeoutToggle";
+import Image from "next/image";
+import Illustration from "../../../public/assets/images/two-athletes-posing-in-action.png";
 
 interface SharePanelProps {
   url: string;
@@ -31,12 +32,26 @@ export default function SharePanel({ url, setStep }: SharePanelProps) {
       exit="exit"
       variants={stepAnimationVariants}
       transition={stepAnimationTransition}
+      className={"flex flex-col items-center"}
     >
-      <h2>Configure Link</h2>
-      <div className="flex gap-3">
+      <h2 className="text-center">Configure Link</h2>
+      <div className="mb-1">
+        <Image
+          width={640}
+          height={480}
+          placeholder={"blur"}
+          src={Illustration}
+          alt=""
+        />
+        <p className="text-center text-gray-800 text-sm">
+          Your upload successfully finished copy your link to share with the
+          World.
+        </p>
+      </div>
+      <div className="flex gap-3 justify-between mt-2 mb-3">
         <input
           value={url}
-          className="select-all"
+          className="select-all font-mono px-1 -py-2 w-full"
           type="text"
           readOnly
           onFocus={handleFocus}
@@ -64,7 +79,13 @@ export default function SharePanel({ url, setStep }: SharePanelProps) {
           </IconButton>
         </div>
       </div>
-      <Button onClick={() => setStep(0)}>Share more</Button>
+      <Button
+        onClick={() => setStep(0)}
+        variant="primary"
+        className=""
+      >
+        Share more
+      </Button>
     </motion.div>
   );
 }
