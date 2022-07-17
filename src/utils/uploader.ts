@@ -9,6 +9,7 @@ const uploadFile = async (
     ...config,
     headers: {
       "Content-Type": file.type,
+      "Content-Disposition": `attachment; filename=${file.name}`,
     },
   };
   return await axios.put(url, file, config);
