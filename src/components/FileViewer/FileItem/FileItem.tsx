@@ -25,8 +25,8 @@ export default function FileItem({ name, size, type, url }: FileItemProps) {
     >
       {url && type && <Previewer type={type} contentUrl={url} />}
       <div className="absolute flex items-end inset-0 w-full">
-        <div className="bg-gray-50 px-5 py-3 overflow-hidden flex w-full justify-between">
-          <div>
+        <div className="bg-gray-50 px-5 py-3 flex w-full justify-between items-center gap-5">
+          <div className="overflow-hidden">
             <p className="truncate text-sm">{name}</p>
             <div className="opacity-30 text-xs flex gap-3">
               <span>
@@ -34,9 +34,11 @@ export default function FileItem({ name, size, type, url }: FileItemProps) {
               </span>
             </div>
           </div>
-          <IconButton>
-            <HiDownload className="fill-indigo-500 w-6" />
-          </IconButton>
+          <a href={url || "#"}>
+            <IconButton>
+              <HiDownload className="fill-indigo-500" />
+            </IconButton>
+          </a>
         </div>
       </div>
     </motion.li>

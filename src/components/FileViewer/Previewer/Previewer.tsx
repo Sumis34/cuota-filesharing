@@ -1,5 +1,5 @@
 import mime from "mime-types";
-import { HiDocument } from "react-icons/hi";
+import { HiAdjustments, HiDocument, HiVideoCamera } from "react-icons/hi";
 import PDFViewer from "../../PDFViewer";
 
 const isImage = (type: string) => type.match("image/*");
@@ -22,10 +22,17 @@ export default function Previewer({
       ) : isPDF(type) ? (
         <PDFViewer path={contentUrl} />
       ) : isVideo(type) ? (
-        <video controls>
-          <source src={contentUrl} type={"video/mp4"} />
-          Your browser does not support the video tag.
-        </video>
+        <div className="relative h-full">
+          <div className="inset-0 absolute p-5">
+            <div className="p-2 bg-gray-200/5 ml-auto w-fit rounded-lg" title="Video">
+              <HiVideoCamera className="fill-gray-200" />
+            </div>
+          </div>
+          <video className="object-cover w-full h-full">
+            <source src={contentUrl} type={"video/mp4"} />
+            Your browser does not support the video tag.
+          </video>
+        </div>
       ) : (
         <div className="w-full h-full flex items-center justify-center">
           <div className="relative">
