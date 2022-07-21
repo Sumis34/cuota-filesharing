@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { Document, LoadingProcessData, Page, pdfjs } from "react-pdf";
 import Button from "../UI/Button";
+import { motion } from "framer-motion";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
@@ -16,16 +17,21 @@ export default function PDFViewer({ path }: { path: string }) {
   };
 
   const handelProgress = (data: LoadingProcessData) => {
-    setLoading(Math.round(data.loaded * 100) / data.total);
+    setLoading(Math.round((data.loaded * 100) / data.total));
   };
+
+  console.log(loading);
 
   return (
     <div className="px-10 py-5 h-full" ref={parent}>
       <Document
         file={path}
         loading={
-          <div className="w-full flex items-center justify-center">
-            <span>{loading}</span>
+          <div className="block w-full">
+            <motion.div
+              style={{ width: `${loading}%` }}
+              className="bg-gradient-to-r from-gray-200 to-gray-100 h-2 rounded-md"
+            />
           </div>
         }
         onLoadProgress={handelProgress}
