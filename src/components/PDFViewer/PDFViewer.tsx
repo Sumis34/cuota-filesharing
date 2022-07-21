@@ -27,12 +27,16 @@ export default function PDFViewer({ path }: { path: string }) {
       <Document
         file={path}
         loading={
-          <div className="block w-full">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="block w-full  rounded-md overflow-hidden"
+          >
             <motion.div
               style={{ width: `${loading}%` }}
-              className="bg-gradient-to-r from-gray-200 to-gray-100 h-2 rounded-md"
+              className="bg-gradient-to-r from-gray-200 to-gray-100 h-2"
             />
-          </div>
+          </motion.div>
         }
         onLoadProgress={handelProgress}
         onLoadSuccess={onDocumentLoadSuccess}
