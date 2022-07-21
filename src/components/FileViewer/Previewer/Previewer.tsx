@@ -13,7 +13,6 @@ export default function Previewer({
   contentUrl: string;
   type: string;
 }) {
-  console.log(type);
 
   return (
     <div className="overflow-hidden h-full">

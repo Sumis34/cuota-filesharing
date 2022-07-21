@@ -2,10 +2,11 @@ import { Ring } from "@uiball/loaders";
 import { useRouter } from "next/router";
 import { getDefaultLayout } from "../../components/Layout/DefaultLayout";
 import Button from "../../components/UI/Button";
-import { trpc } from "../../utils/trpc";
+import { useQuery } from "../../utils/trpc";
 import { NextPageWithLayout } from "../_app";
 import FileItem from "../../components/FileViewer/FileItem";
 import { motion } from "framer-motion";
+import Controls from "../../components/FileViewer/Controls";
 
 const fileListVariants = {
   hidden: { opacity: 0 },
@@ -20,7 +21,7 @@ const fileListVariants = {
 const Files: NextPageWithLayout = () => {
   const { query } = useRouter();
 
-  const { data, isLoading } = trpc.useQuery([
+  const { data, isLoading } = useQuery([
     "files.getAll",
     {
       id: query.fileId as string,
@@ -29,8 +30,9 @@ const Files: NextPageWithLayout = () => {
 
   return (
     <div className="my-32">
-      <main className="relative z-10">
+      <main className="relative z-10 pt-32">
         {/* <pre>{JSON.stringify(data, null, 2)}</pre> */}
+        <Controls />
         {isLoading ? (
           <Ring color="#dddddd" />
         ) : (
@@ -38,7 +40,7 @@ const Files: NextPageWithLayout = () => {
             variants={fileListVariants}
             initial="hidden"
             animate="show"
-            className="grid sm:grid-cols-3 gap-5"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10"
           >
             {data?.files.map(({ key, url, contentLength, contentType }) => (
               <FileItem

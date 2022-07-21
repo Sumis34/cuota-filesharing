@@ -20,8 +20,6 @@ export default function PDFViewer({ path }: { path: string }) {
     setLoading(Math.round((data.loaded * 100) / data.total));
   };
 
-  console.log(loading);
-
   return (
     <div className="px-10 py-5 h-full" ref={parent}>
       <Document

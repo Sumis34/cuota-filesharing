@@ -56,12 +56,12 @@ export default function Uploader() {
     onSuccess: async (data) => {
       const { urls, uploadId } = data;
 
-      if (!files) return console.log("No file to upload");
+      if (!files) return console.error("No file to upload");
 
       const res = await uploadFiles(files, urls);
 
       if (!res.every((r) => r?.status === 200))
-        console.log("upload of some files may have failed");
+        console.error("upload of some files may have failed");
 
       setDownloadUrl(`${window.location.origin}/files/${uploadId}`);
       setStep(2);
@@ -115,7 +115,7 @@ export default function Uploader() {
   //FIXME: #3 The upload controller dose not correctly abort the upload
   const cancelUpload = () => {
     uploadController.abort();
-    console.log("Upload aborted");
+    console.error("Upload aborted");
     setStep(0);
     reset();
   };
