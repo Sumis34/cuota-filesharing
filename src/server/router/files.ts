@@ -6,13 +6,14 @@ import {
   GetObjectCommand,
   HeadObjectCommand,
   _Object,
+  GetObjectCommandInput,
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 const getFiles = async (contents: _Object[], totalSize: number) => {
   return await Promise.all(
     contents?.map(async ({ Key }) => {
-      const params = {
+      const params: GetObjectCommandInput = {
         Bucket: process.env.S3_BUCKET,
         Key,
       };
