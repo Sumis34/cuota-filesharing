@@ -22,8 +22,8 @@ const fileListVariants = {
 
 const downloadAll = async (remoteFiles: RemoteFiles | undefined) => {
   if (!remoteFiles) return;
-  downloadZip(remoteFiles, (loaded, total, fileCount, filesUploaded) =>
-    console.log(loaded, total, fileCount, filesUploaded)
+  downloadZip(remoteFiles, (loaded, total, fileCount) =>
+    console.log(loaded, total, fileCount)
   );
 };
 
