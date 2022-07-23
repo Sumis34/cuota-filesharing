@@ -15,6 +15,7 @@
     "@hookform/resolvers": "^2.9.4",
     "@next-auth/prisma-adapter": "^1.0.3",
     "@prisma/client": "^4.0.0",
+    "@radix-ui/react-toast": "^1.0.0",
     "@trpc/client": "^9.25.3",
     "@trpc/next": "^9.25.3",
     "@trpc/react": "^9.25.3",

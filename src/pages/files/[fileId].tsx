@@ -7,8 +7,9 @@ import { NextPageWithLayout } from "../_app";
 import FileItem from "../../components/FileViewer/FileItem";
 import { motion } from "framer-motion";
 import Controls from "../../components/FileViewer/Controls";
-import { inferProcedureOutput } from "@trpc/server";
+import * as Toast from "@radix-ui/react-toast";
 import downloadZip, { RemoteFiles } from "../../utils/download/downloadZip";
+import { useState } from "react";
 
 const fileListVariants = {
   hidden: { opacity: 0 },
@@ -27,6 +28,7 @@ const downloadAll = async (remoteFiles: RemoteFiles | undefined) => {
 
 const Files: NextPageWithLayout = () => {
   const { query } = useRouter();
+  const [open, setOpen] = useState(true);
 
   const { data, isLoading } = useQuery([
     "files.getAll",
@@ -36,42 +38,53 @@ const Files: NextPageWithLayout = () => {
   ]);
 
   return (
-    <div className="my-32">
-      <main className="relative z-10 pt-32">
-        {/* <pre>{JSON.stringify(data, null, 2)}</pre> */}
-        <Button onClick={() => downloadAll(data?.files)}>All</Button>
-        <Controls />
-        {isLoading ? (
-          <Ring color="#dddddd" />
-        ) : (
-          <motion.ul
-            variants={fileListVariants}
-            initial="hidden"
-            animate="show"
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10"
-          >
-            {data?.files.map(({ key, url, contentLength, contentType }) => (
-              <FileItem
-                name={key?.split("/").at(-1) || ""}
-                type={contentType}
-                size={contentLength}
-                url={url}
-              />
-            ))}
-          </motion.ul>
-        )}
-      </main>
-      <img
-        src="/assets/images/mesh-gradient.png"
-        className="absolute top-[60%] right-[50%] w-full h-full blur-3xl rotate-90 opacity-70"
-        alt=""
-      />
-      <img
-        src="/assets/images/mesh-gradient.png"
-        className="absolute top-[20%] left-[70%] blur-2xl opacity-70 animate-pulse"
-        alt=""
-      />
-    </div>
+    <>
+      <Toast.Provider>
+        <Toast.Root className="bg-white border rounded-md m-5 p-5" open={open} onOpenChange={setOpen} duration={3000}>
+          <Toast.Title>Toast</Toast.Title>
+          <Toast.Description className="">test</Toast.Description>
+          <Toast.Action altText="nothing" />
+          <Toast.Close  />
+        </Toast.Root>
+        <Toast.Viewport className="fixed bottom-0 left-0 z-50" />
+      </Toast.Provider>
+      <div className="my-32">
+        <main className="relative z-10 pt-32">
+          {/* <pre>{JSON.stringify(data, null, 2)}</pre> */}
+          <Button onClick={() => downloadAll(data?.files)}>All</Button>
+          <Controls />
+          {isLoading ? (
+            <Ring color="#dddddd" />
+          ) : (
+            <motion.ul
+              variants={fileListVariants}
+              initial="hidden"
+              animate="show"
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10"
+            >
+              {data?.files.map(({ key, url, contentLength, contentType }) => (
+                <FileItem
+                  name={key?.split("/").at(-1) || ""}
+                  type={contentType}
+                  size={contentLength}
+                  url={url}
+                />
+              ))}
+            </motion.ul>
+          )}
+        </main>
+        <img
+          src="/assets/images/mesh-gradient.png"
+          className="absolute top-[60%] right-[50%] w-full h-full blur-3xl rotate-90 opacity-70"
+          alt=""
+        />
+        <img
+          src="/assets/images/mesh-gradient.png"
+          className="absolute top-[20%] left-[70%] blur-2xl opacity-70 animate-pulse"
+          alt=""
+        />
+      </div>
+    </>
   );
 };
 
