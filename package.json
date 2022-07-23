@@ -23,8 +23,10 @@
     "aws-sdk": "^2.1167.0",
     "axios": "^0.27.2",
     "date-fns": "^2.28.0",
+    "file-saver": "^2.0.5",
     "filenamify": "^5.1.1",
     "framer-motion": "^6.4.2",
+    "jszip": "^3.10.0",
     "mime-types": "^2.1.35",
     "next": "12.2.0",
     "next-auth": "^4.8.0",
@@ -43,6 +45,7 @@
     "zod": "^3.17.3"
   },
   "devDependencies": {
+    "@types/file-saver": "^2.0.5",
     "@types/mime-types": "^2.1.1",
     "@types/node": "18.0.0",
     "@types/react": "18.0.14",

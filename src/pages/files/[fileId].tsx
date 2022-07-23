@@ -2,11 +2,13 @@ import { Ring } from "@uiball/loaders";
 import { useRouter } from "next/router";
 import { getDefaultLayout } from "../../components/Layout/DefaultLayout";
 import Button from "../../components/UI/Button";
-import { useQuery } from "../../utils/trpc";
+import { InferQueryInput, InferQueryOutput, useQuery } from "../../utils/trpc";
 import { NextPageWithLayout } from "../_app";
 import FileItem from "../../components/FileViewer/FileItem";
 import { motion } from "framer-motion";
 import Controls from "../../components/FileViewer/Controls";
+import { inferProcedureOutput } from "@trpc/server";
+import downloadZip, { RemoteFiles } from "../../utils/download/downloadZip";
 
 const fileListVariants = {
   hidden: { opacity: 0 },
@@ -16,6 +18,11 @@ const fileListVariants = {
       staggerChildren: 0.2,
     },
   },
+};
+
+const downloadAll = async (remoteFiles: RemoteFiles | undefined) => {
+  if (!remoteFiles) return;
+  downloadZip(remoteFiles);
 };
 
 const Files: NextPageWithLayout = () => {
@@ -32,6 +39,7 @@ const Files: NextPageWithLayout = () => {
     <div className="my-32">
       <main className="relative z-10 pt-32">
         {/* <pre>{JSON.stringify(data, null, 2)}</pre> */}
+        <Button onClick={() => downloadAll(data?.files)}>All</Button>
         <Controls />
         {isLoading ? (
           <Ring color="#dddddd" />
