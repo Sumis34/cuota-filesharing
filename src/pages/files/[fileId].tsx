@@ -22,9 +22,7 @@ const fileListVariants = {
 
 const downloadAll = async (remoteFiles: RemoteFiles | undefined) => {
   if (!remoteFiles) return;
-  downloadZip(remoteFiles, (loaded, total, fileCount) =>
-    console.log(loaded, total, fileCount)
-  );
+  downloadZip(remoteFiles, (progressEvent) => console.log(progressEvent));
 };
 
 const Files: NextPageWithLayout = () => {

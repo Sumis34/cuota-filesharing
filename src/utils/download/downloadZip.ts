@@ -8,12 +8,14 @@ export type RemoteFiles = Pick<
   "files"
 >["files"];
 
-type DownloadProgress = (
-  loaded: number,
-  total: number,
-  fileCount: number,
-  progresses: number[]
-) => void;
+type DownloadProgress = (event: DownloadProgressEvent) => void;
+
+interface DownloadProgressEvent {
+  loaded: number;
+  total: number;
+  fileCount: number;
+  uploadedFiles: number;
+}
 
 const download = async (
   url: string,
@@ -32,6 +34,7 @@ const downloadMany = (
 ) => {
   const progresses: number[] = [];
   let totalBytes = 0;
+  let uploadedFiles = 0;
 
   return Promise.all(
     files.map(async (file, i) => {
@@ -40,15 +43,17 @@ const downloadMany = (
       const blob = await download(file.url, {
         onDownloadProgress: (e) => {
           progresses[i] = e.loaded;
-          const fileCount = progresses.length;        
-          
+          const fileCount = files.length;
+
+          if (e.loaded === file.contentLength) uploadedFiles++;
+
           if (!onDownloadProgress) return;
-          onDownloadProgress(
-            progresses.reduce((sum, acc) => sum + acc),
-            totalBytes,
-            fileCount,
-            progresses
-          );
+          onDownloadProgress({
+            loaded: progresses.reduce((sum, acc) => sum + acc),
+            total: totalBytes,
+            fileCount: fileCount,
+            uploadedFiles: uploadedFiles,
+          });
         },
       });
 
