@@ -30,16 +30,27 @@ const Files: NextPageWithLayout = () => {
   const { query } = useRouter();
   const [open, setOpen] = useState(true);
 
-  const { data, isLoading } = useQuery([
-    "files.getAll",
+  const { data, isLoading } = useQuery(
+    [
+      "files.getAll",
+      {
+        id: query.fileId as string,
+      },
+    ],
     {
-      id: query.fileId as string,
-    },
-  ]);
+      refetchOnWindowFocus: false,
+    }
+  );
 
   return (
     <>
-      <DownloadToast open={open} setOpen={setOpen} progress={45} filesUploaded={12} fileCount={27} />
+      <DownloadToast
+        open={open}
+        setOpen={setOpen}
+        progress={45}
+        filesUploaded={12}
+        fileCount={27}
+      />
       <div className="my-32">
         <main className="relative z-10 pt-32">
           {/* <pre>{JSON.stringify(data, null, 2)}</pre> */}

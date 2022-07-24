@@ -20,10 +20,14 @@ export default function DownloadToast({
         <AnimatePresence>
           {open && (
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="bg-white border rounded-md m-5 p-5"
+              initial={{ opacity: 0, x: -100, scaleX: 0 }}
+              animate={{ opacity: 1, x: 0, scaleX: 1 }}
+              exit={{ x: -100, scaleX: 0 }}
+              transition={{
+                ease: "easeInOut",
+                duration: 0.3,
+              }}
+              className="bg-white border rounded-md m-5 p-5 shadow-md"
             >
               <Toast.Title>Toast</Toast.Title>
               <Toast.Description className="">test</Toast.Description>
