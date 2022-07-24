@@ -7,6 +7,13 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { Upload } from "@prisma/client";
 import * as trpc from "@trpc/server";
 
+interface UploadURLOptions {
+  maxCacheAge: number;
+}
+
+const SEVEN_DAYS = 60 * 60 * 24 * 7;
+const FIVE_MINUTES = 60 * 5;
+
 const uploadInputSchema = z.object({
   names: z.string().min(3).max(100).array(),
   id: z.string().cuid().optional(),
@@ -14,11 +21,21 @@ const uploadInputSchema = z.object({
   close: z.boolean().optional(),
 });
 
-const getUploadUrls = async (uploadId: string, names: string[]) => {
-  return await Promise.all(names.map((name) => getUploadUrl(uploadId, name)));
+const getUploadUrls = async (
+  uploadId: string,
+  names: string[],
+  options?: UploadURLOptions
+) => {
+  return await Promise.all(
+    names.map((name) => getUploadUrl(uploadId, name, options))
+  );
 };
 
-const getUploadUrl = async (uploadId: string, name: string) => {
+const getUploadUrl = async (
+  uploadId: string,
+  name: string,
+  options?: UploadURLOptions
+) => {
   const safeName = filenamify(name, { replacement: "_" });
   return await getSignedUrl(
     s3,
@@ -26,6 +43,7 @@ const getUploadUrl = async (uploadId: string, name: string) => {
       Bucket: process.env.S3_BUCKET,
       Key: `${uploadId}/${safeName}`, //filename
       ContentDisposition: `attachment; filename=${name}`,
+      CacheControl: `max-age=${options?.maxCacheAge || 60}`,
     }),
     {
       expiresIn: 100,
@@ -55,7 +73,9 @@ export const exampleRouter = createRouter().mutation("request", {
         message: "Upload for this pool already closed",
       });
 
-    const urls = await getUploadUrls(upload.id, input.names);
+    const urls = await getUploadUrls(upload.id, input.names, {
+      maxCacheAge: input.close ? SEVEN_DAYS : FIVE_MINUTES,
+    });
 
     if (input.close)
       await prisma.upload.update({
