@@ -6,13 +6,11 @@ import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { Upload } from "@prisma/client";
 import * as trpc from "@trpc/server";
+import { FIVE_MINUTES, SEVEN_DAYS } from "../../utils/timeInSeconds";
 
 interface UploadURLOptions {
   maxCacheAge: number;
 }
-
-const SEVEN_DAYS = 60 * 60 * 24 * 7;
-const FIVE_MINUTES = 60 * 5;
 
 const uploadInputSchema = z.object({
   names: z.string().min(3).max(100).array(),

@@ -1,4 +1,5 @@
 import axios, { AxiosRequestConfig } from "axios";
+import { SEVEN_DAYS } from "./timeInSeconds";
 
 const uploadFile = async (
   file: File,
@@ -10,6 +11,7 @@ const uploadFile = async (
     headers: {
       "Content-Type": file.type,
       "Content-Disposition": `attachment; filename=${file.name}`,
+      "Cache-Control": `max-age=${SEVEN_DAYS}`,
     },
   };
   return await axios.put(url, file, config);

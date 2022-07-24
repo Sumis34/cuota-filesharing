@@ -9,6 +9,7 @@ import {
   GetObjectCommandInput,
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { SEVEN_DAYS } from "../../utils/timeInSeconds";
 
 const getFiles = async (contents: _Object[], totalSize: number) => {
   return await Promise.all(
@@ -16,6 +17,7 @@ const getFiles = async (contents: _Object[], totalSize: number) => {
       const params: GetObjectCommandInput = {
         Bucket: process.env.S3_BUCKET,
         Key,
+        ResponseCacheControl: `max-age=${SEVEN_DAYS}`,
       };
       const url = await getSignedUrl(s3, new GetObjectCommand(params));
 
