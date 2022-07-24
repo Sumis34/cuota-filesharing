@@ -2,14 +2,14 @@ import { Ring } from "@uiball/loaders";
 import { useRouter } from "next/router";
 import { getDefaultLayout } from "../../components/Layout/DefaultLayout";
 import Button from "../../components/UI/Button";
-import { InferQueryInput, InferQueryOutput, useQuery } from "../../utils/trpc";
+import { useQuery } from "../../utils/trpc";
 import { NextPageWithLayout } from "../_app";
 import FileItem from "../../components/FileViewer/FileItem";
 import { motion } from "framer-motion";
 import Controls from "../../components/FileViewer/Controls";
-import * as Toast from "@radix-ui/react-toast";
 import downloadZip, { RemoteFiles } from "../../utils/download/downloadZip";
 import { useState } from "react";
+import DownloadToast from "../../components/DownloadToast";
 
 const fileListVariants = {
   hidden: { opacity: 0 },
@@ -39,15 +39,7 @@ const Files: NextPageWithLayout = () => {
 
   return (
     <>
-      <Toast.Provider>
-        <Toast.Root className="bg-white border rounded-md m-5 p-5" open={open} onOpenChange={setOpen} duration={3000}>
-          <Toast.Title>Toast</Toast.Title>
-          <Toast.Description className="">test</Toast.Description>
-          <Toast.Action altText="nothing" />
-          <Toast.Close  />
-        </Toast.Root>
-        <Toast.Viewport className="fixed bottom-0 left-0 z-50" />
-      </Toast.Provider>
+      <DownloadToast open={open} setOpen={setOpen} progress={45} filesUploaded={12} fileCount={27} />
       <div className="my-32">
         <main className="relative z-10 pt-32">
           {/* <pre>{JSON.stringify(data, null, 2)}</pre> */}
