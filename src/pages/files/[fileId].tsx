@@ -7,7 +7,10 @@ import { NextPageWithLayout } from "../_app";
 import FileItem from "../../components/FileViewer/FileItem";
 import { motion } from "framer-motion";
 import Controls from "../../components/FileViewer/Controls";
-import downloadZip, { RemoteFiles } from "../../utils/download/downloadZip";
+import downloadZip, {
+  DownloadProgressEvent,
+  RemoteFiles,
+} from "../../utils/download/downloadZip";
 import { useState } from "react";
 import DownloadToast from "../../components/DownloadToast";
 
@@ -21,14 +24,10 @@ const fileListVariants = {
   },
 };
 
-const downloadAll = async (remoteFiles: RemoteFiles | undefined) => {
-  if (!remoteFiles) return;
-  downloadZip(remoteFiles, (progressEvent) => console.log(progressEvent));
-};
-
 const Files: NextPageWithLayout = () => {
   const { query } = useRouter();
   const [open, setOpen] = useState(true);
+  const [progress, setProgress] = useState<DownloadProgressEvent>();
 
   const { data, isLoading } = useQuery(
     [
@@ -42,6 +41,19 @@ const Files: NextPageWithLayout = () => {
     }
   );
 
+  const handleDownloadAll = async () => {
+    if (!data?.files) return;
+    setOpen(true);
+    await downloadZip(data?.files, (progressEvent) =>
+      setProgress(progressEvent)
+    );
+    setProgress(undefined);
+  };
+
+  const progressPercentage = progress
+    ? Math.round((progress?.loaded / progress?.total) * 100)
+    : 0;
+
   return (
     <>
       <DownloadToast
@@ -54,7 +66,8 @@ const Files: NextPageWithLayout = () => {
       <div className="my-32">
         <main className="relative z-10 pt-32">
           {/* <pre>{JSON.stringify(data, null, 2)}</pre> */}
-          <Button onClick={() => downloadAll(data?.files)}>All</Button>
+          {progressPercentage}
+          <Button onClick={() => handleDownloadAll()}>All</Button>
           <Controls />
           {isLoading ? (
             <Ring color="#dddddd" />
@@ -67,6 +80,7 @@ const Files: NextPageWithLayout = () => {
             >
               {data?.files.map(({ key, url, contentLength, contentType }) => (
                 <FileItem
+                  key={key}
                   name={key?.split("/").at(-1) || ""}
                   type={contentType}
                   size={contentLength}

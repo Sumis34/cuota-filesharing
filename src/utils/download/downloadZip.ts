@@ -9,7 +9,7 @@ export type RemoteFiles = Pick<
 
 export type DownloadProgress = (event: DownloadProgressEvent) => void;
 
-interface DownloadProgressEvent {
+export interface DownloadProgressEvent {
   loaded: number;
   total: number;
   fileCount: number;
