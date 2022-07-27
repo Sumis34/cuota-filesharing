@@ -1,4 +1,4 @@
-import { FormEvent, useCallback, useState } from "react";
+import { FormEvent, useCallback, useEffect, useState } from "react";
 import { useMutation } from "../../utils/trpc";
 import { calcTotalProgress, uploadFile } from "../../utils/uploader";
 import Button from "../UI/Button";
@@ -12,7 +12,8 @@ import IconButton from "../UI/Button/IconButton";
 import UploadLoadingPanel from "../UploadLoadingPanel";
 import { AnimatePresence, motion } from "framer-motion";
 import SharePanel from "../SharePanel";
-import { Orbit, Ring } from "@uiball/loaders";
+import { Ring } from "@uiball/loaders";
+import useAbortController from "../../hooks/useAbortController";
 
 const schema = z.object({
   message: z.string().max(150).optional(),
@@ -35,6 +36,7 @@ export default function Uploader() {
   const [downloadUrl, setDownloadUrl] = useState("");
   const [totalUploadSize, setTotalUploadSize] = useState(0);
   const [totalUploadProgress, setTotalUploadProgress] = useState(0);
+  const [uploadController, abortUpload] = useAbortController();
 
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
@@ -54,7 +56,6 @@ export default function Uploader() {
 
   //Tracks uploaded bytes of each file
   const uploadProgresses: number[] = [];
-  const uploadController = new AbortController();
 
   const getUploadUrlMutation = useMutation(["upload.request"], {
     onSuccess: async (data) => {
@@ -105,7 +106,7 @@ export default function Uploader() {
             calcTotalProgress(uploadProgresses, totalSize)
           );
         },
-        signal: uploadController.signal,
+        signal: uploadController?.signal,
       });
     });
     return await Promise.all(promises);
@@ -121,11 +122,12 @@ export default function Uploader() {
     setFiles([]);
     setFetchingUploadUrls(false);
     setTotalUploadProgress(0);
+    setTotalUploadSize(0)
   };
 
   //FIXME: #3 The upload controller dose not correctly abort the upload
   const cancelUpload = () => {
-    uploadController.abort();
+    abortUpload("upload aborted by user");
     console.error("Upload aborted");
     setStep("select");
     reset();
