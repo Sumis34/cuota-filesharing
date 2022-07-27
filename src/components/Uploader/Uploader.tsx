@@ -12,6 +12,7 @@ import IconButton from "../UI/Button/IconButton";
 import UploadLoadingPanel from "../UploadLoadingPanel";
 import { AnimatePresence, motion } from "framer-motion";
 import SharePanel from "../SharePanel";
+import { Orbit, Ring } from "@uiball/loaders";
 
 const schema = z.object({
   message: z.string().max(150).optional(),
@@ -27,6 +28,7 @@ const stepAnimationTransition = { duration: 0.3, delay: 0.2 };
 
 export default function Uploader() {
   const [files, setFiles] = useState<File[] | undefined | null>(null);
+  const [fetchingUploadUrls, setFetchingUploadUrls] = useState(false);
   const [step, setStep] = useState(0);
   const [downloadUrl, setDownloadUrl] = useState("");
   const [totalUploadSize, setTotalUploadSize] = useState(0);
@@ -58,6 +60,8 @@ export default function Uploader() {
 
       if (!files) return console.error("No file to upload");
 
+      setStep(1);
+
       const res = await uploadFiles(files, urls);
 
       if (!res.every((r) => r?.status === 200))
@@ -71,12 +75,13 @@ export default function Uploader() {
 
   const onSubmit = handleSubmit(async (data) => {
     if (!files || files.length === 0) return;
+
+    setFetchingUploadUrls(true);
     getUploadUrlMutation.mutate({
       names: files.map((file) => file.name),
       message: data.message,
       close: true,
     });
-    setStep(1);
   });
 
   //Uploads all files and tracks their progress
@@ -109,6 +114,7 @@ export default function Uploader() {
 
   const reset = () => {
     setFiles([]);
+    setFetchingUploadUrls(false);
     setTotalUploadProgress(0);
   };
 
@@ -166,8 +172,13 @@ export default function Uploader() {
             )}
             <label className="font-serif font-bold text-lg">Message</label>
             <textarea className="resize-none h-28" {...register("message")} />
-            <Button variant="primary" className="mt-3">
+            <Button
+              disabled={fetchingUploadUrls}
+              variant="primary"
+              className="mt-3 flex items-center gap-3"
+            >
               Upload
+              {fetchingUploadUrls && <Ring color="#fff" size={20} />}
             </Button>
           </motion.form>
         ) : step === 1 ? (

@@ -1,6 +1,7 @@
 import Link from "next/link";
+import { ButtonHTMLAttributes } from "react";
 
-interface ButtonProps {
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   onClick?: () => void;
   variant?: "primary" | "secondary" | "tertiary" | "quaternary";
   children: React.ReactNode;
@@ -16,7 +17,7 @@ export default function Button({
   href,
   ...props
 }: ButtonProps) {
-  const styles = `px-6 py-1 w-fit text-white font-serif rounded-lg text-lg font-bold cursor-pointer active:translate-y-0.5 transition-all ${className} ${
+  const styles = `px-6 py-1 w-fit text-white font-serif rounded-lg text-lg font-bold cursor-pointer enabled:active:translate-y-0.5 transition-all disabled:opacity-25 disabled:cursor-default ${className} ${
     variant === "primary"
       ? "bg-gradient-to-t from-indigo-500 to-indigo-300"
       : variant === "secondary"
