@@ -122,10 +122,9 @@ export default function Uploader() {
     setFiles([]);
     setFetchingUploadUrls(false);
     setTotalUploadProgress(0);
-    setTotalUploadSize(0)
+    setTotalUploadSize(0);
   };
 
-  //FIXME: #3 The upload controller dose not correctly abort the upload
   const cancelUpload = () => {
     abortUpload("upload aborted by user");
     console.error("Upload aborted");
