@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { FiCopy } from "react-icons/fi";
+import { HiCheck } from "react-icons/hi";
 import useTimeoutToggle from "../../hooks/useTimeoutToggle";
 import IconButton from "../UI/Button/IconButton";
 
@@ -40,9 +41,13 @@ export default function TextCopy({ text }: { text: string }) {
         <button
           onClick={() => copyToClipboard(text)}
           type="button"
-          className="inline-flex items-center px-3 rounded-r-xl bg-indigo-100"
+          className="inline-flex items-center px-3 rounded-r-xl bg-indigo-100 border-2 border-indigo-200 border-l-0"
         >
-          <FiCopy className="text-xl group-hover:text-indigo-500 transition-all text-indigo-800" />
+          {copied ? (
+            <HiCheck className="text-xl group-hover:text-indigo-500 transition-all text-indigo-800" />
+          ) : (
+            <FiCopy className="text-xl group-hover:text-indigo-500 transition-all text-indigo-800" />
+          )}
         </button>
       </div>
     </div>
