@@ -1,0 +1,50 @@
+import { AnimatePresence, motion } from "framer-motion";
+import { FiCopy } from "react-icons/fi";
+import useTimeoutToggle from "../../hooks/useTimeoutToggle";
+import IconButton from "../UI/Button/IconButton";
+
+export default function TextCopy({ text }: { text: string }) {
+  const [copied, setCopied] = useTimeoutToggle({ ms: 2000 });
+  const copyToClipboard = async (value: string) => {
+    await navigator.clipboard.writeText(value);
+    setCopied(true);
+  };
+
+  const handleFocus = (event: any) => event.target.select();
+
+  return (
+    <div className="relative">
+      <AnimatePresence>
+        {copied && (
+          <motion.div
+            initial={{ opacity: 0, y: -30 }}
+            animate={{ opacity: 1, y: -40 }}
+            exit={{ opacity: 0, y: -60 }}
+            transition={{ duration: 0.2 }}
+            className="absolute inset-0 flex justify-center"
+          >
+            <span className="mx-auto w-fit bg-green-200 text-green-800 px-2 absolute rounded-md z-40 whitespace-nowrap py-1 shadow-md shadow-black/5">
+              Copied 🥳
+            </span>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      <div className="flex">
+        <input
+          value={text}
+          className="select-all font-mono px-1 -py-2 w-full rounded-r-none border-r-0"
+          type="text"
+          readOnly
+          onFocus={handleFocus}
+        />
+        <button
+          onClick={() => copyToClipboard(text)}
+          type="button"
+          className="inline-flex items-center px-3 rounded-r-xl bg-indigo-100"
+        >
+          <FiCopy className="text-xl group-hover:text-indigo-500 transition-all text-indigo-800" />
+        </button>
+      </div>
+    </div>
+  );
+}

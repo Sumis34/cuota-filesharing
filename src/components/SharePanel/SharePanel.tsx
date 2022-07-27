@@ -12,6 +12,7 @@ import Image from "next/image";
 import Illustration from "../../../public/assets/images/two-athletes-posing-in-action.png";
 import { HiQrcode } from "react-icons/hi";
 import QRPopover from "../QRPopover";
+import TextCopy from "../TextCopy";
 
 interface SharePanelProps {
   url: string;
@@ -52,40 +53,12 @@ export default function SharePanel({ url, setStep }: SharePanelProps) {
         </p>
       </div>
       <div className="flex gap-3 justify-between mt-2 mb-3">
-        <input
-          value={url}
-          className="select-all font-mono px-1 -py-2 w-full"
-          type="text"
-          readOnly
-          onFocus={handleFocus}
-        />
+        <TextCopy text={url} />
         <QRPopover url={url}>
           <IconButton className="aspect-square px-3 group hidden sm:block">
             <HiQrcode className="text-xl group-hover:text-indigo-500 transition-all text-indigo-800" />
           </IconButton>
         </QRPopover>
-        <div className="relative">
-          <AnimatePresence>
-            {copied && (
-              <motion.span
-                initial={{ opacity: 0, y: -30 }}
-                animate={{ opacity: 1, y: -40 }}
-                exit={{ opacity: 0, y: -60 }}
-                style={{ x: "-25%" }}
-                transition={{ duration: 0.2 }}
-                className="bg-green-200 text-green-800 px-2 absolute rounded-md z-40 whitespace-nowrap py-1 shadow-md shadow-black/5"
-              >
-                Copied 🥳
-              </motion.span>
-            )}
-          </AnimatePresence>
-          <IconButton
-            className="aspect-square px-3 group"
-            onClick={() => copyToClipboard(url)}
-          >
-            <FiCopy className="text-xl group-hover:text-indigo-500 transition-all text-indigo-800" />
-          </IconButton>
-        </div>
       </div>
       <Button onClick={() => setStep("select")} variant="primary" className="">
         Share more
