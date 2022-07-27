@@ -24,12 +24,14 @@ const stepAnimationVariants = {
   exit: { opacity: 0, x: "10%" },
 };
 
+export type Step = "success" | "loading" | "select";
+
 const stepAnimationTransition = { duration: 0.3, delay: 0.2 };
 
 export default function Uploader() {
   const [files, setFiles] = useState<File[] | undefined | null>(null);
   const [fetchingUploadUrls, setFetchingUploadUrls] = useState(false);
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState<Step>("select");
   const [downloadUrl, setDownloadUrl] = useState("");
   const [totalUploadSize, setTotalUploadSize] = useState(0);
   const [totalUploadProgress, setTotalUploadProgress] = useState(0);
@@ -60,7 +62,7 @@ export default function Uploader() {
 
       if (!files) return console.error("No file to upload");
 
-      setStep(1);
+      setStep("loading");
 
       const res = await uploadFiles(files, urls);
 
@@ -68,8 +70,11 @@ export default function Uploader() {
         console.error("upload of some files may have failed");
 
       setDownloadUrl(`${window.location.origin}/files/${uploadId}`);
-      setStep(2);
+      setStep("success");
       reset();
+    },
+    onSettled: () => {
+      setFetchingUploadUrls(false);
     },
   });
 
@@ -122,14 +127,14 @@ export default function Uploader() {
   const cancelUpload = () => {
     uploadController.abort();
     console.error("Upload aborted");
-    setStep(0);
+    setStep("select");
     reset();
   };
 
   return (
     <div className="card w-80 p-5">
       <AnimatePresence exitBeforeEnter>
-        {step === 0 ? (
+        {step === "select" ? (
           <motion.form
             key="upload-form"
             initial="initial"
@@ -181,7 +186,7 @@ export default function Uploader() {
               {fetchingUploadUrls && <Ring color="#fff" size={20} />}
             </Button>
           </motion.form>
-        ) : step === 1 ? (
+        ) : step === "loading" ? (
           <UploadLoadingPanel
             totalBytes={totalUploadSize}
             progress={totalUploadProgress}

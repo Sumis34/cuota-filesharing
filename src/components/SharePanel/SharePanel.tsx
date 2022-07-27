@@ -3,19 +3,19 @@ import Button from "../UI/Button";
 import IconButton from "../UI/Button/IconButton";
 import { FiCopy } from "react-icons/fi";
 import {
+  Step,
   stepAnimationTransition,
   stepAnimationVariants,
 } from "../Uploader/Uploader";
 import useTimeoutToggle from "../../hooks/useTimeoutToggle";
 import Image from "next/image";
 import Illustration from "../../../public/assets/images/two-athletes-posing-in-action.png";
-import { useState } from "react";
 import { HiQrcode } from "react-icons/hi";
 import QRPopover from "../QRPopover";
 
 interface SharePanelProps {
   url: string;
-  setStep: (step: number) => void;
+  setStep: (step: Step) => void;
 }
 
 const handleFocus = (event: any) => event.target.select();
@@ -87,7 +87,7 @@ export default function SharePanel({ url, setStep }: SharePanelProps) {
           </IconButton>
         </div>
       </div>
-      <Button onClick={() => setStep(0)} variant="primary" className="">
+      <Button onClick={() => setStep("select")} variant="primary" className="">
         Share more
       </Button>
     </motion.div>
