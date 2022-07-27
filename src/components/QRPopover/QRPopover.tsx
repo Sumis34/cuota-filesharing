@@ -17,14 +17,15 @@ export default function QRPopover({
       <Popover.Trigger onClick={() => setOpen(open)}>
         {children}
       </Popover.Trigger>
-      <Popover.Content forceMount asChild>
+      <Popover.Content alignOffset={5} forceMount asChild>
         {open && (
           <>
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 10 }}
-              className="p-5 bg-white shadow-lg rounded-lg"
+              transition={{ ease: "easeInOut", duration: 0.2 }}
+              className="p-5 bg-white shadow-lg rounded-xl"
             >
               <QRCodeSVG value={url} fgColor={"#34393d"} />
               <Popover.Arrow className="fill-white" />
