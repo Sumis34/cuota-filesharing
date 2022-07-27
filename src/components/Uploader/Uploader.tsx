@@ -1,4 +1,4 @@
-import { FormEvent, useCallback, useState } from "react";
+import { FormEvent, useCallback, useEffect, useState } from "react";
 import { useMutation } from "../../utils/trpc";
 import { calcTotalProgress, uploadFile } from "../../utils/uploader";
 import Button from "../UI/Button";
@@ -12,7 +12,8 @@ import IconButton from "../UI/Button/IconButton";
 import UploadLoadingPanel from "../UploadLoadingPanel";
 import { AnimatePresence, motion } from "framer-motion";
 import SharePanel from "../SharePanel";
-import { Orbit, Ring } from "@uiball/loaders";
+import { Ring } from "@uiball/loaders";
+import useAbortController from "../../hooks/useAbortController";
 
 const schema = z.object({
   message: z.string().max(150).optional(),
@@ -24,15 +25,18 @@ const stepAnimationVariants = {
   exit: { opacity: 0, x: "10%" },
 };
 
+export type Step = "success" | "loading" | "select";
+
 const stepAnimationTransition = { duration: 0.3, delay: 0.2 };
 
 export default function Uploader() {
   const [files, setFiles] = useState<File[] | undefined | null>(null);
   const [fetchingUploadUrls, setFetchingUploadUrls] = useState(false);
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState<Step>("select");
   const [downloadUrl, setDownloadUrl] = useState("");
   const [totalUploadSize, setTotalUploadSize] = useState(0);
   const [totalUploadProgress, setTotalUploadProgress] = useState(0);
+  const [uploadController, abortUpload] = useAbortController();
 
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
@@ -52,7 +56,6 @@ export default function Uploader() {
 
   //Tracks uploaded bytes of each file
   const uploadProgresses: number[] = [];
-  const uploadController = new AbortController();
 
   const getUploadUrlMutation = useMutation(["upload.request"], {
     onSuccess: async (data) => {
@@ -60,7 +63,7 @@ export default function Uploader() {
 
       if (!files) return console.error("No file to upload");
 
-      setStep(1);
+      setStep("loading");
 
       const res = await uploadFiles(files, urls);
 
@@ -68,8 +71,11 @@ export default function Uploader() {
         console.error("upload of some files may have failed");
 
       setDownloadUrl(`${window.location.origin}/files/${uploadId}`);
-      setStep(2);
+      setStep("success");
       reset();
+    },
+    onSettled: () => {
+      setFetchingUploadUrls(false);
     },
   });
 
@@ -100,7 +106,7 @@ export default function Uploader() {
             calcTotalProgress(uploadProgresses, totalSize)
           );
         },
-        signal: uploadController.signal,
+        signal: uploadController?.signal,
       });
     });
     return await Promise.all(promises);
@@ -116,20 +122,21 @@ export default function Uploader() {
     setFiles([]);
     setFetchingUploadUrls(false);
     setTotalUploadProgress(0);
+    setTotalUploadSize(0)
   };
 
   //FIXME: #3 The upload controller dose not correctly abort the upload
   const cancelUpload = () => {
-    uploadController.abort();
+    abortUpload("upload aborted by user");
     console.error("Upload aborted");
-    setStep(0);
+    setStep("select");
     reset();
   };
 
   return (
     <div className="card w-80 p-5">
       <AnimatePresence exitBeforeEnter>
-        {step === 0 ? (
+        {step === "select" ? (
           <motion.form
             key="upload-form"
             initial="initial"
@@ -181,7 +188,7 @@ export default function Uploader() {
               {fetchingUploadUrls && <Ring color="#fff" size={20} />}
             </Button>
           </motion.form>
-        ) : step === 1 ? (
+        ) : step === "loading" ? (
           <UploadLoadingPanel
             totalBytes={totalUploadSize}
             progress={totalUploadProgress}
