@@ -9,6 +9,9 @@ import {
 import useTimeoutToggle from "../../hooks/useTimeoutToggle";
 import Image from "next/image";
 import Illustration from "../../../public/assets/images/two-athletes-posing-in-action.png";
+import { useState } from "react";
+import { HiQrcode } from "react-icons/hi";
+import QRPopover from "../QRPopover";
 
 interface SharePanelProps {
   url: string;
@@ -56,6 +59,11 @@ export default function SharePanel({ url, setStep }: SharePanelProps) {
           readOnly
           onFocus={handleFocus}
         />
+        <QRPopover url={url}>
+          <IconButton className="aspect-square px-3 group hidden sm:block">
+            <HiQrcode className="text-xl group-hover:text-indigo-500 transition-all text-indigo-800" />
+          </IconButton>
+        </QRPopover>
         <div className="relative">
           <AnimatePresence>
             {copied && (
@@ -79,11 +87,7 @@ export default function SharePanel({ url, setStep }: SharePanelProps) {
           </IconButton>
         </div>
       </div>
-      <Button
-        onClick={() => setStep(0)}
-        variant="primary"
-        className=""
-      >
+      <Button onClick={() => setStep(0)} variant="primary" className="">
         Share more
       </Button>
     </motion.div>

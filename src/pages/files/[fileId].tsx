@@ -59,14 +59,13 @@ const Files: NextPageWithLayout = () => {
       <DownloadToast
         open={open}
         setOpen={setOpen}
-        progress={45}
-        filesUploaded={12}
-        fileCount={27}
+        progress={progressPercentage}
+        filesUploaded={progress?.uploadedFiles || 0}
+        fileCount={progress?.fileCount || 0}
       />
       <div className="my-32">
         <main className="relative z-10 pt-32">
           {/* <pre>{JSON.stringify(data, null, 2)}</pre> */}
-          {progressPercentage}
           <Button onClick={() => handleDownloadAll()}>All</Button>
           <Controls />
           {isLoading ? (

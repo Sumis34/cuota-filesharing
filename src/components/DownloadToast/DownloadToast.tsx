@@ -14,9 +14,13 @@ export default function DownloadToast({
   filesUploaded: number;
   fileCount: number;
 }) {
+  const handleOpenChange = (open: boolean) => {
+    console.log(open);
+  };
+
   return (
     <Toast.Provider>
-      <Toast.Root open={open} onOpenChange={setOpen} duration={3000} forceMount>
+      <Toast.Root open={open} onOpenChange={handleOpenChange} forceMount>
         <AnimatePresence>
           {open && (
             <motion.div
@@ -30,7 +34,17 @@ export default function DownloadToast({
               className="bg-white border rounded-md m-5 p-5 shadow-md"
             >
               <Toast.Title>Toast</Toast.Title>
-              <Toast.Description className="">test</Toast.Description>
+              <Toast.Description className="">
+                test
+                <motion.div
+                  className="w-12 h-12"
+                  animate={{
+                    background: `conic-gradient(red ${progress}, gray 0deg);`,
+                  }}
+                >
+                  test
+                </motion.div>
+              </Toast.Description>
               <Toast.Action altText="nothing" />
               <Toast.Close />
             </motion.div>
