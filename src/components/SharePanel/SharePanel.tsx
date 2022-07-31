@@ -20,12 +20,6 @@ interface SharePanelProps {
 }
 
 export default function SharePanel({ url, setStep }: SharePanelProps) {
-  const [copied, setCopied] = useTimeoutToggle({ ms: 2000 });
-  const copyToClipboard = async (value: string) => {
-    await navigator.clipboard.writeText(value);
-    setCopied(true);
-  };
-
   return (
     <motion.div
       key="upload-share"

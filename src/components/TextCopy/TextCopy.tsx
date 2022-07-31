@@ -1,14 +1,40 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { FiCopy } from "react-icons/fi";
-import { HiCheck } from "react-icons/hi";
+import { HiCheck, HiShare } from "react-icons/hi";
 import useTimeoutToggle from "../../hooks/useTimeoutToggle";
-import IconButton from "../UI/Button/IconButton";
+import deviceType from "../../utils/deviceType";
 
-export default function TextCopy({ text }: { text: string }) {
+interface TextCopyProps {
+  text: string;
+  /**
+   * useShareOnMobile: if true uses share API on mobile devices
+   */
+  useShareOnMobile?: boolean;
+}
+
+export default function TextCopy({
+  text,
+  useShareOnMobile = true,
+}: TextCopyProps) {
   const [copied, setCopied] = useTimeoutToggle({ ms: 2000 });
-  const copyToClipboard = async (value: string) => {
-    await navigator.clipboard.writeText(value);
-    setCopied(true);
+
+  const device = deviceType();
+
+  const supportsShare = !!navigator.share;
+  const useShareAPI =
+    useShareOnMobile &&
+    supportsShare &&
+    (device === "mobile" || device === "tablet");
+
+  const handelClick = async () => {
+    if (navigator.share && useShareOnMobile)
+      await navigator.share({
+        url: text,
+      });
+    else {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+    }
   };
 
   const handleFocus = (event: any) => event.target.select();
@@ -39,12 +65,14 @@ export default function TextCopy({ text }: { text: string }) {
           onFocus={handleFocus}
         />
         <button
-          onClick={() => copyToClipboard(text)}
+          onClick={() => handelClick()}
           type="button"
           className="inline-flex items-center px-3 rounded-r-xl bg-indigo-100 border-2 border-indigo-200 border-l-0"
         >
           {copied ? (
             <HiCheck className="text-xl group-hover:text-indigo-500 transition-all text-indigo-800" />
+          ) : useShareAPI ? (
+            <HiShare className="text-xl group-hover:text-indigo-500 transition-all text-indigo-800" />
           ) : (
             <FiCopy className="text-xl group-hover:text-indigo-500 transition-all text-indigo-800" />
           )}
