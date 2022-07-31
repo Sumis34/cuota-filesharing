@@ -27,7 +27,7 @@ export default function TextCopy({
     (device === "mobile" || device === "tablet");
 
   const handelClick = async () => {
-    if (navigator.share && useShareOnMobile)
+    if (useShareAPI)
       await navigator.share({
         url: text,
       });
@@ -67,7 +67,7 @@ export default function TextCopy({
         <button
           onClick={() => handelClick()}
           type="button"
-          className="inline-flex items-center px-3 rounded-r-xl bg-indigo-100 border-2 border-indigo-200 border-l-0"
+          className="inline-flex items-center px-3 rounded-r-xl bg-indigo-100 border-2 border-indigo-200"
         >
           {copied ? (
             <HiCheck className="text-xl group-hover:text-indigo-500 transition-all text-indigo-800" />

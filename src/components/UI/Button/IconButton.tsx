@@ -22,6 +22,6 @@ export default function IconButton({
         : "bg-gray-200 hover:bg-gray-200/60"
     }`,
     onClick,
-    children,
+    children: <>{children}</>,
   });
 }
