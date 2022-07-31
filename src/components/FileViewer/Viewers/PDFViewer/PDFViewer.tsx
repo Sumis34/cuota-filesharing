@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { Document, LoadingProcessData, Page, pdfjs } from "react-pdf";
-import Button from "../UI/Button";
+import Button from "../../../UI/Button";
 import { motion } from "framer-motion";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
