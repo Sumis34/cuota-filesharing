@@ -1,5 +1,6 @@
 import * as Toast from "@radix-ui/react-toast";
 import { AnimatePresence, motion } from "framer-motion";
+import RadialProgress from "../UI/RadialProgress";
 
 export default function DownloadToast({
   open,
@@ -35,15 +36,8 @@ export default function DownloadToast({
             >
               <Toast.Title>Toast</Toast.Title>
               <Toast.Description className="">
-                test
-                <motion.div
-                  className="w-12 h-12"
-                  animate={{
-                    background: `conic-gradient(red ${progress}, gray 0deg);`,
-                  }}
-                >
-                  test
-                </motion.div>
+                {progress}%
+                <RadialProgress progress={progress} />
               </Toast.Description>
               <Toast.Action altText="nothing" />
               <Toast.Close />

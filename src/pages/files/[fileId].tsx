@@ -11,7 +11,7 @@ import downloadZip, {
   DownloadProgressEvent,
   RemoteFiles,
 } from "../../utils/download/downloadZip";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DownloadToast from "../../components/DownloadToast";
 
 const fileListVariants = {
@@ -26,7 +26,7 @@ const fileListVariants = {
 
 const Files: NextPageWithLayout = () => {
   const { query } = useRouter();
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const [progress, setProgress] = useState<DownloadProgressEvent>();
 
   const { data, isLoading } = useQuery(
