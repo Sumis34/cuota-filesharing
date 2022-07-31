@@ -14,14 +14,17 @@ export default function IconButton({
   as = "button",
   variant = "primary",
 }: IconButtonProps) {
-  return createElement(as, {
-    type: as === "button" ? "button" : undefined,
-    className: `active:translate-y-0.5 transition-all p-1 rounded-md ${className} ${
-      variant === "primary"
-        ? "bg-indigo-100 hover:bg-indigo-100/70"
-        : "bg-gray-200 hover:bg-gray-200/60"
-    }`,
-    onClick,
-    children: <>{children}</>,
-  });
+  return createElement(
+    as,
+    {
+      type: as === "button" ? "button" : undefined,
+      className: `active:translate-y-0.5 transition-all p-1 rounded-md ${className} ${
+        variant === "primary"
+          ? "bg-indigo-100 hover:bg-indigo-100/70"
+          : "bg-gray-200 hover:bg-gray-200/60"
+      }`,
+      onClick,
+    },
+    children
+  );
 }
