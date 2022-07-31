@@ -55,7 +55,7 @@ export default function SharePanel({ url, setStep }: SharePanelProps) {
       <div className="flex gap-3 justify-between mt-2 mb-3">
         <TextCopy text={url} />
         <QRPopover url={url}>
-          <IconButton className="aspect-square px-3 group hidden sm:block">
+          <IconButton as="div" className="aspect-square px-3 group hidden sm:block">
             <HiQrcode className="text-xl group-hover:text-indigo-500 transition-all text-indigo-800" />
           </IconButton>
         </QRPopover>
