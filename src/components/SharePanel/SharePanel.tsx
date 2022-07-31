@@ -19,8 +19,6 @@ interface SharePanelProps {
   setStep: (step: Step) => void;
 }
 
-const handleFocus = (event: any) => event.target.select();
-
 export default function SharePanel({ url, setStep }: SharePanelProps) {
   const [copied, setCopied] = useTimeoutToggle({ ms: 2000 });
   const copyToClipboard = async (value: string) => {
@@ -55,8 +53,11 @@ export default function SharePanel({ url, setStep }: SharePanelProps) {
       <div className="flex gap-3 justify-between mt-2 mb-3">
         <TextCopy text={url} />
         <QRPopover url={url}>
-          <IconButton as="div" className="aspect-square px-3 group hidden sm:block">
-            <HiQrcode className="text-xl group-hover:text-indigo-500 transition-all text-indigo-800" />
+          <IconButton
+            as="div"
+            className="h-full aspect-square px-2 group hidden sm:flex items-center justify-center"
+          >
+            <HiQrcode className="text-2xl group-hover:text-indigo-500 transition-all text-indigo-800" />
           </IconButton>
         </QRPopover>
       </div>
