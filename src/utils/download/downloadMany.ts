@@ -1,3 +1,4 @@
+import getNameFromKey from "../getNameFromKey";
 import { download } from "./download";
 import { RemoteFiles, DownloadProgress } from "./downloadZip";
 
@@ -18,11 +19,9 @@ export const downloadMany = (
           progresses[i] = e.loaded;
           const fileCount = files.length;
 
-          if (e.loaded === file.contentLength)
-            uploadedFiles++;
+          if (e.loaded === file.contentLength) uploadedFiles++;
 
-          if (!onDownloadProgress)
-            return;
+          if (!onDownloadProgress) return;
           onDownloadProgress({
             loaded: progresses.reduce((sum, acc) => sum + acc),
             total: totalBytes,
@@ -32,7 +31,7 @@ export const downloadMany = (
         },
       });
 
-      const name = file.key?.split("/").at(-1) || "file_" + i;
+      const name = getNameFromKey(file.key);
       return new File([blob], name);
     })
   );

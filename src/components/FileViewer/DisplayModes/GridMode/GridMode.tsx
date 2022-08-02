@@ -1,8 +1,9 @@
 import { DisplayModeProps } from "..";
 import FileItem from "../../FileItem";
 import { motion } from "framer-motion";
+import getNameFromKey from "../../../../utils/getNameFromKey";
 
-const fileListVariants = {
+export const fileListVariants = {
   hidden: { opacity: 0 },
   show: {
     opacity: 1,
@@ -23,7 +24,7 @@ export default function GridMode({ files }: DisplayModeProps) {
       {files.map(({ key, url, contentLength, contentType }) => (
         <FileItem
           key={key}
-          name={key?.split("/").at(-1) || ""}
+          name={getNameFromKey(key)}
           type={contentType}
           size={contentLength}
           url={url}
