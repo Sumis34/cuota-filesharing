@@ -1,8 +1,7 @@
 import * as Popover from "@radix-ui/react-popover";
 import { ReactNode, useState } from "react";
-import { HiX } from "react-icons/hi";
 import { QRCodeSVG } from "qrcode.react";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 
 export default function QRPopover({
   children,

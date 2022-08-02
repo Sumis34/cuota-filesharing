@@ -13,16 +13,7 @@ import downloadZip, {
 } from "../../utils/download/downloadZip";
 import { useEffect, useState } from "react";
 import DownloadToast from "../../components/DownloadToast";
-
-const fileListVariants = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.2,
-    },
-  },
-};
+import GridMode from "../../components/FileViewer/DisplayModes/GridMode";
 
 const Files: NextPageWithLayout = () => {
   const { query } = useRouter();
@@ -63,40 +54,27 @@ const Files: NextPageWithLayout = () => {
         filesUploaded={progress?.uploadedFiles || 0}
         fileCount={progress?.fileCount || 0}
       />
-      <div className="my-32">
+      <div className="my-32 relative">
         <main className="relative z-10 pt-32">
           {/* <pre>{JSON.stringify(data, null, 2)}</pre> */}
           <Button onClick={() => handleDownloadAll()}>All</Button>
           <Controls />
           {isLoading ? (
             <Ring color="#dddddd" />
+          ) : data ? (
+            <GridMode files={data?.files} />
           ) : (
-            <motion.ul
-              variants={fileListVariants}
-              initial="hidden"
-              animate="show"
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10"
-            >
-              {data?.files.map(({ key, url, contentLength, contentType }) => (
-                <FileItem
-                  key={key}
-                  name={key?.split("/").at(-1) || ""}
-                  type={contentType}
-                  size={contentLength}
-                  url={url}
-                />
-              ))}
-            </motion.ul>
+            "No files"
           )}
         </main>
         <img
           src="/assets/images/mesh-gradient.png"
-          className="absolute top-[60%] right-[50%] w-full h-full blur-3xl rotate-90 opacity-70"
+          className="absolute top-[60%] md:right-[50%] w-full h-full blur-3xl rotate-90 opacity-70"
           alt=""
         />
         <img
           src="/assets/images/mesh-gradient.png"
-          className="absolute top-[20%] left-[70%] blur-2xl opacity-70 animate-pulse"
+          className="absolute top-[20%] md:left-[70%] blur-2xl opacity-70 animate-pulse"
           alt=""
         />
       </div>
