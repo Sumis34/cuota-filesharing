@@ -1,9 +1,9 @@
+import { useRouter } from "next/router";
 import { HiViewBoards, HiViewGrid, HiViewList } from "react-icons/hi";
 import IconButton from "../UI/Button/IconButton";
 
 interface PreviewModeButtonProps {
-  onChange: (mode: PreviewMode) => void;
-  mode: PreviewMode;
+  onChange?: () => void;
 }
 
 const modes = ["gallery", "grid", "list"] as const;
@@ -12,21 +12,22 @@ export type PreviewMode = typeof modes[number];
 
 export default function PreviewModeButton({
   onChange,
-  mode,
 }: PreviewModeButtonProps) {
-  const icon =
-    mode === "gallery" ? (
-      <HiViewBoards className="text-3xl fill-gray-800" />
-    ) : mode === "grid" ? (
-      <HiViewGrid className="text-3xl fill-gray-800" />
-    ) : (
-      <HiViewList className="text-3xl fill-gray-800" />
-    );
+  const router = useRouter();
+
+  const mode = router.query.mode as PreviewMode;
 
   const handleClick = () => {
-    const nextMode = modes[(modes.indexOf(mode) + 1) % modes.length];
-    if (!nextMode) return;
-    onChange(nextMode);
+    const nextMode = modes[
+      (modes.indexOf(mode) + 1) % modes.length
+    ] as PreviewMode;
+
+    router.push({
+      pathname: "/files/[fileId]",
+      query: { mode: nextMode, fileId: router.query.fileId },
+    });
+
+    if (onChange) onChange();
   };
 
   return (
@@ -34,7 +35,13 @@ export default function PreviewModeButton({
       className="active:translate-y-0.5 transition-transform"
       onClick={handleClick}
     >
-      {icon}
+      {mode === "gallery" ? (
+        <HiViewBoards className="text-3xl fill-gray-800" />
+      ) : mode === "grid" ? (
+        <HiViewGrid className="text-3xl fill-gray-800" />
+      ) : (
+        <HiViewList className="text-3xl fill-gray-800" />
+      )}
     </IconButton>
   );
 }

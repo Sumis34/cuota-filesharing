@@ -14,6 +14,13 @@ import downloadZip, {
 import { useEffect, useState } from "react";
 import DownloadToast from "../../components/DownloadToast";
 import GridMode from "../../components/FileViewer/DisplayModes/GridMode";
+import {
+  GalleryMode,
+  ListMode,
+} from "../../components/FileViewer/DisplayModes";
+import PreviewModeButton, {
+  PreviewMode,
+} from "../../components/PreviewModeButton.tsx/PreviewModeButton";
 
 const Files: NextPageWithLayout = () => {
   const { query } = useRouter();
@@ -41,6 +48,16 @@ const Files: NextPageWithLayout = () => {
     setProgress(undefined);
   };
 
+  const display:
+    | {
+        [key: string]: React.ReactNode;
+      }
+    | undefined = data && {
+    grid: <GridMode files={data?.files} />,
+    gallery: <GalleryMode files={data?.files} />,
+    list: <ListMode files={data?.files} />,
+  };
+
   const progressPercentage = progress
     ? Math.round((progress?.loaded / progress?.total) * 100)
     : 0;
@@ -61,13 +78,11 @@ const Files: NextPageWithLayout = () => {
           <Controls />
           {isLoading ? (
             <Ring color="#dddddd" />
-          ) : data ? (
-            <GridMode files={data?.files} />
           ) : (
-            "No files"
+            display && display[(query.mode as PreviewMode) || "grid"]
           )}
         </main>
-        <img
+        {/* <img
           src="/assets/images/mesh-gradient.png"
           className="absolute top-[60%] md:right-[50%] w-full h-full blur-3xl rotate-90 opacity-70"
           alt=""
@@ -76,7 +91,7 @@ const Files: NextPageWithLayout = () => {
           src="/assets/images/mesh-gradient.png"
           className="absolute top-[20%] md:left-[70%] blur-2xl opacity-70 animate-pulse"
           alt=""
-        />
+        /> */}
       </div>
     </>
   );
