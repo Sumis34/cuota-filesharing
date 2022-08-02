@@ -5,7 +5,7 @@ import Button from "../../components/UI/Button";
 import { useQuery } from "../../utils/trpc";
 import { NextPageWithLayout } from "../_app";
 import FileItem from "../../components/FileViewer/FileItem";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import Controls from "../../components/FileViewer/Controls";
 import downloadZip, {
   DownloadProgressEvent,

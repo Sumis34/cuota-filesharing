@@ -16,6 +16,7 @@ const fileListVariants = {
       duration: 0.5,
     },
   },
+  exit: { opacity: 0 },
 };
 
 export default function GalleryMode({ files }: DisplayModeProps) {
@@ -24,6 +25,7 @@ export default function GalleryMode({ files }: DisplayModeProps) {
       variants={fileListVariants}
       initial="hidden"
       animate="show"
+      key="gallery"
       className="columns-1 sm:columns-2 md:columns-3 gap-5"
     >
       {files.map(({ key, url, contentLength, contentType }) => (
