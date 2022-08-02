@@ -21,6 +21,7 @@ import {
 import PreviewModeButton, {
   PreviewMode,
 } from "../../components/PreviewModeButton.tsx/PreviewModeButton";
+import { HiDownload } from "react-icons/hi";
 
 const Files: NextPageWithLayout = () => {
   const { query } = useRouter();
@@ -74,8 +75,22 @@ const Files: NextPageWithLayout = () => {
       <div className="my-32 relative">
         <main className="relative z-10 pt-32">
           {/* <pre>{JSON.stringify(data, null, 2)}</pre> */}
-          <Button onClick={() => handleDownloadAll()}>All</Button>
-          <Controls />
+          {query.controls !== "false" && (
+            <motion.div
+              className="flex justify-between mb-3 "
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+            >
+              <PreviewModeButton />
+              <Button
+                title="Download all files as zip"
+                className="flex items-center gap-2 !px-3"
+                onClick={() => handleDownloadAll()}
+              >
+                <HiDownload />
+              </Button>
+            </motion.div>
+          )}
           {isLoading ? (
             <Ring color="#dddddd" />
           ) : (
@@ -84,7 +99,7 @@ const Files: NextPageWithLayout = () => {
         </main>
         {/* <img
           src="/assets/images/mesh-gradient.png"
-          className="absolute top-[60%] md:right-[50%] w-full h-full blur-3xl rotate-90 opacity-70"
+          className="absolute top-[-1900px] md:right-[50%] w-full h-full blur-3xl rotate-90 opacity-70"
           alt=""
         />
         <img

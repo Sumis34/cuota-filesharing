@@ -32,15 +32,15 @@ export default function PreviewModeButton({
 
   return (
     <IconButton
-      className="active:translate-y-0.5 transition-transform"
+      className="active:translate-y-0.5 transition-transform bg-gray-100 hover:bg-gray-200"
       onClick={handleClick}
     >
       {mode === "gallery" ? (
-        <HiViewBoards className="text-3xl fill-gray-800" />
+        <HiViewBoards className="text-2xl fill-gray-800/80 mx-1" />
       ) : mode === "grid" ? (
-        <HiViewGrid className="text-3xl fill-gray-800" />
+        <HiViewGrid className="text-2xl fill-gray-800/80 mx-1" />
       ) : (
-        <HiViewList className="text-3xl fill-gray-800" />
+        <HiViewList className="text-2xl fill-gray-800/80 mx-1" />
       )}
     </IconButton>
   );
