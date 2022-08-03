@@ -35,9 +35,6 @@ const Files: NextPageWithLayout = () => {
         id: query.fileId as string,
       },
     ],
-    {
-      refetchOnWindowFocus: false,
-    }
   );
 
   const handleDownloadAll = async () => {

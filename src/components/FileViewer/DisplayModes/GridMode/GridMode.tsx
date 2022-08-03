@@ -22,9 +22,10 @@ export default function GridMode({ files }: DisplayModeProps) {
       animate="show"
       className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10"
     >
-      {files.map(({ key, url, contentLength, contentType }) => (
+      {files.map(({ key, url, contentLength, contentType, preview }) => (
         <FileItem
           key={key}
+          previewUrl={preview ?? undefined}
           name={getNameFromKey(key)}
           type={contentType}
           size={contentLength}

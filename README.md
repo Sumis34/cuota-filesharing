@@ -66,6 +66,123 @@ Currently there is a problem with CORS because the MinIo server dose not return 
 Header setifempty Access-Control-Allow-Origin "*"
 ```
 
+# Image optimization
+
+imgproxy is a open source software that allows you to optimize your images on the fly.
+
+## imgproxy setup
+
+You can find a number of ways to deploy imgproxy on their [Website](https://imgproxy.net/). The easiest is to Deploy to heroku.
+
+its important to set these tow variables in your heroku (docker) environment for URL Signature to work.
+
+```bash
+IMGPROXY_KEY=CHANGEME
+IMGPROXY_SALT=CHANGEME
+
+#optional for large images
+IMGPROXY_MAX_SRC_RESOLUTION=50
+IMGPROXY_READ_TIMEOUT=20
+
+#useful for debugging
+IMGPROXY_DEVELOPMENT_ERRORS_MODE=true
+```
+
+## Proxy configuration for caching
+
+Create cache directory
+
+```bash
+mkdir /mnt/hd1/cache/apache2/mod_cache_disk/routing/
+```
+
+Grant access to web user on the CacheRoot
+
+```bash
+sudo chown -R www-data /mnt/hd1/cache/apache2/mod_cache_disk/routing/
+```
+
+enable apache modules for caching
+
+```bash
+sudo a2enmod cache
+sudo a2enmod cache_disk
+sudo a2enmod headers
+sudo a2enmod expires
+sudo a2enmod proxy
+sudo a2enmod proxy_http
+sudo a2enmod ssl # if reverse proxying to https servers
+```
+
+Virtual Host configuration for img cashing
+
+```bash                                                               /etc/apache2/sites-available/ch.noekrebs.imgporoxy.conf *
+<VirtualHost *:443>
+    ServerName img.noekrebs.ch
+    ServerAlias imgproxy.noekrebs.ch
+    ServerAdmin webmaster@localhost
+
+    ErrorLog ${APACHE_LOG_DIR}/storage_error.log
+    CustomLog ${APACHE_LOG_DIR}/storage_access.log combined
+
+    ProxyRequests On
+    ProxyVia Block
+    ProxyPreserveHost On
+
+    CacheLockPath /tmp/mod_cache-lock
+    CacheEnable disk /
+    CacheRoot /mnt/hd1/cache/apache2/mod_cache_disk/routing
+
+    # common caching directives
+    CacheQuickHandler on
+    CacheLock on
+    CacheHeader On
+
+    # cache control
+    CacheDirLevels 3
+    CacheDirLength 5
+    CacheIgnoreCacheControl On
+    CacheMaxFileSize 100000000
+    CacheIgnoreNoLastMod On
+    CacheIgnoreQueryString On
+
+    # unset headers from upstream server
+    Header unset Expires
+    Header unset Cache-Control
+    Header unset Pragma
+
+    # set expiration headers for static content
+    ExpiresActive on
+
+    # send an Expires: header for each of these mimetypes (as defined by server)
+    ExpiresDefault "access 1 month"
+
+    ProxyPass / https://cuota-images.herokuapp.com/
+    ProxyPassReverse / https://cuota-images.herokuapp.com/
+
+    SSLProxyEngine On
+    SSLProxyVerify none
+    SSLProxyCheckPeerCN off
+    SSLProxyCheckPeerName off
+    SSLProxyCheckPeerExpire off
+
+    SSLCertificateFile /etc/letsencrypt/live/img.noekrebs.ch/fullchain.pem
+    SSLCertificateKeyFile /etc/letsencrypt/live/img.noekrebs.ch/privkey.pem
+    Include /etc/letsencrypt/options-ssl-apache.conf
+</VirtualHost>
+
+<VirtualHost *:80>
+    ServerName img.noekrebs.ch
+    ServerAlias imgproxy.noekrebs.ch
+    RewriteEngine On
+    RewriteCond %{SERVER_NAME} =img.noekrebs.ch [OR]
+    RewriteCond %{SERVER_NAME} =imgproxy.noekrebs.ch
+    RewriteRule ^ https://%{SERVER_NAME}%{REQUEST_URI} [END,NE,R=permanent]
+</VirtualHost>
+```
+
+src: [taylor.callsen.me](https://taylor.callsen.me/creating-a-caching-proxy-server-with-apache/)
+
 # Ideas
 
 - [ ] show if server is bottleneck

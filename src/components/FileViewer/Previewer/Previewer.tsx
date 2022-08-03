@@ -7,15 +7,17 @@ const isVideo = (type: string) => type.match("video/*");
 
 export default function Previewer({
   contentUrl,
+  previewUrl,
   type,
 }: {
   contentUrl: string;
+  previewUrl?: string;
   type: string;
 }) {
   return (
     <div className="overflow-hidden h-full">
       {isImage(type) ? (
-        <ImgViewer path={contentUrl} />
+        <ImgViewer path={previewUrl || contentUrl} />
       ) : isPDF(type) ? (
         <PDFViewer path={contentUrl} />
       ) : isVideo(type) ? (
