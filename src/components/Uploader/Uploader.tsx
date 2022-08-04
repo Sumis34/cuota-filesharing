@@ -1,4 +1,4 @@
-import { FormEvent, useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { useMutation } from "../../utils/trpc";
 import { calcTotalProgress, uploadFile } from "../../utils/uploader";
 import Button from "../UI/Button";
@@ -14,6 +14,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import SharePanel from "../SharePanel";
 import { Ring } from "@uiball/loaders";
 import useAbortController from "../../hooks/useAbortController";
+import usePreviewPrefetchMutation from "../../hooks/usePreviewPrefetchMutation";
 
 const schema = z.object({
   message: z.string().max(150).optional(),
@@ -37,6 +38,7 @@ export default function Uploader() {
   const [totalUploadSize, setTotalUploadSize] = useState(0);
   const [totalUploadProgress, setTotalUploadProgress] = useState(0);
   const [uploadController, abortUpload] = useAbortController();
+  const { prefetchPreviewUrls } = usePreviewPrefetchMutation();
 
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
@@ -66,6 +68,12 @@ export default function Uploader() {
       setStep("loading");
 
       const res = await uploadFiles(files, urls);
+
+      //prefetch previews if img's are optimized using imgproxy
+      if (process.env.NEXT_PUBLIC_IMG_OPTIMIZATION_METHOD === "imgproxy")
+        prefetchPreviewUrls({
+          id: data.uploadId,
+        });
 
       if (!res.every((r) => r?.status === 200))
         console.error("upload of some files may have failed");

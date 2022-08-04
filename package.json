@@ -29,6 +29,7 @@
     "file-saver": "^2.0.5",
     "filenamify": "^5.1.1",
     "framer-motion": "^6.4.2",
+    "imgproxy": "^1.0.0",
     "jszip": "^3.10.0",
     "mime-types": "^2.1.35",
     "next": "12.2.0",

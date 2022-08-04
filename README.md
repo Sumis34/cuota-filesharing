@@ -76,6 +76,8 @@ You can find a number of ways to deploy imgproxy on their [Website](https://imgp
 
 its important to set these tow variables in your heroku (docker) environment for URL Signature to work.
 
+> These variables must be set in the environment of your imgproxy instance and **not in the .env of this project**
+
 ```bash
 IMGPROXY_KEY=CHANGEME
 IMGPROXY_SALT=CHANGEME
@@ -84,8 +86,20 @@ IMGPROXY_SALT=CHANGEME
 IMGPROXY_MAX_SRC_RESOLUTION=50
 IMGPROXY_READ_TIMEOUT=20
 
+# Tell imgproxy to use s3 storage
+IMGPROXY_USE_S3=true
+IMGPROXY_S3_ENDPOINT=https://s3.noekrebs.ch
+IMGPROXY_S3_REGION=eu-central-1
+
+# S3 bucket credentials
+AWS_SECRET_ACCESS_KEY=CHANGEME
+AWS_ACCESS_KEY_ID=CHANGEME
+
 #useful for debugging
 IMGPROXY_DEVELOPMENT_ERRORS_MODE=true
+
+#if this is not set to one heroku timeout's because the large images took to long to fetch simultaneously
+IMGPROXY_CONCURRENCY=1
 ```
 
 ## Proxy configuration for caching
@@ -180,6 +194,14 @@ Virtual Host configuration for img cashing
     RewriteRule ^ https://%{SERVER_NAME}%{REQUEST_URI} [END,NE,R=permanent]
 </VirtualHost>
 ```
+
+## Problems
+
+Correctly it takes way to long for the imgproxy server to fetch the original images. The only way I can think of to solve this is to move the imgproxy to to the same server as Minio. This currently dose not work for me because Minio is hosted on a Pi 4 and imgproxy is not running on ARM at the Moment (04.08.2022).
+
+Also if many images are requested at the same time the imgproxy server will take to long to fetch the images. And Heroku will time out.
+
+I fixed this by prefetching the images one by one after they are uploaded. Sadly this is not a bullet proof solution.
 
 src: [taylor.callsen.me](https://taylor.callsen.me/creating-a-caching-proxy-server-with-apache/)
 

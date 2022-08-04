@@ -30,8 +30,9 @@ export default function FileItem({
       viewport={{ once: true }}
       className="w-full aspect-square bg-white rounded-xl shadow-xl shadow-black/5 border flex flex-col overflow-hidden relative"
     >
-      {/* add previewUrl={previewUrl} for preview url */}
-      {url && type && <Previewer type={type} contentUrl={url} />}
+      {url && type && (
+        <Previewer type={type} contentUrl={url} previewUrl={previewUrl} />
+      )}
       <div className="absolute flex items-end inset-0 w-full">
         <div className="bg-gray-50 px-5 py-3 flex w-full justify-between items-center gap-5">
           <FileInfo type={type || ""} size={size || 0} name={name || "file"} />
