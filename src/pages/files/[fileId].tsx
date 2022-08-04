@@ -28,14 +28,12 @@ const Files: NextPageWithLayout = () => {
   const [open, setOpen] = useState(false);
   const [progress, setProgress] = useState<DownloadProgressEvent>();
 
-  const { data, isLoading } = useQuery(
-    [
-      "files.getAll",
-      {
-        id: query.fileId as string,
-      },
-    ],
-  );
+  const { data, isLoading } = useQuery([
+    "files.getAll",
+    {
+      id: query.fileId as string,
+    },
+  ]);
 
   const handleDownloadAll = async () => {
     if (!data?.files) return;

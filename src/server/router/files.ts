@@ -12,7 +12,6 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { SEVEN_DAYS } from "../../utils/timeInSeconds";
 import getPreview from "../../utils/preview/getPreview";
 import * as trpc from "@trpc/server";
-import axios from "axios";
 
 const getFiles = async (contents: _Object[], totalSize: number) => {
   return await Promise.all(
@@ -23,7 +22,7 @@ const getFiles = async (contents: _Object[], totalSize: number) => {
         ResponseCacheControl: `max-age=${SEVEN_DAYS}`,
       };
       const url = await getSignedUrl(s3, new GetObjectCommand(params));
-      const previewUrl = getPreview(Key || "");
+      // const previewUrl = getPreview(Key || "");
 
       const { ContentType, ContentLength, LastModified, Metadata } =
         await s3.send(new HeadObjectCommand(params));
@@ -32,7 +31,7 @@ const getFiles = async (contents: _Object[], totalSize: number) => {
 
       return {
         url,
-        preview: previewUrl || null,
+        preview: null,
         key: Key,
         contentType: ContentType,
         contentLength: ContentLength,

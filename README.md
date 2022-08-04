@@ -70,6 +70,8 @@ Header setifempty Access-Control-Allow-Origin "*"
 
 imgproxy is a open source software that allows you to optimize your images on the fly.
 
+**For now I use a manual compression proccess on the Client** You can find a description of the reason down below under the **Problems** section.
+
 ## imgproxy setup
 
 You can find a number of ways to deploy imgproxy on their [Website](https://imgproxy.net/). The easiest is to Deploy to heroku.

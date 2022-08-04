@@ -38,7 +38,7 @@ export default function Uploader() {
   const [totalUploadSize, setTotalUploadSize] = useState(0);
   const [totalUploadProgress, setTotalUploadProgress] = useState(0);
   const [uploadController, abortUpload] = useAbortController();
-  const { prefetchPreviewUrls } = usePreviewPrefetchMutation();
+  // const { prefetchPreviewUrls } = usePreviewPrefetchMutation();
 
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
@@ -52,7 +52,11 @@ export default function Uploader() {
       onDrop,
     });
 
-  const { register, handleSubmit } = useForm({
+  const {
+    register,
+    handleSubmit,
+    reset: resetForm,
+  } = useForm({
     resolver: zodResolver(schema),
   });
 
@@ -70,10 +74,9 @@ export default function Uploader() {
       const res = await uploadFiles(files, urls);
 
       //prefetch previews if img's are optimized using imgproxy
-      if (process.env.NEXT_PUBLIC_IMG_OPTIMIZATION_METHOD === "imgproxy")
-        prefetchPreviewUrls({
-          id: data.uploadId,
-        });
+      // prefetchPreviewUrls({
+      //   id: data.uploadId,
+      // });
 
       if (!res.every((r) => r?.status === 200))
         console.error("upload of some files may have failed");
@@ -128,6 +131,7 @@ export default function Uploader() {
 
   const reset = () => {
     setFiles([]);
+    resetForm();
     setFetchingUploadUrls(false);
     setTotalUploadProgress(0);
     setTotalUploadSize(0);
