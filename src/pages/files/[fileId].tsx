@@ -4,14 +4,11 @@ import { getDefaultLayout } from "../../components/Layout/DefaultLayout";
 import Button from "../../components/UI/Button";
 import { useQuery } from "../../utils/trpc";
 import { NextPageWithLayout } from "../_app";
-import FileItem from "../../components/FileViewer/FileItem";
-import { AnimatePresence, motion } from "framer-motion";
-import Controls from "../../components/FileViewer/Controls";
+import { motion } from "framer-motion";
 import downloadZip, {
   DownloadProgressEvent,
-  RemoteFiles,
 } from "../../utils/download/downloadZip";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import DownloadToast from "../../components/DownloadToast";
 import GridMode from "../../components/FileViewer/DisplayModes/GridMode";
 import {
