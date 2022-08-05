@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useMutation } from "../../utils/trpc";
 import { calcTotalProgress, uploadFile } from "../../utils/uploader";
 import Button from "../UI/Button";
@@ -14,7 +14,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import SharePanel from "../SharePanel";
 import { Ring } from "@uiball/loaders";
 import useAbortController from "../../hooks/useAbortController";
-import usePreviewPrefetchMutation from "../../hooks/usePreviewPrefetchMutation";
+import compressImg from "../../utils/compression/compressImg";
+import { COMPRESSED_FILE_EXTENSION } from "../../utils/constants";
 
 const schema = z.object({
   message: z.string().max(150).optional(),
@@ -38,12 +39,19 @@ export default function Uploader() {
   const [totalUploadSize, setTotalUploadSize] = useState(0);
   const [totalUploadProgress, setTotalUploadProgress] = useState(0);
   const [uploadController, abortUpload] = useAbortController();
-  // const { prefetchPreviewUrls } = usePreviewPrefetchMutation();
+
+  //state used for compression
+  const [activeCompressions, setActiveCompressions] = useState(0);
+  const [startedSubmit, setStartedSubmit] = useState(false);
 
   const onDrop = useCallback(
-    (acceptedFiles: File[]) => {
-      if (files) setFiles([...files, ...acceptedFiles]);
-      else setFiles(acceptedFiles);
+    async (acceptedFiles: File[]) => {
+      if (!acceptedFiles) return;
+
+      const previewImages = await compressImages(acceptedFiles);
+
+      if (files) setFiles([...files, ...acceptedFiles, ...previewImages]);
+      else setFiles([...acceptedFiles, ...previewImages]);
     },
     [files, setFiles]
   );
@@ -56,6 +64,7 @@ export default function Uploader() {
     register,
     handleSubmit,
     reset: resetForm,
+    getValues,
   } = useForm({
     resolver: zodResolver(schema),
   });
@@ -73,11 +82,6 @@ export default function Uploader() {
 
       const res = await uploadFiles(files, urls);
 
-      //prefetch previews if img's are optimized using imgproxy
-      // prefetchPreviewUrls({
-      //   id: data.uploadId,
-      // });
-
       if (!res.every((r) => r?.status === 200))
         console.error("upload of some files may have failed");
 
@@ -94,11 +98,11 @@ export default function Uploader() {
     if (!files || files.length === 0) return;
 
     setFetchingUploadUrls(true);
-    getUploadUrlMutation.mutate({
-      names: files.map((file) => file.name),
-      message: data.message,
-      close: true,
-    });
+
+    if (activeCompressions) {
+      console.log(`Waiting for compression to finish (${activeCompressions})`);
+      setStartedSubmit(true);
+    } else mutateGetUploadUrls(data.message, files);
   });
 
   //Uploads all files and tracks their progress
@@ -143,6 +147,43 @@ export default function Uploader() {
     setStep("select");
     reset();
   };
+
+  const mutateGetUploadUrls = (message: string, files: File[]) =>
+    getUploadUrlMutation.mutate({
+      names: files.map((file) => file.name),
+      message: message,
+      close: true,
+    });
+
+  const compressImages = async (files: File[]) => {
+    const allCompressions = await Promise.all(
+      files.map(
+        async (file) =>
+          await compressImg(file, {
+            nameExtension: COMPRESSED_FILE_EXTENSION,
+            onStart: () => setActiveCompressions((count) => count + 1),
+            onSuccess: () => setActiveCompressions((count) => count - 1),
+            onError: () => setActiveCompressions((count) => count - 1),
+          })
+      )
+    );
+
+    const validCompressions: File[] = allCompressions.filter(
+      (file): file is File => typeof file !== "undefined" && file !== null
+    );
+
+    return validCompressions;
+  };
+
+  useEffect(() => {
+    /**
+     * When images are uploaded thy are automatically compressed. If compressions are still in progress when user presses submit, it sets `staredSubmit` to true. As soon as all compressions are finished, it submits the form.
+     */
+    if (activeCompressions === 0 && startedSubmit && files) {
+      mutateGetUploadUrls(getValues("message"), files);
+      setStartedSubmit(false);
+    }
+  }, [activeCompressions, startedSubmit, files]);
 
   return (
     <div className="card w-80 p-5">

@@ -11,18 +11,20 @@ import {
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { SEVEN_DAYS } from "../../utils/timeInSeconds";
 import getPreview from "../../utils/preview/getPreview";
-import * as trpc from "@trpc/server";
 
 const getFiles = async (contents: _Object[], totalSize: number) => {
+  const { files, previews } = splitContents(contents);
+
   return await Promise.all(
-    contents?.map(async ({ Key }) => {
+    files?.map(async ({ Key }) => {
       const params: GetObjectCommandInput = {
         Bucket: process.env.S3_BUCKET,
         Key,
         ResponseCacheControl: `max-age=${SEVEN_DAYS}`,
       };
       const url = await getSignedUrl(s3, new GetObjectCommand(params));
-      // const previewUrl = getPreview(Key || "");
+
+      const previewUrl = await getPreview(Key || "", previews);
 
       const { ContentType, ContentLength, LastModified, Metadata } =
         await s3.send(new HeadObjectCommand(params));
@@ -31,7 +33,7 @@ const getFiles = async (contents: _Object[], totalSize: number) => {
 
       return {
         url,
-        preview: null,
+        preview: previewUrl || null,
         key: Key,
         contentType: ContentType,
         contentLength: ContentLength,
@@ -42,64 +44,52 @@ const getFiles = async (contents: _Object[], totalSize: number) => {
   );
 };
 
-export const filesRouter = createRouter()
-  .mutation("getPreviewUrls", {
-    input: z.object({
-      id: z.string().cuid(),
-    }),
-    async resolve({ input, ctx }) {
-      const command = new ListObjectsCommand({
-        Bucket: process.env.S3_BUCKET,
-        Prefix: input.id,
-      });
+const splitContents = (
+  contents: _Object[] | undefined
+): {
+  files: _Object[];
+  previews: _Object[];
+} => {
+  return {
+    files: !contents
+      ? []
+      : contents?.filter((content) => !content.Key?.includes("/preview/")),
+    previews: !contents
+      ? []
+      : contents?.filter((content) => content.Key?.includes("/preview/")),
+  };
+};
 
-      const { Contents } = await s3.send(command);
+export const filesRouter = createRouter().query("getAll", {
+  input: z.object({
+    id: z.string().cuid(),
+  }),
+  async resolve({ input, ctx }) {
+    const { prisma } = ctx;
+    let totalSize = 0;
+    const command = new ListObjectsCommand({
+      Bucket: process.env.S3_BUCKET,
+      Prefix: input.id,
+    });
 
-      if (!Contents)
-        throw new trpc.TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "unable to get file list from s3",
-        });
+    const { Contents, Prefix, IsTruncated, MaxKeys } = await s3.send(command);
 
-      const urls = await Promise.all(
-        Contents.map(async ({ Key }) => {
-          return getPreview(Key || "");
-        })
-      );
+    const uploadInfo = await prisma.upload.findUnique({
+      where: { id: input.id },
+    });
 
-      return { urls };
-    },
-  })
-  .query("getAll", {
-    input: z.object({
-      id: z.string().cuid(),
-    }),
-    async resolve({ input, ctx }) {
-      const { prisma } = ctx;
-      let totalSize = 0;
-      const command = new ListObjectsCommand({
-        Bucket: process.env.S3_BUCKET,
-        Prefix: input.id,
-      });
+    const files = !Contents ? [] : await getFiles(Contents, totalSize);
 
-      const { Contents, Prefix, IsTruncated, MaxKeys } = await s3.send(command);
-
-      const uploadInfo = await prisma.upload.findUnique({
-        where: { id: input.id },
-      });
-
-      const files = !Contents ? [] : await getFiles(Contents, totalSize);
-
-      return {
-        files,
-        totalSize,
-        isTruncated: IsTruncated,
-        maxKeys: MaxKeys,
-        prefix: Prefix,
-        owner: uploadInfo?.userId,
-        message: uploadInfo?.message,
-        allowsUploads: !uploadInfo?.closed,
-        poolCreatedAt: uploadInfo?.uploadTime,
-      };
-    },
-  });
+    return {
+      files,
+      totalSize,
+      isTruncated: IsTruncated,
+      maxKeys: MaxKeys,
+      prefix: Prefix,
+      owner: uploadInfo?.userId,
+      message: uploadInfo?.message,
+      allowsUploads: !uploadInfo?.closed,
+      poolCreatedAt: uploadInfo?.uploadTime,
+    };
+  },
+});
