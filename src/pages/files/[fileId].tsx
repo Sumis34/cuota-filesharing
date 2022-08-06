@@ -8,7 +8,7 @@ import { motion } from "framer-motion";
 import downloadZip, {
   DownloadProgressEvent,
 } from "../../utils/download/downloadZip";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DownloadToast from "../../components/DownloadToast";
 import GridMode from "../../components/FileViewer/DisplayModes/GridMode";
 import {
@@ -18,11 +18,14 @@ import {
 import PreviewModeButton, {
   PreviewMode,
 } from "../../components/PreviewModeButton.tsx/PreviewModeButton";
-import { HiDownload } from "react-icons/hi";
+import { HiDownload, HiQrcode } from "react-icons/hi";
+import QRPopover from "../../components/QRPopover";
+import IconButton from "../../components/UI/Button/IconButton";
 
 const Files: NextPageWithLayout = () => {
   const { query } = useRouter();
   const [open, setOpen] = useState(false);
+  const [url, setUrl] = useState("");
   const [progress, setProgress] = useState<DownloadProgressEvent>();
 
   const { data, isLoading } = useQuery([
@@ -55,6 +58,10 @@ const Files: NextPageWithLayout = () => {
     ? Math.round((progress?.loaded / progress?.total) * 100)
     : 0;
 
+  useEffect(() => {
+    setUrl(window.origin);
+  });
+
   return (
     <>
       <DownloadToast
@@ -69,18 +76,28 @@ const Files: NextPageWithLayout = () => {
           {/* <pre>{JSON.stringify(data, null, 2)}</pre> */}
           {query.controls !== "false" && (
             <motion.div
-              className="flex justify-between mb-3 "
+              className="flex justify-between mb-3 sticky top-0"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
             >
               <PreviewModeButton />
-              <Button
-                title="Download all files as zip"
-                className="flex items-center gap-2 !px-3"
-                onClick={() => handleDownloadAll()}
-              >
-                <HiDownload />
-              </Button>
+              <div className="flex gap-3">
+                <QRPopover url={url}>
+                  <IconButton
+                    as="div"
+                    className="h-full aspect-square px-2 group hidden sm:flex items-center justify-center"
+                  >
+                    <HiQrcode className="text-2xl group-hover:text-indigo-500 transition-all text-indigo-800" />
+                  </IconButton>
+                </QRPopover>
+                <Button
+                  title="Download all files as zip"
+                  className="flex items-center gap-2 !px-3"
+                  onClick={() => handleDownloadAll()}
+                >
+                  <HiDownload />
+                </Button>
+              </div>
             </motion.div>
           )}
           {isLoading ? (

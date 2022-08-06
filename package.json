@@ -45,6 +45,7 @@
     "react-hot-toast": "^2.2.0",
     "react-icons": "^4.4.0",
     "react-pdf": "^5.7.2",
+    "react-plock": "^2.0.0",
     "react-query": "^3.39.1",
     "react-wavify": "^1.5.8",
     "superjson": "^1.9.1",

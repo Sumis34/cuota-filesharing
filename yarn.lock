@@ -3534,6 +3534,11 @@ react-pdf@^5.7.2:
     tiny-invariant "^1.0.0"
     tiny-warning "^1.0.0"
 
+react-plock@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/react-plock/-/react-plock-2.0.0.tgz#b2f176f361837baf87ccc0d916464c35d7af4428"
+  integrity sha512-m3ByNGVixwmSTRiz+50kyDzy+Ccj9mODOFqh+f/gTnmb7OLYErsF6cEWK1fgc3hifMJGte5SLtCGPSIoP/k5hA==
+
 react-query@^3.39.1:
   version "3.39.1"
   resolved "https://registry.yarnpkg.com/react-query/-/react-query-3.39.1.tgz#3876c0fdac7a3b5a84e195534e5fa8fbdd628847"

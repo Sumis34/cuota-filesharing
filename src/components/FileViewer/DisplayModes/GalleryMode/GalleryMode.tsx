@@ -4,36 +4,25 @@ import { motion } from "framer-motion";
 import { item } from "../../FileItem/FileItem";
 import FileInfo from "../../FileInfo";
 import getNameFromKey from "../../../../utils/getNameFromKey";
-import { useRef } from "react";
+import { Breakpoint, Plock } from "react-plock";
 import IconButton from "../../../UI/Button/IconButton";
 import { HiDownload } from "react-icons/hi";
 
-const fileListVariants = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: {
-      duration: 0.5,
-    },
-  },
-  exit: { opacity: 0 },
-};
+const breakpoints: Breakpoint[] = [
+  { size: 640, columns: 1 },
+  { size: 800, columns: 2 },
+  { size: 1000, columns: 3 },
+];
 
 export default function GalleryMode({ files }: DisplayModeProps) {
   return (
-    <motion.ul
-      variants={fileListVariants}
-      initial="hidden"
-      animate="show"
-      key="gallery"
-      className="columns-1 sm:columns-2 md:columns-3 gap-5"
-    >
+    <Plock gap="2rem" breakpoints={breakpoints}>
       {files.map(({ key, url, contentLength, contentType, preview }) => (
-        <motion.li
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           key={key}
-          className="break-inside-avoid mb-5 relative group rounded-xl overflow-hidden shadow-lg hover:shadow-xl"
+          className="break-inside-avoid relative group rounded-xl overflow-hidden shadow-lg hover:shadow-xl"
         >
           {contentType && (
             <Previewer
@@ -56,8 +45,8 @@ export default function GalleryMode({ files }: DisplayModeProps) {
               </a>
             </div>
           </div>
-        </motion.li>
+        </motion.div>
       ))}
-    </motion.ul>
+    </Plock>
   );
 }

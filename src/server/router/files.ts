@@ -31,8 +31,6 @@ const getFiles = async (contents: _Object[], totalSize: number) => {
 
       if (ContentLength) totalSize += ContentLength;
 
-      console.log(Metadata);
-
       return {
         url,
         preview: previewUrl || null,
