@@ -1,5 +1,6 @@
 import imageCompression from "browser-image-compression";
 import path from "path";
+import getPreviewName from "./getPreviewName";
 
 interface CompressImgOptions {
   nameExtension: string;
@@ -26,9 +27,7 @@ export default async function compressImg(
 
     const compressedFile = await imageCompression(file, compressionOptions);
 
-    const currentName = path.parse(compressedFile.name);
-
-    const name = currentName.name + options?.nameExtension + currentName.ext;
+    const name = getPreviewName(file.name, options?.nameExtension);
 
     Object.defineProperty(compressedFile, "name", {
       writable: true,

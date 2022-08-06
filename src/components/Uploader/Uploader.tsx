@@ -16,6 +16,7 @@ import { Ring } from "@uiball/loaders";
 import useAbortController from "../../hooks/useAbortController";
 import compressImg from "../../utils/compression/compressImg";
 import { COMPRESSED_FILE_EXTENSION } from "../../utils/constants";
+import getPreviewName from "../../utils/compression/getPreviewName";
 
 const schema = z.object({
   message: z.string().max(150).optional(),
@@ -43,15 +44,17 @@ export default function Uploader() {
   //state used for compression
   const [activeCompressions, setActiveCompressions] = useState(0);
   const [startedSubmit, setStartedSubmit] = useState(false);
+  const [previews, setPreviews] = useState<File[]>([]);
 
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
       if (!acceptedFiles) return;
 
-      const previewImages = await compressImages(acceptedFiles);
+      if (files) setFiles([...files, ...acceptedFiles]);
+      else setFiles([...acceptedFiles]);
 
-      if (files) setFiles([...files, ...acceptedFiles, ...previewImages]);
-      else setFiles([...acceptedFiles, ...previewImages]);
+      const previewImages = await compressImages(acceptedFiles);
+      if (previewImages) setPreviews(previewImages);
     },
     [files, setFiles]
   );
@@ -80,7 +83,7 @@ export default function Uploader() {
 
       setStep("loading");
 
-      const res = await uploadFiles(files, urls);
+      const res = await uploadFiles([...files, ...previews], urls);
 
       if (!res.every((r) => r?.status === 200))
         console.error("upload of some files may have failed");
@@ -102,7 +105,7 @@ export default function Uploader() {
     if (activeCompressions) {
       console.log(`Waiting for compression to finish (${activeCompressions})`);
       setStartedSubmit(true);
-    } else mutateGetUploadUrls(data.message, files);
+    } else mutateGetUploadUrls(data.message, [...files, ...previews]);
   });
 
   //Uploads all files and tracks their progress
@@ -131,6 +134,26 @@ export default function Uploader() {
     const tmpFile = [...(files as File[])];
     tmpFile?.splice(index, 1);
     setFiles(tmpFile);
+  };
+
+  const removePreview = (fileIndex: number) => {
+    const [originalFile] = files?.splice(fileIndex, 1) || [];
+    const tmpPreviews = [...previews];
+
+    if (!originalFile) return;
+
+    const previewName = getPreviewName(
+      originalFile.name,
+      COMPRESSED_FILE_EXTENSION
+    );
+
+    const previewToRemove = tmpPreviews.find(
+      ({ name }) => name === previewName
+    );
+
+    if (!previewToRemove) return;
+
+    tmpPreviews.splice(tmpPreviews.indexOf(previewToRemove), 1);
   };
 
   const reset = () => {
@@ -180,7 +203,7 @@ export default function Uploader() {
      * When images are uploaded thy are automatically compressed. If compressions are still in progress when user presses submit, it sets `staredSubmit` to true. As soon as all compressions are finished, it submits the form.
      */
     if (activeCompressions === 0 && startedSubmit && files) {
-      mutateGetUploadUrls(getValues("message"), files);
+      mutateGetUploadUrls(getValues("message"), [...files, ...previews]);
       setStartedSubmit(false);
     }
   }, [activeCompressions, startedSubmit, files]);
@@ -227,7 +250,13 @@ export default function Uploader() {
                 )}
               </div>
             ) : (
-              <UploadFileList onRemove={removeFile} files={files} />
+              <UploadFileList
+                onRemove={(i) => {
+                  removeFile(i);
+                  removePreview(i);
+                }}
+                files={files}
+              />
             )}
             <label className="font-serif font-bold text-lg">Message</label>
             <textarea className="resize-none h-28" {...register("message")} />

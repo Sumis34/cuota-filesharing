@@ -42,7 +42,7 @@ export default function GalleryMode({ files }: DisplayModeProps) {
               previewUrl={preview || undefined}
             />
           )}
-          <div className="absolute opacity-0 group-hover:opacity-100 transition-all inset-0 flex items-end px-5 pb-2 text-white bg-gradient-to-t from-black/70 duration-300">
+          <div className="absolute opacity-0 group-hover:opacity-100 transition-all bottom-0 w-full flex items-end px-5 pb-2 text-white bg-gradient-to-t from-black/70 duration-300 h-4/5">
             <div className="flex gap-3 justify-between w-full">
               <FileInfo
                 name={getNameFromKey(key)}
