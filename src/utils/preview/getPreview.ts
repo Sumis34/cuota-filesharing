@@ -19,9 +19,11 @@ export default async function getPreview(
     path.parse(preview.Key || "").name.includes(path.parse(key).name)
   );
 
+  if (!preview) return null;
+
   const params: GetObjectCommandInput = {
     Bucket: process.env.S3_BUCKET,
-    Key: preview?.Key || "",
+    Key: preview.Key || "",
   };
   const url = await getSignedUrl(s3, new GetObjectCommand(params));
 
