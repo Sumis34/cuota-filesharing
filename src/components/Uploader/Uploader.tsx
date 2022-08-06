@@ -17,6 +17,7 @@ import useAbortController from "../../hooks/useAbortController";
 import compressImg from "../../utils/compression/compressImg";
 import { COMPRESSED_FILE_EXTENSION } from "../../utils/constants";
 import getPreviewName from "../../utils/compression/getPreviewName";
+import fileIsInList from "../../utils/dropzone/fileIsInList";
 
 const schema = z.object({
   message: z.string().max(150).optional(),
@@ -61,6 +62,7 @@ export default function Uploader() {
   const { getRootProps, getInputProps, isDragActive, open, fileRejections } =
     useDropzone({
       onDrop,
+      validator: (file) => fileIsInList(file.name, files),
     });
 
   const {

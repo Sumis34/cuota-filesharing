@@ -1,7 +1,6 @@
 import { DisplayModeProps } from "..";
 import Previewer from "../../Previewer";
 import { motion } from "framer-motion";
-import { item } from "../../FileItem/FileItem";
 import FileInfo from "../../FileInfo";
 import getNameFromKey from "../../../../utils/getNameFromKey";
 import { Breakpoint, Plock } from "react-plock";
