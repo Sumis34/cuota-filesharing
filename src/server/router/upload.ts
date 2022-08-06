@@ -46,6 +46,9 @@ const getUploadUrl = async (
     new PutObjectCommand({
       Bucket: process.env.S3_BUCKET,
       Key: path, //filename
+      Metadata: {
+        poolId: uploadId,
+      },
       ContentDisposition: `attachment; filename=${name}`,
       CacheControl: `max-age=${options?.maxCacheAge || 60}`,
     }),
