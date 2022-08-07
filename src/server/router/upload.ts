@@ -61,7 +61,7 @@ const getUploadUrl = async (
 export const exampleRouter = createRouter().mutation("request", {
   input: uploadInputSchema,
   async resolve({ input, ctx }) {
-    const { prisma } = ctx;
+    const { prisma, session } = ctx;
     let upload: Upload | null = null;
 
     if (input.id)
