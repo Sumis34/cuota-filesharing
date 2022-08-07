@@ -5,7 +5,7 @@ import Button from "../UI/Button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { useDropzone } from "react-dropzone";
+import { FileError, useDropzone } from "react-dropzone";
 import UploadFileList from "../UploadFileList";
 import { HiPlus } from "react-icons/hi";
 import IconButton from "../UI/Button/IconButton";
@@ -18,6 +18,7 @@ import compressImg from "../../utils/compression/compressImg";
 import { COMPRESSED_FILE_EXTENSION } from "../../utils/constants";
 import getPreviewName from "../../utils/compression/getPreviewName";
 import fileIsInList from "../../utils/dropzone/fileIsInList";
+import InfoBox from "../UI/InfoBox";
 
 const schema = z.object({
   message: z.string().max(150).optional(),
@@ -41,6 +42,7 @@ export default function Uploader() {
   const [totalUploadSize, setTotalUploadSize] = useState(0);
   const [totalUploadProgress, setTotalUploadProgress] = useState(0);
   const [uploadController, abortUpload] = useAbortController();
+  const [rejection, setRejection] = useState<FileError | undefined>();
 
   //state used for compression
   const [activeCompressions, setActiveCompressions] = useState(0);
@@ -63,6 +65,7 @@ export default function Uploader() {
     useDropzone({
       onDrop,
       validator: (file) => fileIsInList(file.name, files),
+      onDropRejected: (error) => setRejection(error[0]?.errors[0]),
     });
 
   const {
@@ -260,7 +263,12 @@ export default function Uploader() {
                 files={files}
               />
             )}
-            <label className="font-serif font-bold text-lg">Message</label>
+            {rejection && (
+              <InfoBox type="error" onClose={() => setRejection(undefined)}>
+                <p>{rejection.message}</p>
+              </InfoBox>
+            )}
+            <label className="font-serif font-bold text-lg mt-1">Message</label>
             <textarea className="resize-none h-28" {...register("message")} />
             <Button
               disabled={fetchingUploadUrls}

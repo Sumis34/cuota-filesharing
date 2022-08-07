@@ -59,8 +59,8 @@ const Files: NextPageWithLayout = () => {
     : 0;
 
   useEffect(() => {
-    setUrl(window.origin);
-  });
+    setUrl(`${window.location.origin}/files/${query.fileId}`);
+  }, [query]);
 
   return (
     <>
