@@ -67,9 +67,9 @@ model Upload {
     id         String   @id @default(cuid())
     url        String?
     uploadTime DateTime @default(now())
-    userId     String?
     closed     Boolean  @default(false)
     message    String?
+    userId     String?
     user       User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     @@unique([id])

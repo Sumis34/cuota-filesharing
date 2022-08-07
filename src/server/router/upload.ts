@@ -71,6 +71,13 @@ export const exampleRouter = createRouter().mutation("request", {
       upload = await prisma.upload.create({
         data: {
           message: input.message,
+          ...(session && {
+            user: {
+              connect: {
+                id: (session.uid as string) || undefined,
+              },
+            },
+          }),
         },
       });
 

@@ -1,5 +1,4 @@
 import NextAuth, { type NextAuthOptions } from "next-auth";
-import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 
 // Prisma adapter for NextAuth, optional and can be removed
@@ -17,9 +16,15 @@ export const authOptions: NextAuthOptions = {
   ],
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
-      signIn: '/auth/signin',
+    signIn: "/auth/signin",
   },
   debug: true,
+  callbacks: {
+    async session({ session, user }) {
+      session.uid = user.id;
+      return session;
+    },
+  },
 };
 
 export default NextAuth(authOptions);
