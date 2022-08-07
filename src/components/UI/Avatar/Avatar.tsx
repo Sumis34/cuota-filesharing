@@ -8,7 +8,7 @@ interface AvatarProps {
 export default function Avatar({ className, url }: AvatarProps) {
   return (
     <div
-      className={`aspect-square overflow-hidden bg-gradient-to-tr bg-indigo-100 rounded-xl relative ${
+      className={`aspect-square overflow-hidden bg-gradient-to-tr bg-indigo-100 rounded-xl relative shadow-md ${
         className ? className : ""
       }`}
     >
