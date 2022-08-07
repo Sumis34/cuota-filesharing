@@ -35,7 +35,7 @@
     "jszip": "^3.10.0",
     "mime-types": "^2.1.35",
     "next": "12.2.0",
-    "next-auth": "^4.8.0",
+    "next-auth": "^4.10.3",
     "next-seo": "^5.4.0",
     "pretty-bytes": "^6.0.0",
     "qrcode.react": "^3.1.0",
