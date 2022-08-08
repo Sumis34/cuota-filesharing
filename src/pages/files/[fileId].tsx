@@ -7,6 +7,7 @@ import { NextPageWithLayout } from "../_app";
 import { motion } from "framer-motion";
 import downloadZip, {
   DownloadProgressEvent,
+  RemoteFile,
 } from "../../utils/download/downloadZip";
 import { useEffect, useState } from "react";
 import DownloadToast from "../../components/DownloadToast";
@@ -21,11 +22,14 @@ import PreviewModeButton, {
 import { HiDownload, HiQrcode } from "react-icons/hi";
 import QRPopover from "../../components/QRPopover";
 import IconButton from "../../components/UI/Button/IconButton";
+import FullScreenFIleItem from "../../components/FullScreenFIleItem";
 
 const Files: NextPageWithLayout = () => {
   const { query } = useRouter();
   const [open, setOpen] = useState(false);
   const [url, setUrl] = useState("");
+  const [fullscreenOpen, setFullscreenOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<number>(0);
   const [progress, setProgress] = useState<DownloadProgressEvent>();
 
   const { data, isLoading } = useQuery([
@@ -44,14 +48,19 @@ const Files: NextPageWithLayout = () => {
     setProgress(undefined);
   };
 
+  const handleItemClick = (remoteFile: RemoteFile) => {
+    setSelectedItem(data?.files.indexOf(remoteFile) || 0);
+    setFullscreenOpen(true);
+  };
+
   const display:
     | {
         [key: string]: React.ReactNode;
       }
     | undefined = data && {
-    grid: <GridMode files={data?.files} />,
-    gallery: <GalleryMode files={data?.files} />,
-    list: <ListMode files={data?.files} />,
+    grid: <GridMode files={data?.files} onItemClick={handleItemClick} />,
+    gallery: <GalleryMode files={data?.files} onItemClick={handleItemClick} />,
+    list: <ListMode files={data?.files} onItemClick={handleItemClick} />,
   };
 
   const progressPercentage = progress
@@ -70,6 +79,11 @@ const Files: NextPageWithLayout = () => {
         progress={progressPercentage}
         filesUploaded={progress?.uploadedFiles || 0}
         fileCount={progress?.fileCount || 0}
+      />
+      <FullScreenFIleItem
+        file={data?.files[selectedItem]}
+        open={fullscreenOpen}
+        setOpen={setFullscreenOpen}
       />
       <div className="my-32 relative">
         <main className="relative z-10 pt-32">

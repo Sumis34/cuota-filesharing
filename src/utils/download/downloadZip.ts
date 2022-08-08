@@ -2,10 +2,12 @@ import { InferQueryOutput } from "../trpc";
 import { exportZip } from "./exportZip";
 import { downloadMany } from "./downloadMany";
 
-export type RemoteFiles = Pick<
+export type RemoteFile = Pick<
   InferQueryOutput<"files.getAll">,
   "files"
->["files"];
+>["files"][0];
+
+export type RemoteFiles = RemoteFile[];
 
 export type DownloadProgress = (event: DownloadProgressEvent) => void;
 

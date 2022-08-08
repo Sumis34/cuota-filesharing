@@ -8,6 +8,7 @@ interface FileItemProps {
   size?: number;
   type?: string;
   url?: string;
+  onClick: () => void;
   lastModified?: Date;
   previewUrl?: string;
 }
@@ -23,11 +24,13 @@ export default function FileItem({
   type,
   url,
   previewUrl,
+  onClick,
 }: FileItemProps) {
   return (
     <motion.li
       variants={item}
       viewport={{ once: true }}
+      onClick={() => onClick()}
       className="w-full aspect-square bg-white rounded-xl shadow-xl shadow-black/5 border flex flex-col overflow-hidden relative"
     >
       {url && type && (

@@ -13,7 +13,7 @@ export const fileListVariants = {
   },
 };
 
-export default function GridMode({ files }: DisplayModeProps) {
+export default function GridMode({ files, onItemClick }: DisplayModeProps) {
   return (
     <motion.ul
       variants={fileListVariants}
@@ -22,16 +22,20 @@ export default function GridMode({ files }: DisplayModeProps) {
       animate="show"
       className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10"
     >
-      {files.map(({ key, url, contentLength, contentType, preview }) => (
-        <FileItem
-          key={key}
-          previewUrl={preview ?? undefined}
-          name={getNameFromKey(key)}
-          type={contentType}
-          size={contentLength}
-          url={url}
-        />
-      ))}
+      {files.map((file) => {
+        const { key, url, contentLength, contentType, preview } = file;
+        return (
+          <FileItem
+            key={key}
+            onClick={() => onItemClick(file)}
+            previewUrl={preview ?? undefined}
+            name={getNameFromKey(key)}
+            type={contentType}
+            size={contentLength}
+            url={url}
+          />
+        );
+      })}
     </motion.ul>
   );
 }
