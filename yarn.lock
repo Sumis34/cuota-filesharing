@@ -981,6 +981,11 @@
     "@floating-ui/dom" "^0.5.3"
     use-isomorphic-layout-effect "^1.1.1"
 
+"@formkit/auto-animate@^1.0.0-beta.1":
+  version "1.0.0-beta.1"
+  resolved "https://registry.yarnpkg.com/@formkit/auto-animate/-/auto-animate-1.0.0-beta.1.tgz#aec5fd2ea5e499ceb7eb117c7fd1217a7f100748"
+  integrity sha512-I3OWOBaPZKSJL4bsooXI8kC3q7bcgibD2oML0P/Lir6MnbvUe/0/7EH8br024juvM/Ulm9C9xGx9CJUQYrOWSA==
+
 "@hookform/resolvers@^2.9.4":
   version "2.9.4"
   resolved "https://registry.yarnpkg.com/@hookform/resolvers/-/resolvers-2.9.4.tgz#e06d15649c5b8d7ec5fb9cd53ede1ac7b117aaff"

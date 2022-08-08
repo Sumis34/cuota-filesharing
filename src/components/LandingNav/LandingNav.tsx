@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import Badge from "../UI/Badge";
@@ -26,15 +26,17 @@ export default function LandingNav() {
           </a>
         </Link>
         <div>
-          {session ? (
-            <ProfileInfo
-              name={session.user?.name}
-              avatar={session.user?.image}
-              email={session.user?.email}
-            />
-          ) : (
-            status === "unauthenticated" && <LoginButtons />
-          )}
+          <AnimatePresence>
+            {session ? (
+              <ProfileInfo
+                name={session.user?.name}
+                avatar={session.user?.image}
+                email={session.user?.email}
+              />
+            ) : (
+              <LoginButtons />
+            )}
+          </AnimatePresence>
         </div>
       </nav>
     </div>

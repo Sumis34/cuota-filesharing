@@ -1,3 +1,5 @@
+import { useAutoAnimate } from "@formkit/auto-animate/react";
+import { LegacyRef, useEffect, useRef } from "react";
 import UploadFileItem from "./UploadFileItem";
 
 export default function UploadFileList({
@@ -7,8 +9,13 @@ export default function UploadFileList({
   files: File[];
   onRemove: (i: number) => void;
 }) {
+  const [parent] = useAutoAnimate();
+
   return (
-    <div className="relative max-h-44 overflow-y-auto divide-y-2 scrollbar-thumb-gray-200 scrollbar-thin scrollbar-thumb-rounded-md pr-4 mb-2">
+    <ul
+      ref={parent as LegacyRef<HTMLUListElement>}
+      className="relative max-h-44 overflow-y-auto divide-y-2 scrollbar-thumb-gray-200 scrollbar-thin scrollbar-thumb-rounded-md pr-4 mb-2"
+    >
       {files.map(({ name, type, size }, i) => (
         <UploadFileItem
           key={name}
@@ -18,6 +25,6 @@ export default function UploadFileList({
           remove={() => onRemove(i)}
         />
       ))}
-    </div>
+    </ul>
   );
 }
