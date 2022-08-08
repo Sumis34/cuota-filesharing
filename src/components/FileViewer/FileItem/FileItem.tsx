@@ -31,7 +31,7 @@ export default function FileItem({
       variants={item}
       viewport={{ once: true }}
       onClick={() => onClick()}
-      className="w-full aspect-square bg-white rounded-xl shadow-xl shadow-black/5 border flex flex-col overflow-hidden relative"
+      className="w-full aspect-square bg-white rounded-xl shadow-xl shadow-black/5 border flex flex-col overflow-hidden relative cursor-zoom-in"
     >
       {url && type && (
         <Previewer type={type} contentUrl={url} previewUrl={previewUrl} />

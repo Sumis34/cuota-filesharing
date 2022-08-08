@@ -1,9 +1,13 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import React from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { AnimatePresence, motion } from "framer-motion";
 import { RemoteFile } from "../../utils/download/downloadZip";
 import Previewer from "../FileViewer/Previewer";
+import { PreviewContext } from "../FileViewer/Previewer/PreviewContext";
+import { HiDownload } from "react-icons/hi";
+import Button from "../UI/Button";
+import getImgMetadata from "../../utils/exifr/getImgMetadata";
 
 export default function FullScreenFileItem({
   open,
@@ -47,21 +51,33 @@ export default function FullScreenFileItem({
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="w-full h-full transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                {file && (
-                  <Previewer
-                    type={file?.contentType || "image/png"}
-                    contentUrl={file?.url}
-                  />
-                )}
-                <div className="mt-4">
-                  <button
-                    type="button"
-                    className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                    onClick={closeModal}
+              <Dialog.Panel className="w-full h-full transform overflow-hidden rounded-2xl bg-white py-6 px-5 text-left align-middle shadow-xl transition-all">
+                <div>
+                  <Button
+                    className="pl-3 flex items-center gap-2 ml-auto"
+                    href={file?.url}
                   >
-                    Close
-                  </button>
+                    <HiDownload className="text-xl" />
+                  </Button>
+                </div>
+                <div className="w-full h-full">
+                  {file && (
+                    <PreviewContext.Provider
+                      value={{
+                        img: {
+                          styles: {
+                            objectFit: "contain",
+                          },
+                          className: "h-full mx-auto",
+                        },
+                      }}
+                    >
+                      <Previewer
+                        type={file?.contentType || "image/png"}
+                        contentUrl={file?.url}
+                      />
+                    </PreviewContext.Provider>
+                  )}
                 </div>
               </Dialog.Panel>
             </Transition.Child>

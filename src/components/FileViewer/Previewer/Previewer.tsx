@@ -15,7 +15,7 @@ export default function Previewer({
   type: string;
 }) {
   return (
-    <div className="overflow-hidden h-full">
+    <div className="overflow-hidden h-full w-full">
       {isImage(type) ? (
         <ImgViewer path={previewUrl || contentUrl} />
       ) : isPDF(type) ? (

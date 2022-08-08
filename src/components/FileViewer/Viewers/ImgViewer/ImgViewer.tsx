@@ -1,3 +1,11 @@
+import { PreviewContext } from "../../Previewer/PreviewContext";
+
 export default function ImgViewer({ path }: { path: string }) {
-  return <img src={path} className="object-cover w-full h-full" />;
+  return (
+    <PreviewContext.Consumer>
+      {({ img }) => (
+        <img src={path} className={img.className} style={img.styles} />
+      )}
+    </PreviewContext.Consumer>
+  );
 }
