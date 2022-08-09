@@ -37,7 +37,7 @@ export default function FileItem({
         <Previewer type={type} contentUrl={url} previewUrl={previewUrl} />
       )}
       <div className="absolute flex items-end inset-0 w-full">
-        <div className="bg-gray-50 px-5 py-3 flex w-full justify-between items-center gap-5">
+        <div className="bg-gray-50 px-5 py-3 flex w-full justify-between items-center gap-5 rounded-t-md">
           <FileInfo type={type || ""} size={size || 0} name={name || "file"} />
           <a href={url || "#"}>
             <IconButton>

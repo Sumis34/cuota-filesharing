@@ -23,6 +23,7 @@ import { HiDownload, HiQrcode } from "react-icons/hi";
 import QRPopover from "../../components/QRPopover";
 import IconButton from "../../components/UI/Button/IconButton";
 import FullScreenFIleItem from "../../components/FullScreenFIleItem";
+import PoolStats from "../../components/PoolStats";
 
 const Files: NextPageWithLayout = () => {
   const { query } = useRouter();
@@ -89,6 +90,13 @@ const Files: NextPageWithLayout = () => {
       <div className="my-32 relative">
         <main className="relative z-10 pt-32">
           {/* <pre>{JSON.stringify(data, null, 2)}</pre> */}
+          {data && (
+            <PoolStats
+              totalSize={data.totalSize}
+              files={data.files}
+              message={data.message}
+            />
+          )}
           {query.controls !== "false" && (
             <motion.div
               className="flex justify-between mb-3 sticky top-0"

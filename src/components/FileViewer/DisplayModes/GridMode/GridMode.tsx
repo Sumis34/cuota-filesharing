@@ -20,7 +20,7 @@ export default function GridMode({ files, onItemClick }: DisplayModeProps) {
       initial="hidden"
       key="grid"
       animate="show"
-      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10"
+      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 relative z-10"
     >
       {files.map((file) => {
         const { key, url, contentLength, contentType, preview } = file;

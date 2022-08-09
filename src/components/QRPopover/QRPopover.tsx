@@ -24,7 +24,7 @@ export default function QRPopover({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 10 }}
               transition={{ ease: "easeInOut", duration: 0.2 }}
-              className="p-5 bg-white shadow-lg rounded-xl"
+              className="p-5 bg-white shadow-lg rounded-xl z-[500]"
             >
               <QRCodeSVG value={url} fgColor={"#34393d"} />
               <Popover.Arrow className="fill-white" />

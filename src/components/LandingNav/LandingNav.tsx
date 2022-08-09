@@ -9,7 +9,7 @@ import ProfileInfo from "./ProfileInfo";
 export default function LandingNav() {
   const { data: session, status } = useSession();
   return (
-    <div className="left-0 top-0 fixed z-50 flex w-screen justify-center bg-white/50 backdrop-blur-xl">
+    <div className="left-0 top-0 fixed z-50 flex w-screen justify-center bg-white/90 backdrop-blur-xl">
       <nav
         className={`sm:px-20 px-5 w-full max-w-screen-2xl flex justify-between ${
           0 > 0 ? "py-5" : "py-12"
