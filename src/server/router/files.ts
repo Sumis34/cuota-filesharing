@@ -12,7 +12,10 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { SEVEN_DAYS } from "../../utils/timeInSeconds";
 import getPreview from "../../utils/preview/getPreview";
 
-const getFiles = async (contents: _Object[], totalSize: number) => {
+const getFiles = async (
+  contents: _Object[],
+  addFileSize: (size: number) => void
+) => {
   const { files, previews } = splitContents(contents);
 
   return await Promise.all(
@@ -29,7 +32,7 @@ const getFiles = async (contents: _Object[], totalSize: number) => {
       const { ContentType, ContentLength, LastModified, Metadata } =
         await s3.send(new HeadObjectCommand(params));
 
-      if (ContentLength) totalSize += ContentLength;
+      if (ContentLength) addFileSize(ContentLength);
 
       return {
         url,
@@ -78,7 +81,9 @@ export const filesRouter = createRouter().query("getAll", {
       where: { id: input.id },
     });
 
-    const files = !Contents ? [] : await getFiles(Contents, totalSize);
+    const files = !Contents
+      ? []
+      : await getFiles(Contents, (s) => (totalSize += s));
 
     return {
       files,
