@@ -95,6 +95,7 @@ export const filesRouter = createRouter().query("getAll", {
       message: uploadInfo?.message,
       allowsUploads: !uploadInfo?.closed,
       poolCreatedAt: uploadInfo?.uploadTime,
+      expiresAt: uploadInfo?.expiresAt,
     };
   },
 });

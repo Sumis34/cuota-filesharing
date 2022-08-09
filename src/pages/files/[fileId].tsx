@@ -95,6 +95,8 @@ const Files: NextPageWithLayout = () => {
               totalSize={data.totalSize}
               files={data.files}
               message={data.message}
+              createdAt={data.poolCreatedAt}
+              expiresAt={data.expiresAt}
             />
           )}
           {query.controls !== "false" && (

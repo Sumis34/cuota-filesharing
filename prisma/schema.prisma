@@ -64,13 +64,14 @@ model VerificationToken {
 }
 
 model Upload {
-    id         String   @id @default(cuid())
+    id         String    @id @default(cuid())
     url        String?
-    uploadTime DateTime @default(now())
-    closed     Boolean  @default(false)
+    uploadTime DateTime  @default(now())
+    closed     Boolean   @default(false)
     message    String?
+    expiresAt  DateTime?
     userId     String?
-    user       User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+    user       User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     @@unique([id])
 }

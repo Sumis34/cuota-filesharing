@@ -5,11 +5,22 @@ import { portionByType } from "../../utils/statistics/portionByType";
 import { countByType } from "../../utils/statistics/countByType";
 import bytes from "pretty-bytes";
 import { useState } from "react";
+import {
+  format,
+  formatDistance,
+  formatDistanceToNow,
+  isPast,
+  isWithinInterval,
+  subWeeks,
+} from "date-fns";
+import { HiCalendar, HiClock } from "react-icons/hi";
 
 interface PoolStatsProps {
   totalSize: number;
   message?: string | null;
   files: RemoteFiles;
+  createdAt?: Date;
+  expiresAt?: Date | null;
 }
 
 const COLORS_BY_CATEGORY: { [key: string]: string } = {
@@ -30,6 +41,8 @@ export default function PoolStats({
   totalSize,
   message,
   files,
+  createdAt,
+  expiresAt,
 }: PoolStatsProps) {
   const [activePortion, setActivePortions] = useState(1);
   const [activeItemCount, setActiveItemCount] = useState(files.length);
@@ -65,9 +78,13 @@ export default function PoolStats({
     setActiveCategory(null);
   };
 
+  const expiresSoon = expiresAt
+    ? +expiresAt < new Date().setDate(new Date().getDate() + 3)
+    : false;
+
   return (
-    <div className="grid grid-cols-3 mb-5 gap-10">
-      <div className="h-32 border rounded-xl shadow-lg p-4 flex justify-between flex-col">
+    <div className="grid grid-cols-3 mb-5 gap-10 h-32">
+      <div className="h-full border rounded-xl shadow-lg p-4 flex justify-between flex-col">
         <h3 className="text-2xl">Data</h3>
         <div>
           <div className="mb-1 flex justify-between">
@@ -107,8 +124,57 @@ export default function PoolStats({
           </div>
         </div>
       </div>
-      <div className="h-32 border rounded-xl shadow-lg"></div>
-      <div className="h-32 border rounded-xl shadow-lg"></div>
+      <div className="h-full border rounded-xl shadow-lg p-4 flex flex-col">
+        <h3 className="text-2xl">Message</h3>
+        <p className={`text-sm ${message ? "opacity-70" : "opacity-30"}`}>
+          {message || "no message"}
+        </p>
+      </div>
+      <div className="h-full border rounded-xl shadow-lg p-4 flex flex-col justify-between">
+        <h3 className="text-2xl">Dates</h3>
+        <div className="grid grid-cols-2">
+          <div className="flex items-center gap-2">
+            <div className="bg-slate-100 p-2 w-fit rounded-lg">
+              <HiCalendar className="fill-slate-400 text-2xl" />
+            </div>
+            <div className="flex flex-col">
+              <time className="-mb-1">
+                {format(createdAt || new Date(), "dd.MM.yyyy")}
+              </time>
+              <span className="text-xs opacity-40">upload date</span>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <div
+              className={`bg-slate-100 p-2 w-fit rounded-lg ${
+                expiresSoon ? "bg-red-200" : ""
+              }`}
+            >
+              <HiClock
+                className={`fill-slate-400 text-2xl ${
+                  expiresSoon ? "fill-red-500" : ""
+                }`}
+              />
+            </div>
+            <div className="flex flex-col">
+              <time className={`-mb-1 ${expiresSoon ? "text-red-500" : ""}`}>
+                {expiresAt
+                  ? !isPast(expiresAt)
+                    ? formatDistanceToNow(expiresAt)
+                    : "in 1 minute"
+                  : "never"}
+              </time>
+              <span
+                className={`text-xs opacity-40 ${
+                  expiresSoon ? "text-red-500" : ""
+                }`}
+              >
+                expires in
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

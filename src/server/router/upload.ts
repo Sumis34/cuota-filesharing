@@ -71,6 +71,7 @@ export const exampleRouter = createRouter().mutation("request", {
       upload = await prisma.upload.create({
         data: {
           message: input.message,
+          expiresAt: new Date(Date.now() + SEVEN_DAYS * 1000),
           ...(session && {
             user: {
               connect: {
