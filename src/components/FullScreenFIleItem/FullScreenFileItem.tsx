@@ -4,10 +4,11 @@ import { Dialog, Transition } from "@headlessui/react";
 import { RemoteFile } from "../../utils/download/downloadZip";
 import { HiDownload } from "react-icons/hi";
 import Button from "../UI/Button";
-import { FullImgViewer } from "../FileViewer/Viewers/ImgViewer/ImgViewer";
+import { ImgViewer } from "../FileViewer/Viewers";
 import FileInfo from "../FileViewer/FileInfo";
 import getNameFromKey from "../../utils/getNameFromKey";
 import DisplayImgMeta from "./DisplayImgMeta";
+import Previewer from "../FileViewer/Previewer";
 
 export default function FullScreenFileItem({
   open,
@@ -67,20 +68,29 @@ export default function FullScreenFileItem({
                 </div>
                 <div className="min-h-0 my-5">
                   {file && (
-                    <FullImgViewer path={file?.url} onMetaChange={setImgMeta} />
+                    <Previewer
+                      contentUrl={file?.url}
+                      type={file?.contentType || ""}
+                      mode="fullscreen"
+                      onMetaChange={setImgMeta}
+                    />
                   )}
                 </div>
-                {file?.contentType && file.contentType.includes("image") && (
-                  <DisplayImgMeta
-                    camera={imgMeta?.Model}
-                    shutter={imgMeta?.ExposureTime}
-                    aperture={imgMeta?.FNumber}
-                    focalLength={imgMeta?.FocalLength}
-                    width={imgMeta?.ExifImageWidth}
-                    height={imgMeta?.ExifImageHeight}
-                    time={imgMeta?.DateTimeOriginal}
-                  />
-                )}
+                <div className="h-8 flex items-center flex-none">
+                  {file?.contentType &&
+                    file.contentType.includes("image") &&
+                    imgMeta && (
+                      <DisplayImgMeta
+                        camera={imgMeta?.Model}
+                        shutter={imgMeta?.ExposureTime}
+                        aperture={imgMeta?.FNumber}
+                        focalLength={imgMeta?.FocalLength}
+                        width={imgMeta?.ExifImageWidth}
+                        height={imgMeta?.ExifImageHeight}
+                        time={imgMeta?.DateTimeOriginal}
+                      />
+                    )}
+                </div>
               </Dialog.Panel>
             </Transition.Child>
           </div>

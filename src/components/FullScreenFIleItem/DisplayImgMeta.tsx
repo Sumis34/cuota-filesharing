@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 import { HiCamera } from "react-icons/hi";
-
+import { motion } from "framer-motion";
 interface DisplayImgMetaProps {
   camera?: string;
   time?: Date;
@@ -35,7 +35,11 @@ export default function DisplayImgMeta({
   const shutterSpeed = calcShutterSpeed(shutter || 0);
 
   return (
-    <div className="flex gap-4 min-h-">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="flex gap-4"
+    >
       <div className="flex gap-1 flex-col">
         <h3 className="text-xs leading-none -mb-1 opacity-50 font-sans font-semibold">
           Camera
@@ -76,6 +80,6 @@ export default function DisplayImgMeta({
           {time ? format(new Date(time), "dd MMM, yyyy HH:mm") : "-"}
         </span>
       </div>
-    </div>
+    </motion.div>
   );
 }
