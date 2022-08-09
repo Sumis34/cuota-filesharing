@@ -28,3 +28,5 @@ export default function Previewer({
     </div>
   );
 }
+
+export { isImage, isPDF, isVideo };
