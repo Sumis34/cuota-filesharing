@@ -42,7 +42,7 @@ export default function ImgViewer({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
-          className="w-full h-full flex items-center justify-center"
+          className="w-full h-full flex items-center justify-center aspect-square"
         >
           <Ring color="#dddddd" />
         </motion.div>
