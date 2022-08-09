@@ -11,6 +11,7 @@ export default function ListMode({ files, onItemClick }: DisplayModeProps) {
         const { key, url, contentLength, contentType } = file;
         return (
           <li
+            key={key}
             onClick={() => onItemClick(file)}
             className="rounded-lg bg-slate-200/30 border py-3 px-5 flex items-center justify-between cursor-pointer hover:shadow-lg shadow-gray-400/20 transition-all"
           >
