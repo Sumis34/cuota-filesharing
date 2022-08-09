@@ -29,9 +29,9 @@ export default function Previewer({
           path={previewUrl || contentUrl}
         />
       ) : isPDF(type) ? (
-        <PDFViewer path={contentUrl} />
+        <PDFViewer mode={mode} path={contentUrl} />
       ) : isVideo(type) ? (
-        <VideoViewer path={contentUrl} />
+        <VideoViewer mode={mode} path={contentUrl} />
       ) : (
         <UnknownViewer type={type} />
       )}

@@ -81,6 +81,7 @@ const Files: NextPageWithLayout = () => {
         fileCount={progress?.fileCount || 0}
       />
       <FullScreenFIleItem
+        currentId={selectedItem}
         file={data?.files[selectedItem]}
         open={fullscreenOpen}
         setOpen={setFullscreenOpen}

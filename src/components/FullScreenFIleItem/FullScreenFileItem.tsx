@@ -14,10 +14,14 @@ export default function FullScreenFileItem({
   open,
   file,
   setOpen,
+  currentId,
+  onSetItemId,
 }: {
   open: boolean;
   setOpen: (open: boolean) => void;
   file?: RemoteFile;
+  currentId: number;
+  onSetItemId?: (id: number) => void;
 }) {
   const [imgMeta, setImgMeta] = useState<any>();
 
