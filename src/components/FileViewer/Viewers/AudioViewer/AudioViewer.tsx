@@ -37,7 +37,9 @@ export default function AudioViewer({
       <div className="flex items-center flex-col">
         {cover ? (
           <img
-            className={`${mode === "fullscreen" ? "w-32 rounded-2xl mb-2" : "w-full"}`}
+            className={`${
+              mode === "fullscreen" ? "w-32 rounded-2xl mb-2" : "w-full"
+            }`}
             src={cover}
             alt="cover"
           />
@@ -48,10 +50,12 @@ export default function AudioViewer({
             }`}
           />
         )}
-        <div className="text-center mb-3">
-          <h3 className={`text-xl`}>{metadata?.common.title}</h3>
-          <p className="opacity-30">by {metadata?.common.artist}</p>
-        </div>
+        {mode == "fullscreen" && (
+          <div className="text-center mb-3">
+            <h3 className={`text-xl`}>{metadata?.common.title}</h3>
+            <p className="opacity-30">by {metadata?.common.artist}</p>
+          </div>
+        )}
         <audio controls={mode === "fullscreen"}>
           <source src={path} type={"audio/mpeg"} />
           Your browser does not support the audio tag.

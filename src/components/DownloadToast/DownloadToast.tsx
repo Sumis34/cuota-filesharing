@@ -37,7 +37,7 @@ export default function DownloadToast({
               <Toast.Title>Toast</Toast.Title>
               <Toast.Description className="">
                 {progress}%
-                <RadialProgress progress={progress} />
+                <RadialProgress radius={20} progress={progress} />
               </Toast.Description>
               <Toast.Action altText="nothing" />
               <Toast.Close />

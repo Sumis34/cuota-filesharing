@@ -1,18 +1,35 @@
 import { motion } from "framer-motion";
 
-export default function RadialProgress({ progress }: { progress: number }) {
+export default function RadialProgress({
+  progress = 0,
+  radius,
+}: {
+  progress: number;
+  radius: number;
+}) {
+  const circumference = Math.PI * 2 * radius;
+
   return (
     <div className="relative">
-      <motion.div
+      <motion.svg
         animate={{
-          background: `conic-gradient(
-            rgb(3, 133, 255) 80%,
-            rgb(242, 242, 242) 80%
-          );`,
+          rotate: -90,
+          strokeDasharray: circumference,
+          strokeLinecap: "round",
+          strokeDashoffset: circumference - circumference * (progress / 100),
         }}
-        className="w-12 aspect-square rounded-full"
-      ></motion.div>
-      <motion.div className="w-12 aspect-square absolute bg-gray-100 rounded-full"></motion.div>
+        height="100"
+        width="100"
+      >
+        <circle
+          cx="50"
+          cy="50"
+          r={radius}
+          stroke="#22C55E"
+          stroke-width="5"
+          fill="transparent"
+        />
+      </motion.svg>
     </div>
   );
 }
