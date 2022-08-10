@@ -36,6 +36,7 @@
     "imgproxy": "^1.0.0",
     "jszip": "^3.10.0",
     "mime-types": "^2.1.35",
+    "music-metadata-browser": "^2.5.8",
     "next": "12.2.0",
     "next-auth": "^4.10.3",
     "next-seo": "^5.4.0",
