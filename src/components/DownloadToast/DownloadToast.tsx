@@ -1,5 +1,6 @@
 import * as Toast from "@radix-ui/react-toast";
 import { AnimatePresence, motion } from "framer-motion";
+import { useEffect } from "react";
 import RadialProgress from "../UI/RadialProgress";
 
 export default function DownloadToast({
@@ -16,8 +17,14 @@ export default function DownloadToast({
   fileCount: number;
 }) {
   const handleOpenChange = (open: boolean) => {
-    console.log(open);
+    if (progress === 100 || !progress) {
+      setOpen(open);
+    }
   };
+
+  useEffect(() => {
+    handleOpenChange(open);
+  }, [open, progress]);
 
   return (
     <Toast.Provider>
@@ -32,14 +39,29 @@ export default function DownloadToast({
                 ease: "easeInOut",
                 duration: 0.3,
               }}
-              className="bg-white border rounded-md m-5 p-5 shadow-md"
+              className="bg-white border rounded-md m-5 px-5 py-3 shadow-lg flex flex-col justify-between gap-3"
             >
-              <Toast.Title>Toast</Toast.Title>
-              <Toast.Description className="">
-                {progress}%
-                <RadialProgress radius={20} progress={progress} />
+              <Toast.Title asChild>
+                <div className="flex justify-between gap-3">
+                  <h3 className="text-md">Downloading all files </h3>
+                </div>
+              </Toast.Title>
+              <Toast.Description>
+                <div className="flex justify-between items-center gap-3">
+                  <div className="w-full bg-gray-100 rounded-full h-2">
+                    <motion.div
+                      className="bg-green-500 rounded-full h-full"
+                      animate={{
+                        width: `${progress}%`,
+                      }}
+                    />
+                  </div>
+                  <span className="text-sm opacity-60">
+                    {progress}
+                    <span className="text-xs">%</span>
+                  </span>
+                </div>
               </Toast.Description>
-              <Toast.Action altText="nothing" />
               <Toast.Close />
             </motion.div>
           )}

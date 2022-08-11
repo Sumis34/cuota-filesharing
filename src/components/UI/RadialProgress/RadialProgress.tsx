@@ -8,9 +8,14 @@ export default function RadialProgress({
   radius: number;
 }) {
   const circumference = Math.PI * 2 * radius;
+  const stroke = 5;
+  const width = radius * 2 + stroke;
+  const height = width;
+  const cy = height / 2;
+  const cx = width / 2;
 
   return (
-    <div className="relative">
+    <div className="h-fit w-fit">
       <motion.svg
         animate={{
           rotate: -90,
@@ -18,12 +23,12 @@ export default function RadialProgress({
           strokeLinecap: "round",
           strokeDashoffset: circumference - circumference * (progress / 100),
         }}
-        height="100"
-        width="100"
+        height={height}
+        width={width}
       >
         <circle
-          cx="50"
-          cy="50"
+          cx={cx}
+          cy={cy}
           r={radius}
           stroke="#22C55E"
           stroke-width="5"
