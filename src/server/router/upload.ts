@@ -75,7 +75,7 @@ export const exampleRouter = createRouter().mutation("request", {
           ...(session && {
             user: {
               connect: {
-                id: (session.uid as string) || undefined,
+                id: (session?.user?.id as string) || undefined,
               },
             },
           }),
