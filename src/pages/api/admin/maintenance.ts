@@ -54,6 +54,9 @@ const deletePool = async (
   return true;
 };
 
+/**
+ * Deletes all expired uploads from the database and s3.
+ */
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
