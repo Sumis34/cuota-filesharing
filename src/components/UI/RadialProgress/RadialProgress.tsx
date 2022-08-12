@@ -31,7 +31,7 @@ export default function RadialProgress({
           cy={cy}
           r={radius}
           stroke="#22C55E"
-          stroke-width="5"
+          strokeWidth="5"
           fill="transparent"
         />
       </motion.svg>
