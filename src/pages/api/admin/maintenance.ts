@@ -1,58 +1,10 @@
-import { DeleteObjectsCommand, ListObjectsCommand } from "@aws-sdk/client-s3";
 import { PrismaClient } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
 import { unstable_getServerSession as getServerSession } from "next-auth";
-import { s3 } from "../../../utils/s3/s3";
+import deletePool from "../../../utils/s3/deletePool";
 import { authOptions } from "../auth/[...nextauth]";
 
 const prisma = new PrismaClient();
-
-const deletePoolData = async (poolId: string) => {
-  const command = new ListObjectsCommand({
-    Bucket: process.env.S3_BUCKET,
-    Prefix: poolId,
-  });
-
-  const { Contents } = await s3.send(command);
-
-  const deleteCommand = new DeleteObjectsCommand({
-    Bucket: process.env.S3_BUCKET,
-    Delete: {
-      Objects: Contents?.map((content) => ({ Key: content.Key })),
-    },
-  });
-
-  const deleted = await s3.send(deleteCommand);
-
-  return deleted;
-};
-
-const deletePool = async (
-  poolId: string,
-  onDelete: (items: string[]) => void
-) => {
-  try {
-    const { Deleted } = await deletePoolData(poolId);
-
-    const deletedKeys = Deleted?.map((item) => item.Key) || [];
-
-    const validDeletedKeys: string[] = deletedKeys.filter(
-      (key) => typeof key === "string"
-    ) as string[];
-
-    onDelete(validDeletedKeys);
-  } catch (error) {
-    throw error;
-  }
-
-  await prisma.upload.delete({
-    where: {
-      id: poolId,
-    },
-  });
-
-  return true;
-};
 
 /**
  * Deletes all expired uploads from the database and s3.
