@@ -70,6 +70,18 @@ Header setifempty Access-Control-Allow-Origin "*"
 
 **For now I use a manual compression proccess on the Client**. If you are interested about my learnings with imgproxy you can check out my [Notes](docs/IMGRPOXY.md).
 
+# Maintenance
+
+Because we want our shared files to expire eventually we need to set a cronjob. But because this project is centered around a easy to use solution we will use the [cron-job.org](https://cron-job.org) service. This service is a simple to use service that allows you to schedule a http request to a url.
+
+## Cronjob.org Setup
+
+I have setup a job with the following configuration.
+
+> Add your service key (SERVICE_KEY) configured in the [.env](.env) file.
+
+![cron config](docs/images/cron-job-conf.png)
+
 # Ideas
 
 - [ ] show if server is bottleneck
