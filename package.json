@@ -33,6 +33,7 @@
     "file-saver": "^2.0.5",
     "filenamify": "^5.1.1",
     "framer-motion": "^6.4.2",
+    "gray-matter": "^4.0.3",
     "imgproxy": "^1.0.0",
     "jszip": "^3.10.0",
     "mime-types": "^2.1.35",
@@ -48,6 +49,7 @@
     "react-hook-form": "^7.33.1",
     "react-hot-toast": "^2.2.0",
     "react-icons": "^4.4.0",
+    "react-markdown": "^8.0.3",
     "react-pdf": "^5.7.2",
     "react-plock": "^2.0.0",
     "react-query": "^3.39.1",
@@ -56,6 +58,7 @@
     "zod": "^3.17.3"
   },
   "devDependencies": {
+    "@tailwindcss/typography": "^0.5.4",
     "@types/file-saver": "^2.0.5",
     "@types/mime-types": "^2.1.1",
     "@types/node": "18.0.0",
