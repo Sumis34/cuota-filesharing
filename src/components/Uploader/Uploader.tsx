@@ -1,17 +1,24 @@
-import { FormEvent, useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useMutation } from "../../utils/trpc";
 import { calcTotalProgress, uploadFile } from "../../utils/uploader";
 import Button from "../UI/Button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { useDropzone } from "react-dropzone";
+import { FileError, useDropzone } from "react-dropzone";
 import UploadFileList from "../UploadFileList";
 import { HiPlus } from "react-icons/hi";
 import IconButton from "../UI/Button/IconButton";
 import UploadLoadingPanel from "../UploadLoadingPanel";
 import { AnimatePresence, motion } from "framer-motion";
 import SharePanel from "../SharePanel";
+import { Ring } from "@uiball/loaders";
+import useAbortController from "../../hooks/useAbortController";
+import compressImg from "../../utils/compression/compressImg";
+import { COMPRESSED_FILE_EXTENSION } from "../../utils/constants";
+import getPreviewName from "../../utils/compression/getPreviewName";
+import fileIsInList from "../../utils/dropzone/fileIsInList";
+import InfoBox from "../UI/InfoBox";
 
 const schema = z.object({
   message: z.string().max(150).optional(),
@@ -23,34 +30,55 @@ const stepAnimationVariants = {
   exit: { opacity: 0, x: "10%" },
 };
 
+export type Step = "success" | "loading" | "select";
+
 const stepAnimationTransition = { duration: 0.3, delay: 0.2 };
 
 export default function Uploader() {
   const [files, setFiles] = useState<File[] | undefined | null>(null);
-  const [step, setStep] = useState(0);
+  const [fetchingUploadUrls, setFetchingUploadUrls] = useState(false);
+  const [step, setStep] = useState<Step>("select");
   const [downloadUrl, setDownloadUrl] = useState("");
   const [totalUploadSize, setTotalUploadSize] = useState(0);
   const [totalUploadProgress, setTotalUploadProgress] = useState(0);
+  const [uploadController, abortUpload] = useAbortController();
+  const [rejection, setRejection] = useState<FileError | undefined>();
+
+  //state used for compression
+  const [activeCompressions, setActiveCompressions] = useState(0);
+  const [startedSubmit, setStartedSubmit] = useState(false);
+  const [previews, setPreviews] = useState<File[]>([]);
 
   const onDrop = useCallback(
-    (acceptedFiles: File[]) => {
+    async (acceptedFiles: File[]) => {
+      if (!acceptedFiles) return;
+
       if (files) setFiles([...files, ...acceptedFiles]);
-      else setFiles(acceptedFiles);
+      else setFiles([...acceptedFiles]);
+
+      const previewImages = await compressImages(acceptedFiles);
+      if (previewImages) setPreviews(previewImages);
     },
     [files, setFiles]
   );
   const { getRootProps, getInputProps, isDragActive, open, fileRejections } =
     useDropzone({
       onDrop,
+      validator: (file) => fileIsInList(file.name, files),
+      onDropRejected: (error) => setRejection(error[0]?.errors[0]),
     });
 
-  const { register, handleSubmit } = useForm({
+  const {
+    register,
+    handleSubmit,
+    reset: resetForm,
+    getValues,
+  } = useForm({
     resolver: zodResolver(schema),
   });
 
   //Tracks uploaded bytes of each file
   const uploadProgresses: number[] = [];
-  const uploadController = new AbortController();
 
   const getUploadUrlMutation = useMutation(["upload.request"], {
     onSuccess: async (data) => {
@@ -58,25 +86,31 @@ export default function Uploader() {
 
       if (!files) return console.error("No file to upload");
 
-      const res = await uploadFiles(files, urls);
+      setStep("loading");
+
+      const res = await uploadFiles([...files, ...previews], urls);
 
       if (!res.every((r) => r?.status === 200))
         console.error("upload of some files may have failed");
 
       setDownloadUrl(`${window.location.origin}/files/${uploadId}`);
-      setStep(2);
+      setStep("success");
       reset();
+    },
+    onSettled: () => {
+      setFetchingUploadUrls(false);
     },
   });
 
   const onSubmit = handleSubmit(async (data) => {
     if (!files || files.length === 0) return;
-    getUploadUrlMutation.mutate({
-      names: files.map((file) => file.name),
-      message: data.message,
-      close: true,
-    });
-    setStep(1);
+
+    setFetchingUploadUrls(true);
+
+    if (activeCompressions) {
+      console.log(`Waiting for compression to finish (${activeCompressions})`);
+      setStartedSubmit(true);
+    } else mutateGetUploadUrls(data.message, [...files, ...previews]);
   });
 
   //Uploads all files and tracks their progress
@@ -95,7 +129,7 @@ export default function Uploader() {
             calcTotalProgress(uploadProgresses, totalSize)
           );
         },
-        signal: uploadController.signal,
+        signal: uploadController?.signal,
       });
     });
     return await Promise.all(promises);
@@ -107,23 +141,82 @@ export default function Uploader() {
     setFiles(tmpFile);
   };
 
-  const reset = () => {
-    setFiles([]);
-    setTotalUploadProgress(0);
+  const removePreview = (fileIndex: number) => {
+    const [originalFile] = files?.splice(fileIndex, 1) || [];
+    const tmpPreviews = [...previews];
+
+    if (!originalFile) return;
+
+    const previewName = getPreviewName(
+      originalFile.name,
+      COMPRESSED_FILE_EXTENSION
+    );
+
+    const previewToRemove = tmpPreviews.find(
+      ({ name }) => name === previewName
+    );
+
+    if (!previewToRemove) return;
+
+    tmpPreviews.splice(tmpPreviews.indexOf(previewToRemove), 1);
   };
 
-  //FIXME: #3 The upload controller dose not correctly abort the upload
+  const reset = () => {
+    setFiles([]);
+    resetForm();
+    setFetchingUploadUrls(false);
+    setTotalUploadProgress(0);
+    setTotalUploadSize(0);
+  };
+
   const cancelUpload = () => {
-    uploadController.abort();
+    abortUpload("upload aborted by user");
     console.error("Upload aborted");
-    setStep(0);
+    setStep("select");
     reset();
   };
+
+  const mutateGetUploadUrls = (message: string, files: File[]) =>
+    getUploadUrlMutation.mutate({
+      names: files.map((file) => file.name),
+      message: message,
+      close: true,
+    });
+
+  const compressImages = async (files: File[]) => {
+    const allCompressions = await Promise.all(
+      files.map(
+        async (file) =>
+          await compressImg(file, {
+            nameExtension: COMPRESSED_FILE_EXTENSION,
+            onStart: () => setActiveCompressions((count) => count + 1),
+            onSuccess: () => setActiveCompressions((count) => count - 1),
+            onError: () => setActiveCompressions((count) => count - 1),
+          })
+      )
+    );
+
+    const validCompressions: File[] = allCompressions.filter(
+      (file): file is File => typeof file !== "undefined" && file !== null
+    );
+
+    return validCompressions;
+  };
+
+  useEffect(() => {
+    /**
+     * When images are uploaded thy are automatically compressed. If compressions are still in progress when user presses submit, it sets `staredSubmit` to true. As soon as all compressions are finished, it submits the form.
+     */
+    if (activeCompressions === 0 && startedSubmit && files) {
+      mutateGetUploadUrls(getValues("message"), [...files, ...previews]);
+      setStartedSubmit(false);
+    }
+  }, [activeCompressions, startedSubmit, files]);
 
   return (
     <div className="card w-80 p-5">
       <AnimatePresence exitBeforeEnter>
-        {step === 0 ? (
+        {step === "select" ? (
           <motion.form
             key="upload-form"
             initial="initial"
@@ -162,15 +255,31 @@ export default function Uploader() {
                 )}
               </div>
             ) : (
-              <UploadFileList onRemove={removeFile} files={files} />
+              <UploadFileList
+                onRemove={(i) => {
+                  removeFile(i);
+                  removePreview(i);
+                }}
+                files={files}
+              />
             )}
-            <label className="font-serif font-bold text-lg">Message</label>
+            {rejection && (
+              <InfoBox type="error" onClose={() => setRejection(undefined)}>
+                <p>{rejection.message}</p>
+              </InfoBox>
+            )}
+            <label className="font-serif font-bold text-lg mt-1">Message</label>
             <textarea className="resize-none h-28" {...register("message")} />
-            <Button variant="primary" className="mt-3">
+            <Button
+              disabled={fetchingUploadUrls}
+              variant="primary"
+              className="mt-3 flex items-center gap-3"
+            >
               Upload
+              {fetchingUploadUrls && <Ring color="#fff" size={20} />}
             </Button>
           </motion.form>
-        ) : step === 1 ? (
+        ) : step === "loading" ? (
           <UploadLoadingPanel
             totalBytes={totalUploadSize}
             progress={totalUploadProgress}

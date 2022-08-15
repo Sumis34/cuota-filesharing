@@ -7,13 +7,14 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { Upload } from "@prisma/client";
 import * as trpc from "@trpc/server";
 import { FIVE_MINUTES, SEVEN_DAYS } from "../../utils/timeInSeconds";
+import { isPreview } from "../../utils/preview/isPreview";
 
 interface UploadURLOptions {
   maxCacheAge: number;
 }
 
 const uploadInputSchema = z.object({
-  names: z.string().min(3).max(100).array(),
+  names: z.string().min(3).max(1024).array(),
   id: z.string().cuid().optional(),
   message: z.string().max(100).optional(),
   close: z.boolean().optional(),
@@ -35,11 +36,19 @@ const getUploadUrl = async (
   options?: UploadURLOptions
 ) => {
   const safeName = filenamify(name, { replacement: "_" });
+
+  const path = isPreview(name)
+    ? `${uploadId}/preview/${safeName}`
+    : `${uploadId}/${safeName}`;
+
   return await getSignedUrl(
     s3,
     new PutObjectCommand({
       Bucket: process.env.S3_BUCKET,
-      Key: `${uploadId}/${safeName}`, //filename
+      Key: path, //filename
+      Metadata: {
+        poolId: uploadId,
+      },
       ContentDisposition: `attachment; filename=${name}`,
       CacheControl: `max-age=${options?.maxCacheAge || 60}`,
     }),
@@ -52,7 +61,7 @@ const getUploadUrl = async (
 export const exampleRouter = createRouter().mutation("request", {
   input: uploadInputSchema,
   async resolve({ input, ctx }) {
-    const { prisma } = ctx;
+    const { prisma, session } = ctx;
     let upload: Upload | null = null;
 
     if (input.id)
@@ -62,6 +71,14 @@ export const exampleRouter = createRouter().mutation("request", {
       upload = await prisma.upload.create({
         data: {
           message: input.message,
+          expiresAt: new Date(Date.now() + SEVEN_DAYS * 1000),
+          ...(session && {
+            user: {
+              connect: {
+                id: (session?.user?.id as string) || undefined,
+              },
+            },
+          }),
         },
       });
 

@@ -1,11 +1,18 @@
 import { useRef, useState } from "react";
 import { Document, LoadingProcessData, Page, pdfjs } from "react-pdf";
-import Button from "../UI/Button";
+import Button from "../../../UI/Button";
 import { motion } from "framer-motion";
+import { ViewMode } from "../../Previewer/Previewer";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
-export default function PDFViewer({ path }: { path: string }) {
+export default function PDFViewer({
+  path,
+  mode,
+}: {
+  path: string;
+  mode: ViewMode;
+}) {
   const [numPages, setNumPages] = useState(0);
   const [pageNumber, setPageNumber] = useState(1);
   const [loading, setLoading] = useState(0);
@@ -19,6 +26,9 @@ export default function PDFViewer({ path }: { path: string }) {
   const handelProgress = (data: LoadingProcessData) => {
     setLoading(Math.round((data.loaded * 100) / data.total));
   };
+
+  const previewWidth = (parent.current?.offsetWidth || 200) - 40;
+  const fullscreenHeight = (parent.current?.offsetHeight || 200) - 40;
 
   return (
     <div className="px-10 py-5 h-full" ref={parent}>
@@ -40,13 +50,17 @@ export default function PDFViewer({ path }: { path: string }) {
         onLoadSuccess={onDocumentLoadSuccess}
       >
         <Page
-          width={(parent.current?.offsetWidth || 200) - 40}
+          width={mode === "preview" ? previewWidth : undefined}
+          height={mode === "fullscreen" ? fullscreenHeight : undefined}
           pageNumber={pageNumber}
         />
       </Document>
-
-      {/* <Button onClick={() => setPageNumber(pageNumber + 1)}>+</Button>
-      <Button onClick={() => setPageNumber(pageNumber - 1)}>-</Button> */}
+      {mode === "fullscreen" && (
+        <>
+          <Button onClick={() => setPageNumber(pageNumber + 1)}>+</Button>
+          <Button onClick={() => setPageNumber(pageNumber - 1)}>-</Button>
+        </>
+      )}
     </div>
   );
 }

@@ -1,47 +1,46 @@
 import mime from "mime-types";
-import { HiAdjustments, HiDocument, HiVideoCamera } from "react-icons/hi";
-import PDFViewer from "../../PDFViewer";
+import { ImgViewer, PDFViewer, UnknownViewer, VideoViewer } from "../Viewers";
+import AudioViewer from "../Viewers/AudioViewer";
 
 const isImage = (type: string) => type.match("image/*");
 const isPDF = (type: string) => type === mime.contentType("pdf");
 const isVideo = (type: string) => type.match("video/*");
+const isAudio = (type: string) => type.match("audio/*");
+
+export type ViewMode = "preview" | "fullscreen";
 
 export default function Previewer({
   contentUrl,
+  previewUrl,
   type,
+  onMetaChange,
+  mode = "preview",
 }: {
   contentUrl: string;
+  previewUrl?: string;
   type: string;
+  mode?: ViewMode;
+  onMetaChange?: (meta: any) => void;
 }) {
-
   return (
-    <div className="overflow-hidden h-full">
+    <div className="overflow-hidden h-full w-full">
       {isImage(type) ? (
-        <img src={contentUrl} className="object-cover w-full h-full" />
+        <ImgViewer
+          mode={mode}
+          onMetaChange={onMetaChange}
+          path={previewUrl || contentUrl}
+        />
       ) : isPDF(type) ? (
-        <PDFViewer path={contentUrl} />
+        <PDFViewer mode={mode} path={contentUrl} />
       ) : isVideo(type) ? (
-        <div className="relative h-full">
-          <div className="inset-0 absolute p-5">
-            <div className="p-2 bg-gray-200/5 ml-auto w-fit rounded-lg" title="Video">
-              <HiVideoCamera className="fill-gray-200" />
-            </div>
-          </div>
-          <video className="object-cover w-full h-full">
-            <source src={contentUrl} type={"video/mp4"} />
-            Your browser does not support the video tag.
-          </video>
-        </div>
+        <VideoViewer mode={mode} path={contentUrl} />
+      ) : isAudio(type) ? (
+        <AudioViewer mode={mode} path={contentUrl} />
       ) : (
-        <div className="w-full h-full flex items-center justify-center">
-          <div className="relative">
-            <HiDocument className="fill-gray-200 text-9xl" />
-            <span className="text-gray-200 text-center block">
-              {mime.extension(type || "")}
-            </span>
-          </div>
-        </div>
+        <UnknownViewer type={type} />
       )}
     </div>
   );
 }
+
+export { isImage, isPDF, isVideo };

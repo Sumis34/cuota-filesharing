@@ -10,10 +10,19 @@ import {
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { SEVEN_DAYS } from "../../utils/timeInSeconds";
+import getPreview from "../../utils/preview/getPreview";
+import isAdmin from "../../utils/auth/isAdmin";
+import { TRPCError } from "@trpc/server";
+import deletePool from "../../utils/s3/deletePool";
 
-const getFiles = async (contents: _Object[], totalSize: number) => {
+const getFiles = async (
+  contents: _Object[],
+  addFileSize: (size: number) => void
+) => {
+  const { files, previews } = splitContents(contents);
+
   return await Promise.all(
-    contents?.map(async ({ Key }) => {
+    files?.map(async ({ Key }) => {
       const params: GetObjectCommandInput = {
         Bucket: process.env.S3_BUCKET,
         Key,
@@ -21,13 +30,16 @@ const getFiles = async (contents: _Object[], totalSize: number) => {
       };
       const url = await getSignedUrl(s3, new GetObjectCommand(params));
 
+      const previewUrl = await getPreview(Key || "", previews);
+
       const { ContentType, ContentLength, LastModified, Metadata } =
         await s3.send(new HeadObjectCommand(params));
 
-      if (ContentLength) totalSize += ContentLength;
+      if (ContentLength) addFileSize(ContentLength);
 
       return {
         url,
+        preview: previewUrl || null,
         key: Key,
         contentType: ContentType,
         contentLength: ContentLength,
@@ -38,15 +50,23 @@ const getFiles = async (contents: _Object[], totalSize: number) => {
   );
 };
 
+const splitContents = (
+  contents: _Object[] | undefined
+): {
+  files: _Object[];
+  previews: _Object[];
+} => {
+  return {
+    files: !contents
+      ? []
+      : contents?.filter((content) => !content.Key?.includes("/preview/")),
+    previews: !contents
+      ? []
+      : contents?.filter((content) => content.Key?.includes("/preview/")),
+  };
+};
+
 export const filesRouter = createRouter()
-  .mutation("request", {
-    input: z.object({
-      name: z.string().min(3).max(100),
-    }),
-    async resolve({ input, ctx }) {
-      return { url: "" };
-    },
-  })
   .query("getAll", {
     input: z.object({
       id: z.string().cuid(),
@@ -65,7 +85,9 @@ export const filesRouter = createRouter()
         where: { id: input.id },
       });
 
-      const files = !Contents ? [] : await getFiles(Contents, totalSize);
+      const files = !Contents
+        ? []
+        : await getFiles(Contents, (s) => (totalSize += s));
 
       return {
         files,
@@ -77,6 +99,32 @@ export const filesRouter = createRouter()
         message: uploadInfo?.message,
         allowsUploads: !uploadInfo?.closed,
         poolCreatedAt: uploadInfo?.uploadTime,
+        expiresAt: uploadInfo?.expiresAt,
+      };
+    },
+  })
+  .mutation("delete", {
+    input: z.object({
+      ids: z.array(z.string().cuid()),
+    }),
+    async resolve({ input, ctx }) {
+      const { session } = ctx;
+      const deleted: string[] = [];
+
+      if (!isAdmin(session))
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "You are not authorized to delete files.",
+        });
+
+      for (const id of input.ids) {
+        await deletePool(id, (keys) => {
+          deleted.push(...keys);
+        });
+      }
+
+      return {
+        deleted,
       };
     },
   });

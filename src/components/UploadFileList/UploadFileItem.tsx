@@ -17,7 +17,7 @@ export default function UploadFileItem({
   remove,
 }: UploadFileItemProps) {
   return (
-    <div className="flex py-2 justify-between group gap-3">
+    <li className="flex py-2 justify-between group gap-3">
       <div className="flex flex-col overflow-hidden">
         <p className="font-semibold opacity-80 leading-snug truncate">{name}</p>
         <div className="opacity-30 text-xs flex gap-3">
@@ -34,6 +34,6 @@ export default function UploadFileItem({
           <HiMinus className="fill-gray-500" />
         </IconButton>
       </div>
-    </div>
+    </li>
   );
 }
