@@ -13,11 +13,11 @@ const Article: NextPageWithLayout = ({
   const { meta, content } = article;
 
   return (
-    <div>
+    <div className="mb-5">
       <div className="mt-32 overflow-hidden h-96 rounded-2xl relative">
         <div className="absolute inset-0 flex px-24 justify-center flex-col">
           <h1 className="text-7xl">{meta.title || "ok"}</h1>
-          <div className="bg-slate-100 p-3 flex rounded-xl items-center gap-2 mt-4 w-fit">
+          <div className="bg-white p-3 flex rounded-xl items-center gap-2 mt-4 w-fit">
             <Avatar url={meta.author.image} className="w-10 h-10" />
             <div className="flex flex-col">
               <p className="font-bold -mb-1">{meta.author.name}</p>
