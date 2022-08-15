@@ -19,12 +19,12 @@ const Home: NextPageWithLayout = () => {
       </div>
       <img
         src="/assets/images/mesh-gradient.png"
-        className="absolute top-[60%] right-[50%] w-full h-full blur-lg rotate-90 opacity-70"
+        className="absolute top-[60%] right-[50%] w-full h-full blur-lg rotate-90"
         alt=""
       />
       <img
         src="/assets/images/mesh-gradient.png"
-        className="absolute top-[20%] left-[70%] blur-xl opacity-70 animate-pulse"
+        className="absolute top-[20%] left-[70%] blur-xl"
         alt=""
       />
     </div>

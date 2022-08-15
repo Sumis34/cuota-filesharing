@@ -1,4 +1,4 @@
-import { HiMinus } from "react-icons/hi";
+import { HiMinus, HiOutlineExclamation } from "react-icons/hi";
 import IconButton from "../UI/Button/IconButton";
 import bytes from "pretty-bytes";
 import mime from "mime-types";
@@ -9,6 +9,8 @@ interface UploadFileItemProps {
   size: number;
   remove: () => void;
 }
+
+const GIGABYTE = 1024 * 1024 * 1024;
 
 export default function UploadFileItem({
   name,
@@ -26,7 +28,14 @@ export default function UploadFileItem({
           </span>
         </div>
       </div>
-      <div className="flex items-center">
+      <div className="flex items-center justify-end flex-grow">
+        {size > GIGABYTE * 3 && (
+          <span className="text-orange-900 bg-orange-200 rounded-md p-1">
+            <HiOutlineExclamation />
+          </span>
+        )}
+      </div>
+      <div className="flex items-center flex-none">
         <IconButton
           onClick={remove}
           className="group-hover:opacity-100 opacity-0 !bg-gray-200 hover:!bg-gray-200/60"
