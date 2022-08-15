@@ -1,4 +1,5 @@
 import React, { ReactElement, useState } from "react";
+import Footer from "../Footer";
 import LandingNav from "../LandingNav";
 
 interface LayoutProps {
@@ -14,6 +15,7 @@ function DefaultLayout({ children }: LayoutProps) {
           {children}
         </div>
       </div>
+      <Footer />
     </>
   );
 }
