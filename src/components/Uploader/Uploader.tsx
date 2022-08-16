@@ -19,6 +19,8 @@ import { COMPRESSED_FILE_EXTENSION } from "../../utils/constants";
 import getPreviewName from "../../utils/compression/getPreviewName";
 import fileIsInList from "../../utils/dropzone/fileIsInList";
 import InfoBox from "../UI/InfoBox";
+import encryptFiles from "../../utils/crypto/encryptFiles";
+import { getRandomLetter } from "../../utils/greece";
 
 const schema = z.object({
   message: z.string().max(150).optional(),
@@ -41,6 +43,7 @@ export default function Uploader() {
   const [downloadUrl, setDownloadUrl] = useState("");
   const [totalUploadSize, setTotalUploadSize] = useState(0);
   const [totalUploadProgress, setTotalUploadProgress] = useState(0);
+  const [useE2EEncryption, setUseE2EEncryption] = useState(false);
   const [uploadController, abortUpload] = useAbortController();
   const [rejection, setRejection] = useState<FileError | undefined>();
 
@@ -110,6 +113,9 @@ export default function Uploader() {
     if (activeCompressions) {
       console.log(`Waiting for compression to finish (${activeCompressions})`);
       setStartedSubmit(true);
+    } else if (useE2EEncryption) {
+      const encryptedFile = await encryptFiles(files);
+      mutateGetUploadUrls(data.message, [encryptedFile]);
     } else mutateGetUploadUrls(data.message, [...files, ...previews]);
   });
 

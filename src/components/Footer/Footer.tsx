@@ -24,7 +24,7 @@ const SOCIAL_LINKS: { href: string; icon: React.ReactNode }[] = [
 
 export default function Footer() {
   return (
-    <footer className="h-64 w-full shadow-xl border">
+    <footer className="h-64 w-full">
       <img
         src="/assets/shapes/flat_ellipse.svg"
         className="-translate-y-full w-full"
