@@ -16,6 +16,7 @@ interface UploadURLOptions {
 const uploadInputSchema = z.object({
   names: z.string().min(3).max(1024).array(),
   id: z.string().cuid().optional(),
+  size: z.number().optional(),
   message: z.string().max(100).optional(),
   close: z.boolean().optional(),
 });
