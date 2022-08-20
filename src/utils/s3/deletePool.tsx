@@ -1,4 +1,8 @@
-import { DeleteObjectsCommand, ListObjectsCommand } from "@aws-sdk/client-s3";
+import {
+  DeleteObjectsCommand,
+  DeleteObjectsCommandOutput,
+  ListObjectsCommand,
+} from "@aws-sdk/client-s3";
 import { PrismaClient } from "@prisma/client";
 import { s3 } from "./s3";
 
@@ -11,6 +15,9 @@ const deletePoolData = async (poolId: string) => {
   });
 
   const { Contents } = await s3.send(command);
+
+  if (!Contents)
+    return { Deleted: [], $metadata: "" } as DeleteObjectsCommandOutput;
 
   const deleteCommand = new DeleteObjectsCommand({
     Bucket: process.env.S3_BUCKET,

@@ -76,3 +76,14 @@ model Upload {
 
     @@unique([id])
 }
+
+model TransferAmount {
+    time   DateTime @unique @default(now())
+    amount Int      @default(0)
+}
+
+model DeletedPools {
+    time      DateTime @unique @default(now())
+    amount    Int      @default(0)
+    fileCount Int      @default(0)
+}

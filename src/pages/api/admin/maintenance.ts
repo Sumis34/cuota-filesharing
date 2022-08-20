@@ -36,6 +36,16 @@ export default async function handler(
     for (const pool of expiredPools) {
       await deletePool(pool.id, updateDeletedItems);
     }
+
+    // Safe amount of deleted items to DB for logging purposes
+    if (expiredPools.length > 0)
+      await prisma.deletedPools.create({
+        data: {
+          amount: expiredPools.length,
+          fileCount: deletedItems.length,
+        },
+      });
+
     res.status(200).json({
       success: true,
       message:
