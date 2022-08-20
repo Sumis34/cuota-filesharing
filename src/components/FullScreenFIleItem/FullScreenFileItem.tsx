@@ -2,13 +2,14 @@ import { Fragment, useState } from "react";
 import React from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { RemoteFile } from "../../utils/download/downloadZip";
-import { HiDownload } from "react-icons/hi";
+import { HiDownload, HiX } from "react-icons/hi";
 import Button from "../UI/Button";
 import { ImgViewer } from "../FileViewer/Viewers";
 import FileInfo from "../FileViewer/FileInfo";
 import getNameFromKey from "../../utils/getNameFromKey";
 import DisplayImgMeta from "./DisplayImgMeta";
 import Previewer from "../FileViewer/Previewer";
+import IconButton from "../UI/Button/IconButton";
 
 export default function FullScreenFileItem({
   open,
@@ -63,12 +64,13 @@ export default function FullScreenFileItem({
                     type={file?.contentType || ""}
                     key={file?.key}
                   />
-                  <Button
+                  <IconButton
                     className="!px-3  flex items-center gap-2 ml-auto"
-                    href={file?.url}
+                    variant="tertiary"
+                    onClick={closeModal}
                   >
-                    <HiDownload className="text-xl" />
-                  </Button>
+                    <HiX className="text-xl text-gray-500" />
+                  </IconButton>
                 </div>
                 <div className="min-h-0 my-5">
                   {file && (
@@ -80,20 +82,28 @@ export default function FullScreenFileItem({
                     />
                   )}
                 </div>
-                <div className="h-8 flex items-center flex-none">
-                  {file?.contentType &&
-                    file.contentType.includes("image") &&
-                    imgMeta && (
-                      <DisplayImgMeta
-                        camera={imgMeta?.Model}
-                        shutter={imgMeta?.ExposureTime}
-                        aperture={imgMeta?.FNumber}
-                        focalLength={imgMeta?.FocalLength}
-                        width={imgMeta?.ExifImageWidth}
-                        height={imgMeta?.ExifImageHeight}
-                        time={imgMeta?.DateTimeOriginal}
-                      />
-                    )}
+                <div className="flex justify-between">
+                  <div className="flex items-center overflow-y-auto">
+                    {file?.contentType &&
+                      file.contentType.includes("image") &&
+                      imgMeta && (
+                        <DisplayImgMeta
+                          camera={imgMeta?.Model}
+                          shutter={imgMeta?.ExposureTime}
+                          aperture={imgMeta?.FNumber}
+                          focalLength={imgMeta?.FocalLength}
+                          width={imgMeta?.ExifImageWidth}
+                          height={imgMeta?.ExifImageHeight}
+                          time={imgMeta?.DateTimeOriginal}
+                        />
+                      )}
+                  </div>
+                  <Button
+                    className="!px-3  flex items-center gap-2 ml-auto"
+                    href={file?.url}
+                  >
+                    <HiDownload className="text-xl" />
+                  </Button>
                 </div>
               </Dialog.Panel>
             </Transition.Child>
