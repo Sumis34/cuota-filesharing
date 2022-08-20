@@ -32,6 +32,7 @@ const encryptFile = async (
 
   return { key, buffer: buf };
 };
+
 /**
  *
  * @param files Array of files to encrypt

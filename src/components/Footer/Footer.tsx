@@ -27,7 +27,7 @@ export default function Footer() {
     <footer className="h-64 w-full">
       <img
         src="/assets/shapes/flat_ellipse.svg"
-        className="-translate-y-full w-full"
+        className="-translate-y-[99%] w-full"
         alt="ellipse"
       />
       <div className="w-full flex items-center justify-center flex-col">

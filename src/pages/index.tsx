@@ -9,7 +9,7 @@ import { NextPageWithLayout } from "./_app";
 const Home: NextPageWithLayout = () => {
   return (
     <div className="relative w-full h-full">
-      <div className="sm:items-center justify-center items-center flex sm:flex-row flex-col gap-10 h-screen sm:justify-between z-10 relative">
+      <div className="sm:items-center justify-center items-center flex sm:flex-row flex-col gap-10 h-[110vh] sm:justify-between z-10 relative">
         <h1 className="font-serif font-light sm:text-8xl text-4xl">
           <span className="text-indigo-500 font-bold italic">Share</span> your
           art
