@@ -21,10 +21,18 @@ import fileIsInList from "../../utils/dropzone/fileIsInList";
 import InfoBox from "../UI/InfoBox";
 import encryptFiles from "../../utils/crypto/encryptFiles";
 import { getRandomLetter } from "../../utils/greece";
+import { TRPCClientError } from "@trpc/client";
 
 const schema = z.object({
-  message: z.string().max(150).optional(),
+  message: z
+    .string()
+    .max(100, "Keep it short! Message must contain at most 100 characters")
+    .optional(),
 });
+
+type FormValues = {
+  message: string;
+};
 
 const stepAnimationVariants = {
   initial: { opacity: 0, x: "-10%" },
@@ -46,6 +54,7 @@ export default function Uploader() {
   const [useE2EEncryption, setUseE2EEncryption] = useState(false);
   const [uploadController, abortUpload] = useAbortController();
   const [rejection, setRejection] = useState<FileError | undefined>();
+  const [uploadError, setUploadError] = useState<string>("");
 
   //state used for compression
   const [activeCompressions, setActiveCompressions] = useState(0);
@@ -76,7 +85,8 @@ export default function Uploader() {
     handleSubmit,
     reset: resetForm,
     getValues,
-  } = useForm({
+    formState: { errors },
+  } = useForm<FormValues>({
     resolver: zodResolver(schema),
   });
 
@@ -100,6 +110,12 @@ export default function Uploader() {
       setStep("success");
       reset();
     },
+    onError: (error) =>
+      setUploadError(
+        error.data?.code === "INTERNAL_SERVER_ERROR"
+          ? "Upload filed! Please try again later (Server Error)"
+          : "Upload filed! Please check your Internet connection or try again later"
+      ),
     onSettled: () => {
       setFetchingUploadUrls(false);
     },
@@ -275,7 +291,21 @@ export default function Uploader() {
               </InfoBox>
             )}
             <label className="font-serif font-bold text-lg mt-1">Message</label>
-            <textarea className="resize-none h-28" {...register("message")} />
+            <textarea
+              maxLength={100}
+              className="resize-none h-28 mb-2"
+              {...register("message")}
+            />
+            {errors?.message && (
+              <InfoBox type="error">
+                <p>{errors?.message?.message}</p>
+              </InfoBox>
+            )}
+            {uploadError && (
+              <InfoBox type="error">
+                <p>{uploadError}</p>
+              </InfoBox>
+            )}
             <Button
               disabled={fetchingUploadUrls}
               variant="primary"
