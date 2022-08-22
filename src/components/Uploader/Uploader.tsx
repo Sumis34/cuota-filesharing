@@ -110,12 +110,16 @@ export default function Uploader() {
       setStep("success");
       reset();
     },
-    onError: (error) =>
+    onError: (error) => {
+      if ((error as any).code === "ERR_CANCELED") return;
+
       setUploadError(
         error.data?.code === "INTERNAL_SERVER_ERROR"
           ? "Upload filed! Please try again later (Server Error)"
           : "Upload filed! Please check your Internet connection or try again later"
-      ),
+      );
+      setStep("select");
+    },
     onSettled: () => {
       setFetchingUploadUrls(false);
     },
@@ -125,6 +129,7 @@ export default function Uploader() {
     if (!files || files.length === 0) return;
 
     setFetchingUploadUrls(true);
+    setUploadError("");
 
     if (activeCompressions) {
       console.log(`Waiting for compression to finish (${activeCompressions})`);
@@ -185,6 +190,7 @@ export default function Uploader() {
 
   const reset = () => {
     setFiles([]);
+    setUploadError("");
     resetForm();
     setFetchingUploadUrls(false);
     setTotalUploadProgress(0);

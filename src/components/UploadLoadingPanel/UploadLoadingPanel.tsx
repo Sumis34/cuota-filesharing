@@ -49,8 +49,10 @@ export default function UploadLoadingPanel({
     const uploadSpeed = uploadedBytes / seconds;
     const speeds = [...uploadSpeeds, uploadSpeed];
 
+    const lastTenSpeeds = speeds.slice(-10);
+
     const averageSpeed = Math.round(
-      speeds.reduce((a, b) => a + b, 0) / speeds.length
+      lastTenSpeeds.reduce((a, b) => a + b, 0) / speeds.length
     );
 
     const timeRemaining = Math.round(
@@ -114,7 +116,10 @@ export default function UploadLoadingPanel({
           </Wave>
         </div>
         <div className="flex gap-2">
-          <span title="Upload speed" className="bg-green-200 pr-2 pl-1 rounded-md text-sm text-green-800 inline-flex items-center">
+          <span
+            title="Upload speed"
+            className="bg-green-200 pr-2 pl-1 rounded-md text-sm text-green-800 inline-flex items-center"
+          >
             <HiArrowSmUp className="fill-green-800" />
             {bytes(averageSpeed)}/s
           </span>
