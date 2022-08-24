@@ -17,6 +17,14 @@ const Admin = ({
   return (
     <main className="p-5">
       <h2>Admin</h2>
+      <button
+        type="button"
+        onClick={() => {
+          throw new Error("Sentry Frontend Error");
+        }}
+      >
+        Throw error
+      </button>
       <ul className="flex flex-col gap-3 max-w-md">
         {pools.map(({ expiresAt, id, uploadTime, message }: Upload) => (
           <li
