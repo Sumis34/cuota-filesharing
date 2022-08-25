@@ -11,7 +11,7 @@ export const poolRouter = createRouter()
     if (!ctx.session) throw new TRPCError({ code: "UNAUTHORIZED" });
     return next();
   })
-  .query("pools", {
+  .query("getUserPools", {
     input: z.object({
       skip: z.number().optional(),
       take: z.number().max(MAX_RETURN_COUNT).min(MIN_RETURN_COUNT).optional(),

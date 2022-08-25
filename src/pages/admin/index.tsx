@@ -7,6 +7,7 @@ import {
 } from "next";
 import { unstable_getServerSession } from "next-auth";
 import { useRouter } from "next/router";
+import { useInfiniteQuery, useQuery } from "../../utils/trpc";
 import { authOptions } from "../api/auth/[...nextauth]";
 
 const Admin = ({
@@ -17,14 +18,6 @@ const Admin = ({
   return (
     <main className="p-5">
       <h2>Admin</h2>
-      <button
-        type="button"
-        onClick={() => {
-          throw new Error("Sentry Frontend Error");
-        }}
-      >
-        Throw error
-      </button>
       <ul className="flex flex-col gap-3 max-w-md">
         {pools.map(({ expiresAt, id, uploadTime, message }: Upload) => (
           <li
