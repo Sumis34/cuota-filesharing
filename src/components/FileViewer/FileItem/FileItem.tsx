@@ -30,13 +30,14 @@ export default function FileItem({
     <motion.li
       variants={item}
       viewport={{ once: true }}
-      onClick={() => onClick()}
-      className="w-full aspect-square bg-white rounded-xl shadow-xl shadow-black/5 border flex flex-col overflow-hidden relative cursor-zoom-in"
+      className="w-full aspect-square bg-white rounded-xl shadow-xl shadow-black/5 border flex flex-col overflow-hidden relative"
     >
-      {url && type && (
-        <Previewer type={type} contentUrl={url} previewUrl={previewUrl} />
-      )}
-      <div className="absolute flex items-end inset-0 w-full">
+      <div className="cursor-zoom-in h-full w-full" onClick={() => onClick()}>
+        {url && type && (
+          <Previewer type={type} contentUrl={url} previewUrl={previewUrl} />
+        )}
+      </div>
+      <div className="absolute mt-auto inset-0 w-full h-fit">
         <div className="bg-gray-50 px-5 py-3 flex w-full justify-between items-center gap-5 rounded-t-md">
           <FileInfo type={type || ""} size={size || 0} name={name || "file"} />
           <a href={url || "#"}>

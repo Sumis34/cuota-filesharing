@@ -4,6 +4,13 @@
 
 This is an app bootstrapped according to the [init.tips](https://init.tips) stack, also known as the T3-Stack.
 
+# Run App
+
+1. Clone repo
+2. Configure ENV Variables
+3. Configure Logging. `sentry-cli login` [sentry.io](https://docs.sentry.io/product/cli/configuration/)
+4. Deploy (Recommended to deploy to Vercel)
+
 # MinIo Setup
 
 MinIo is a self hosted s3 storage solution. Because this project is focused around open source solutions cuota is optimized to work with MinIo.

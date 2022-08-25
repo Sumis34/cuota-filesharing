@@ -7,6 +7,7 @@ import {
 } from "next";
 import { unstable_getServerSession } from "next-auth";
 import { useRouter } from "next/router";
+import { useInfiniteQuery, useQuery } from "../../utils/trpc";
 import { authOptions } from "../api/auth/[...nextauth]";
 
 const Admin = ({
