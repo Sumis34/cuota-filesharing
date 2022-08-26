@@ -5,6 +5,7 @@ import { DropdownItem } from "../Dropdown/Dropdown";
 import { router } from "@trpc/server";
 import { useRouter } from "next/router";
 import { signOut, useSession } from "next-auth/react";
+import { HiChevronDown } from "react-icons/hi";
 
 interface ProfileInfoProps {
   name?: string | null;
@@ -42,10 +43,11 @@ export default function ProfileInfo({ name, email, avatar }: ProfileInfoProps) {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="flex items-center gap-3"
+          className="flex items-center gap-2"
         >
-          <div className="text-right">
-            <p className="-mb-1">{name}</p>
+          <div className="">
+            <HiChevronDown className="text-xl" />
+            {/* <p className="-mb-1">{name}</p> */}
             {/* <p className="text-xs opacity-40">{email}</p> */}
           </div>
           <Avatar className="w-10" url={avatar || ""} />
