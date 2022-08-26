@@ -14,6 +14,7 @@ import {
   subWeeks,
 } from "date-fns";
 import { HiCalendar, HiClock } from "react-icons/hi";
+import ParsedText from "../ParsedText";
 
 interface PoolStatsProps {
   totalSize: number;
@@ -127,7 +128,7 @@ export default function PoolStats({
       <div className="h-32 border rounded-xl shadow-lg p-4 flex flex-col">
         <h3 className="text-2xl">Message</h3>
         <p className={`text-sm ${message ? "opacity-70" : "opacity-30"}`}>
-          {message || "no message"}
+          {message ? <ParsedText text={message} /> : "no message"}
         </p>
       </div>
       <div className="h-32 border rounded-xl shadow-lg p-4 flex flex-col justify-between">
