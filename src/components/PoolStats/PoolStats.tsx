@@ -85,7 +85,7 @@ export default function PoolStats({
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 mb-5 gap-5 md:gap-10">
-      <div className="h-32 border rounded-xl shadow-lg p-4 flex justify-between flex-col">
+      <div className="h-32 solid-card flex justify-between flex-col">
         <h3 className="text-2xl">Data</h3>
         <div>
           <div className="mb-1 flex justify-between">
@@ -125,13 +125,13 @@ export default function PoolStats({
           </div>
         </div>
       </div>
-      <div className="h-32 border rounded-xl shadow-lg p-4 flex flex-col">
+      <div className="h-32 solid-card flex flex-col">
         <h3 className="text-2xl">Message</h3>
         <p className={`text-sm ${message ? "opacity-70" : "opacity-30"}`}>
           {message ? <ParsedText text={message} /> : "no message"}
         </p>
       </div>
-      <div className="h-32 border rounded-xl shadow-lg p-4 flex flex-col justify-between">
+      <div className="h-32 solid-card flex flex-col justify-between">
         <h3 className="text-2xl">Dates</h3>
         <div className="grid grid-cols-2">
           <div className="flex items-center gap-2">

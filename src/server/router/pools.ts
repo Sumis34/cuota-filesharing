@@ -13,11 +13,11 @@ export const poolRouter = createRouter()
   })
   .query("getUserPools", {
     input: z.object({
-      skip: z.number().optional(),
+      cursor: z.number().optional(),
       take: z.number().max(MAX_RETURN_COUNT).min(MIN_RETURN_COUNT).optional(),
       asc: z.boolean().optional(),
     }),
-    async resolve({ ctx, input }) {
+    resolve: async ({ ctx, input }) => {
       const { prisma, session } = ctx;
       const isCurrentUser = {
         userId: {
@@ -27,7 +27,7 @@ export const poolRouter = createRouter()
 
       const userPools = await prisma.upload.findMany({
         where: isCurrentUser,
-        skip: input.skip,
+        skip: input.cursor,
         take: input.take || DEFAULT_RETURN_COUNT,
         orderBy: {
           uploadTime: input.asc ? "asc" : "desc",
