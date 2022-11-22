@@ -28,7 +28,9 @@ const Login: NextPageWithLayout<{ providers: Provider[] }> = ({
             {Object.values(providers).map((provider) =>
               provider.name === "Google" ? (
                 <GoogleButton
-                  onClick={() => signIn(provider.id)}
+                  onClick={() =>
+                    signIn(provider.id, { callbackUrl: "/" })
+                  }
                   key={provider.name}
                 />
               ) : (
