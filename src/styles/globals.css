@@ -35,5 +35,8 @@
   .card {
     @apply backdrop-blur-xl shadow-white shadow-inner bg-white/50 rounded-3xl;
   }
+  .card-solid {
+    @apply border rounded-xl shadow-lg p-4
+  }
 }
 @tailwind utilities;

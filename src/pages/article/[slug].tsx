@@ -13,7 +13,7 @@ const Article: NextPageWithLayout = ({
   const { meta, content } = article;
 
   return (
-    <div className="mb-5">
+    <div className="mb-10">
       <div className="mt-32 overflow-hidden h-96 rounded-2xl relative">
         <div className="absolute inset-0 flex px-24 justify-center flex-col">
           <h1 className="text-7xl">{meta.title || "ok"}</h1>

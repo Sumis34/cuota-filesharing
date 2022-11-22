@@ -7,18 +7,32 @@ import {
 } from "next";
 import { unstable_getServerSession } from "next-auth";
 import { useRouter } from "next/router";
+import InfoBox from "../../components/UI/InfoBox";
 import { useInfiniteQuery, useQuery } from "../../utils/trpc";
 import { authOptions } from "../api/auth/[...nextauth]";
 
 const Admin = ({
   pools,
+  totalPools,
+  fetchedPools,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const router = useRouter();
 
   return (
     <main className="p-5">
       <h2>Admin</h2>
-      <ul className="flex flex-col gap-3 max-w-md">
+      <InfoBox>
+        <p className="text-sm">
+          Returned <b>{fetchedPools}</b> of
+          <b> {totalPools}</b>
+          {totalPools === fetchedPools && (
+            <>
+              , pass <b>?a=AMOUNT</b> to limit amount of pools fetched.
+            </>
+          )}
+        </p>
+      </InfoBox>
+      <ul className="flex flex-col gap-3 max-w-md mt-5">
         {pools.map(({ expiresAt, id, uploadTime, message }: Upload) => (
           <li
             key={id}
@@ -56,9 +70,14 @@ const Admin = ({
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+export const getServerSideProps: GetServerSideProps = async ({
+  req,
+  res,
+  query,
+}) => {
   const session = await unstable_getServerSession(req, res, authOptions);
   const prisma = new PrismaClient();
+  const amount = query.a ? parseInt(query.a as string, 10) : undefined;
 
   if (!(session?.user?.role === "admin"))
     return {
@@ -72,11 +91,16 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
     orderBy: {
       uploadTime: "desc",
     },
+    take: amount,
   });
+
+  const totalPools = await prisma.upload.count();
 
   return {
     props: {
       pools: JSON.parse(JSON.stringify(pools)),
+      totalPools,
+      fetchedPools: amount || totalPools,
     },
   };
 };

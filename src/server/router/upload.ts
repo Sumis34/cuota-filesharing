@@ -54,7 +54,7 @@ const getUploadUrl = async (
       CacheControl: `max-age=${options?.maxCacheAge || 60}`,
     }),
     {
-      expiresIn: 100,
+      expiresIn: 3600,
     }
   );
 };

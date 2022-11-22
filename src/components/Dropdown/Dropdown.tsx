@@ -5,7 +5,7 @@ import { HiChevronDown } from "react-icons/hi";
 import { item } from "../FileViewer/FileItem/FileItem";
 
 export interface DropdownItem {
-  label: string;
+  label: React.ReactNode;
   onClick: () => void;
 }
 
@@ -33,8 +33,8 @@ const Dropdown: FC<DropdownProps> = ({ children, itemGroups }) => (
       <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 px-3 py-1 rounded-md bg-white shadow-xl shadow-black/5 ring-1 ring-black ring-opacity-5 focus:outline-none">
         {itemGroups.map((items, i) => (
           <div key={i} className="px-1 py-1">
-            {items.map(({ label, onClick }) => (
-              <Menu.Item key={label}>
+            {items.map(({ label, onClick }, i) => (
+              <Menu.Item key={i}>
                 {({ active }) => (
                   <button
                     onClick={onClick}
