@@ -38,7 +38,7 @@ export default function FileItem({
         )}
       </div>
       <div className="absolute mt-auto inset-0 w-full h-fit">
-        <div className="bg-gray-50 px-5 py-3 flex w-full justify-between items-center gap-5 rounded-t-md">
+        <div className="bg-gray-50 px-5 py-4 flex w-full justify-between items-center gap-5">
           <FileInfo type={type || ""} size={size || 0} name={name || "file"} />
           <a href={url || "#"}>
             <IconButton>
