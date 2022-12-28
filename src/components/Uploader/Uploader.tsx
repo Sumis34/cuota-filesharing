@@ -22,6 +22,8 @@ import InfoBox from "../UI/InfoBox";
 import encryptFiles from "../../utils/crypto/encryptFiles";
 import { getRandomLetter } from "../../utils/greece";
 import { TRPCClientError } from "@trpc/client";
+import { SourceType } from "../../server/router/upload";
+import { type } from "os";
 
 const schema = z.object({
   message: z
@@ -93,7 +95,7 @@ export default function Uploader() {
   //Tracks uploaded bytes of each file
   const uploadProgresses: number[] = [];
 
-  const getUploadUrlMutation = useMutation(["upload.request"], {
+  const getUploadUrlMutation = useMutation(["upload.requestV2"], {
     onSuccess: async (data) => {
       const { urls, uploadId } = data;
 
@@ -136,8 +138,19 @@ export default function Uploader() {
       setStartedSubmit(true);
     } else if (useE2EEncryption) {
       const encryptedFile = await encryptFiles(files);
-      mutateGetUploadUrls(data.message, [encryptedFile]);
-    } else mutateGetUploadUrls(data.message, [...files, ...previews]);
+      mutateGetUploadUrls(data.message, [
+        { file: encryptedFile, encrypted: true },
+      ]);
+    } else
+      mutateGetUploadUrls(data.message, [
+        ...files.map((f) => ({
+          file: f,
+        })),
+        ...previews.map((f) => ({
+          file: f,
+          type: "preview",
+        })),
+      ]);
   });
 
   //Uploads all files and tracks their progress
@@ -204,11 +217,17 @@ export default function Uploader() {
     reset();
   };
 
-  const mutateGetUploadUrls = (message: string, files: File[]) =>
+  const mutateGetUploadUrls = (
+    message: string,
+    files: { file: File; type?: SourceType; encrypted?: boolean }[]
+  ) =>
     getUploadUrlMutation.mutate({
-      names: files.map((file) => file.name),
+      files: files.map(({ file, type, encrypted }) => ({
+        name: file.name,
+        type: type,
+        encrypted: encrypted,
+      })),
       message: message,
-      close: true,
     });
 
   const compressImages = async (files: File[]) => {
@@ -236,7 +255,15 @@ export default function Uploader() {
      * When images are uploaded thy are automatically compressed. If compressions are still in progress when user presses submit, it sets `staredSubmit` to true. As soon as all compressions are finished, it submits the form.
      */
     if (activeCompressions === 0 && startedSubmit && files) {
-      mutateGetUploadUrls(getValues("message"), [...files, ...previews]);
+      mutateGetUploadUrls(getValues("message"), [
+        ...files.map((f) => ({
+          file: f,
+        })),
+        ...previews.map((f) => ({
+          file: f,
+          type: "preview",
+        })),
+      ]);
       setStartedSubmit(false);
     }
   }, [activeCompressions, startedSubmit, files]);

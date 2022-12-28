@@ -16,12 +16,13 @@ interface UploadURLOptions {
 
 const types = ["original", "preview"] as const;
 
-type Type = typeof types[number];
+export type SourceType = typeof types[number];
 
 const Files = z.array(
   z.object({
     name: z.string().min(3).max(1024),
     type: z.enum(types).default("original"),
+    encrypted: z.boolean().default(false),
   })
 );
 
@@ -55,7 +56,7 @@ const getUploadUrls = async (
 
 const getUploadUrlsV2 = async (
   poolId: string,
-  files: { type: Type; name: string }[]
+  files: { type: SourceType; name: string }[]
 ) => {
   return await Promise.all(
     files.map((f) => getUploadUrlV2(poolId, f.name, f.type))
@@ -96,7 +97,7 @@ const getUploadUrl = async (
 const getUploadUrlV2 = async (
   poolId: string,
   name: string,
-  type: Type,
+  type: SourceType,
   options?: UploadURLOptions
 ) => {
   const safeName = filenamify(name, { replacement: "_" });
