@@ -19,11 +19,12 @@ import {
 import PreviewModeButton, {
   PreviewMode,
 } from "../../components/PreviewModeButton.tsx/PreviewModeButton";
-import { HiDownload, HiQrcode } from "react-icons/hi";
+import { HiArrowLeft, HiDownload, HiQrcode } from "react-icons/hi";
 import QRPopover from "../../components/QRPopover";
 import IconButton from "../../components/UI/Button/IconButton";
 import FullScreenFIleItem from "../../components/FullScreenFIleItem";
 import PoolStats from "../../components/PoolStats";
+import Link from "next/link";
 
 const Files: NextPageWithLayout = () => {
   const { query } = useRouter();
@@ -91,6 +92,14 @@ const Files: NextPageWithLayout = () => {
       <div className="my-32 relative">
         <main className="relative z-10 pt-32">
           <AnimatePresence exitBeforeEnter>
+            {query.from && (
+              <Link href={query.from.toString() || "#"}>
+                <a className="flex gap-3 items-center rounded-lg px-2 py-1 group hover:bg-gray-100 w-fit font-sans transition-all mb-2 cursor-pointer">
+                  <HiArrowLeft className="group-hover:translate-x-0 translate-x-1 transition-all" />{" "}
+                  <span>Back</span>
+                </a>
+              </Link>
+            )}
             {isLoading ? (
               <motion.div
                 key={"loading"}

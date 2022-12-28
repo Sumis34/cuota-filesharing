@@ -63,8 +63,12 @@ const MyUploads: NextPageWithLayout = () => {
         <ul className="card-solid p-0 divide-y">
           {data?.pages.map((page) =>
             (page as any)?.pools.map((pool: any) => (
-              <li key={pool.id} className="py-5 px-7 group cursor-pointer">
-                <Link href={`/files/${pool.id}`}>
+              <li
+                key={pool.id}
+                className="py-5 px-7 group cursor-pointer scroll-m-44"
+                id={pool.id}
+              >
+                <Link href={`/files/${pool.id}?from=/my-uploads`}>
                   <a className=" flex justify-between items-center ">
                     <div>
                       <h4>Message</h4>
