@@ -57,7 +57,6 @@ const splitContents = (
   files: _Object[];
   previews: _Object[];
 } => {
-  // console.log(path.dirname(contents?.at(2)?.Key || "").includes("/preview"));
   const res = {
     files: !contents
       ? []
