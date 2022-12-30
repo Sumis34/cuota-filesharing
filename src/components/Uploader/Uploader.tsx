@@ -187,10 +187,7 @@ export default function Uploader() {
 
     if (!originalFile) return;
 
-    const previewName = getPreviewName(
-      originalFile.name,
-      COMPRESSED_FILE_EXTENSION
-    );
+    const previewName = getPreviewName(originalFile.name);
 
     const previewToRemove = tmpPreviews.find(
       ({ name }) => name === previewName
@@ -235,7 +232,6 @@ export default function Uploader() {
       files.map(
         async (file) =>
           await compressImg(file, {
-            nameExtension: COMPRESSED_FILE_EXTENSION,
             onStart: () => setActiveCompressions((count) => count + 1),
             onSuccess: () => setActiveCompressions((count) => count - 1),
             onError: () => setActiveCompressions((count) => count - 1),

@@ -104,8 +104,8 @@ const getUploadUrlV2 = async (
 
   const key =
     type === "preview"
-      ? `${poolId}/${safeName}/${type}${path.extname(safeName)}}`
-      : `${poolId}/${safeName}/original${path.extname(safeName)}`;
+      ? `${poolId}/preview/${safeName}`
+      : `${poolId}/${safeName}`;
 
   return await getSignedUrl(
     s3,

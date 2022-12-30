@@ -8,5 +8,5 @@ import path from "path";
  */
 export default function getPreviewName(key: string, nameExtension?: string) {
   const currentName = path.parse(key);
-  return currentName.name + nameExtension || "" + currentName.ext;
+  return currentName.name + (nameExtension || "") + currentName.ext;
 }

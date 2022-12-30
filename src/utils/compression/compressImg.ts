@@ -3,7 +3,7 @@ import path from "path";
 import getPreviewName from "./getPreviewName";
 
 interface CompressImgOptions {
-  nameExtension: string;
+  nameExtension?: string;
   onStart?: (options: any) => void;
   onSuccess?: (compressedFile: File) => void;
   onError?: (error: Error) => void;

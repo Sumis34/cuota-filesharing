@@ -15,9 +15,15 @@ export default async function getPreview(
   previews: _Object[],
   options?: PreviewUrlOptions
 ) {
-  const preview = previews.find((preview) =>
-    path.parse(preview.Key || "").name.includes(path.parse(key).name)
-  );
+  const preview = previews.find((preview) => {
+    const previewPath = path.parse(preview.Key || "");
+    const filePath = path.parse(key);
+
+    return (
+      previewPath.name === filePath.name &&
+      previewPath.dir.includes(filePath.dir)
+    );
+  });
 
   if (!preview) return null;
 
