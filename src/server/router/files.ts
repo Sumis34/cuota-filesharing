@@ -71,8 +71,6 @@ const splitContents = (
         ),
   };
 
-  console.log(res);
-
   return res;
 };
 
