@@ -62,12 +62,12 @@ const splitContents = (
     files: !contents
       ? []
       : contents?.filter(
-          (content) => !path.dirname(content.Key || "").includes("/preview/")
+          (content) => !path.dirname(content.Key || "").includes("/preview")
         ),
     previews: !contents
       ? []
       : contents?.filter((content) =>
-          path.dirname(content.Key || "").includes("/preview/")
+          path.dirname(content.Key || "").includes("/preview")
         ),
   };
 
