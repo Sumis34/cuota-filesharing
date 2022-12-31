@@ -53,7 +53,7 @@ export default function Uploader() {
   const [downloadUrl, setDownloadUrl] = useState("");
   const [totalUploadSize, setTotalUploadSize] = useState(0);
   const [totalUploadProgress, setTotalUploadProgress] = useState(0);
-  const [useE2EEncryption, setUseE2EEncryption] = useState(false);
+  const [useE2EEncryption, setUseE2EEncryption] = useState(true);
   const [uploadController, abortUpload] = useAbortController();
   const [rejection, setRejection] = useState<FileError | undefined>();
   const [uploadError, setUploadError] = useState<string>("");
@@ -101,9 +101,13 @@ export default function Uploader() {
 
       if (!files) return console.error("No file to upload");
 
+      let uploadContent: File[] = [...files, ...previews];
+
       setStep("loading");
 
-      const res = await uploadFiles([...files, ...previews], urls);
+      if (useE2EEncryption) uploadContent = await encryptFiles(uploadContent);
+
+      const res = await uploadFiles(uploadContent, urls);
 
       if (!res.every((r) => r?.status === 200))
         console.error("upload of some files may have failed");
@@ -136,21 +140,18 @@ export default function Uploader() {
     if (activeCompressions) {
       console.log(`Waiting for compression to finish (${activeCompressions})`);
       setStartedSubmit(true);
-    } else if (useE2EEncryption) {
-      const encryptedFile = await encryptFiles(files);
-      mutateGetUploadUrls(data.message, [
-        { file: encryptedFile, encrypted: true },
-      ]);
-    } else
-      mutateGetUploadUrls(data.message, [
-        ...files.map((f) => ({
-          file: f,
-        })),
-        ...previews.map((f) => ({
-          file: f,
-          type: "preview",
-        })),
-      ]);
+      return;
+    }
+
+    mutateGetUploadUrls(data.message, [
+      ...files.map((f) => ({
+        file: f,
+      })),
+      ...previews.map((f) => ({
+        file: f,
+        type: "preview",
+      })),
+    ]);
   });
 
   //Uploads all files and tracks their progress
