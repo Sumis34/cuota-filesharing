@@ -143,14 +143,20 @@ export default function Uploader() {
       return;
     }
 
+    const reformatedFiles = files.map((f) => ({
+      file: f,
+      encrypted: useE2EEncryption,
+    }));
+
+    const reformatedPreviews = previews.map((f) => ({
+      file: f,
+      type: "preview",
+      encrypted: useE2EEncryption,
+    }));
+
     mutateGetUploadUrls(data.message, [
-      ...files.map((f) => ({
-        file: f,
-      })),
-      ...previews.map((f) => ({
-        file: f,
-        type: "preview",
-      })),
+      ...reformatedFiles,
+      ...reformatedPreviews,
     ]);
   });
 
