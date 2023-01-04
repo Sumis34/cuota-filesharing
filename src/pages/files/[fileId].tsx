@@ -8,6 +8,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import downloadZip, {
   DownloadProgressEvent,
   RemoteFile,
+  RemoteFiles,
 } from "../../utils/download/downloadZip";
 import { useEffect, useState } from "react";
 import DownloadToast from "../../components/DownloadToast";
@@ -35,6 +36,7 @@ const Files: NextPageWithLayout = () => {
   const [fullscreenOpen, setFullscreenOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<number>(0);
   const [progress, setProgress] = useState<DownloadProgressEvent>();
+  const [files, setFiles] = useState<RemoteFile[]>([]);
 
   const { data, isLoading } = useQuery([
     "files.getAll",
@@ -44,16 +46,14 @@ const Files: NextPageWithLayout = () => {
   ]);
 
   const handleDownloadAll = async () => {
-    if (!data?.files) return;
+    if (!files) return;
     setOpen(true);
-    await downloadZip(data?.files, (progressEvent) =>
-      setProgress(progressEvent)
-    );
+    await downloadZip(files, (progressEvent) => setProgress(progressEvent));
     setProgress(undefined);
   };
 
   const handleItemClick = (remoteFile: RemoteFile) => {
-    setSelectedItem(data?.files.indexOf(remoteFile) || 0);
+    setSelectedItem(files.indexOf(remoteFile) || 0);
     setFullscreenOpen(true);
   };
 
@@ -62,9 +62,9 @@ const Files: NextPageWithLayout = () => {
         [key: string]: React.ReactNode;
       }
     | undefined = data && {
-    grid: <GridMode files={data?.files} onItemClick={handleItemClick} />,
-    gallery: <GalleryMode files={data?.files} onItemClick={handleItemClick} />,
-    list: <ListMode files={data?.files} onItemClick={handleItemClick} />,
+    grid: <GridMode files={files} onItemClick={handleItemClick} />,
+    gallery: <GalleryMode files={files} onItemClick={handleItemClick} />,
+    list: <ListMode files={files} onItemClick={handleItemClick} />,
   };
 
   const progressPercentage = progress
@@ -77,8 +77,9 @@ const Files: NextPageWithLayout = () => {
 
   const processFiles = async () => {
     if (!data?.files) return [];
+    if (!window.location.hash.slice(KEY_PREFIX.length)) return data?.files;
 
-    return await Promise.all(
+    const processedFiles = await Promise.all(
       data.files.map(async (f) => {
         if (f.metadata?.["encrypted"] != "true") return f;
 
@@ -106,12 +107,14 @@ const Files: NextPageWithLayout = () => {
         };
       })
     );
+
+    return processedFiles.filter((f) => f !== undefined) as RemoteFiles;
   };
 
   useEffect(() => {
     const process = async () => {
       const files = await processFiles();
-      console.log(files);
+      setFiles(files);
     };
     process().catch((e) => console.log(e));
   }, [data]);
@@ -128,7 +131,7 @@ const Files: NextPageWithLayout = () => {
       />
       <FullScreenFIleItem
         currentId={selectedItem}
-        file={data?.files[selectedItem]}
+        file={files[selectedItem]}
         open={fullscreenOpen}
         setOpen={setFullscreenOpen}
       />
@@ -164,7 +167,7 @@ const Files: NextPageWithLayout = () => {
                 {data && (
                   <PoolStats
                     totalSize={data.totalSize}
-                    files={data.files}
+                    files={files}
                     message={data.message}
                     createdAt={data.poolCreatedAt}
                     expiresAt={data.expiresAt}
