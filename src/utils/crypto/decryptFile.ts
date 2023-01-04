@@ -36,8 +36,6 @@ export default async function decryptFile(
   const iv = rawData.slice(0, 12);
   const content = rawData.slice(12);
 
-  console.log(rawData);
-
   const decrypted = await crypto.subtle.decrypt(
     {
       name: "AES-GCM",

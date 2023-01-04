@@ -24,19 +24,19 @@
     @apply font-serif;
   }
   input {
-    @apply focus-visible:outline-none border-2 focus-visible:border-indigo-500/70 rounded-xl bg-transparent py-2 px-3;
+    @apply focus-visible:outline-none border-2 focus-visible:border-indigo-500/70 rounded-xl bg-transparent dark:border-neutral-700 py-2 px-3;
   }
   textarea {
-    @apply focus-visible:outline-none border-2 focus-visible:border-indigo-500/70 rounded-xl bg-transparent py-2 px-3;
+    @apply focus-visible:outline-none border-2 focus-visible:border-indigo-500/70 rounded-xl bg-transparent dark:border-neutral-700 py-2 px-3;
   }
 }
 @tailwind components;
 @layer components {
   .card {
-    @apply backdrop-blur-xl shadow-white shadow-inner bg-white/50 rounded-3xl;
+    @apply backdrop-blur-xl shadow-white dark:shadow-none shadow-inner bg-white/50 dark:bg-neutral-900 rounded-3xl;
   }
   .card-solid {
-    @apply border rounded-xl shadow-lg p-4
+    @apply border rounded-xl shadow-lg p-4 dark:bg-neutral-900 dark:border-black
   }
 }
 @tailwind utilities;

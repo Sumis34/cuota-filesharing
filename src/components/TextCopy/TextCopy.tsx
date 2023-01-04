@@ -67,7 +67,7 @@ export default function TextCopy({
         <button
           onClick={() => handelClick()}
           type="button"
-          className="inline-flex items-center px-3 rounded-r-xl bg-indigo-100 border-2 border-indigo-200"
+          className="inline-flex items-center px-3 rounded-r-xl bg-indigo-100 dark:bg-indigo-400 border-2 border-indigo-200 dark:border-indigo-300"
         >
           {copied ? (
             <HiCheck className="text-xl group-hover:text-indigo-500 transition-all text-indigo-800" />

@@ -34,7 +34,7 @@ const Home: NextPageWithLayout = () => {
         className="absolute inset-0 w-full h-full object-cover"
         alt=""
       />
-      <div className="h-72 bg-gradient-to-t from-white absolute -bottom-2 inset-x-0" />
+      <div className="h-72 bg-gradient-to-t from-white dark:from-black absolute -bottom-2 inset-x-0" />
     </>
   );
 };

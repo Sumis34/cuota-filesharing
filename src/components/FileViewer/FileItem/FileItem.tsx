@@ -30,7 +30,7 @@ export default function FileItem({
     <motion.li
       variants={item}
       viewport={{ once: true }}
-      className="w-full aspect-square bg-white rounded-xl shadow-xl shadow-black/5 border flex flex-col overflow-hidden relative"
+      className="w-full aspect-square bg-white dark:bg-neutral-900 rounded-xl shadow-xl shadow-black/5 dark:border-black border flex flex-col overflow-hidden relative"
     >
       <div className="cursor-zoom-in h-full w-full" onClick={() => onClick()}>
         {url && type && (
@@ -38,11 +38,11 @@ export default function FileItem({
         )}
       </div>
       <div className="absolute mt-auto inset-0 w-full h-fit">
-        <div className="bg-gray-50 px-5 py-4 flex w-full justify-between items-center gap-5">
+        <div className="bg-gray-50 dark:bg-neutral-900 px-5 py-4 flex w-full justify-between items-center gap-5 dark:border-none">
           <FileInfo type={type || ""} size={size || 0} name={name || "file"} />
           <a href={url || "#"}>
             <IconButton>
-              <HiDownload className="fill-indigo-500" />
+              <HiDownload className="fill-indigo-500 dark:fill-white" />
             </IconButton>
           </a>
         </div>

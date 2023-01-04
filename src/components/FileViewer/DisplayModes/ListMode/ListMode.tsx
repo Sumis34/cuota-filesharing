@@ -13,7 +13,7 @@ export default function ListMode({ files, onItemClick }: DisplayModeProps) {
           <li
             key={key}
             onClick={() => onItemClick(file)}
-            className="rounded-lg bg-slate-200/30 border py-3 px-5 flex items-center justify-between cursor-pointer hover:shadow-lg shadow-gray-400/20 transition-all"
+            className="rounded-lg bg-slate-200/30 dark:bg-neutral-900 dark:border-none border py-3 px-5 flex items-center justify-between cursor-pointer hover:shadow-lg shadow-gray-400/20 transition-all"
           >
             <FileInfo
               name={getNameFromKey(key)}
@@ -22,7 +22,7 @@ export default function ListMode({ files, onItemClick }: DisplayModeProps) {
             />
             <a href={url || "#"}>
               <IconButton>
-                <HiDownload className="fill-indigo-500" />
+                <HiDownload className="fill-indigo-500 dark:fill-white" />
               </IconButton>
             </a>
           </li>

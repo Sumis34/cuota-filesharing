@@ -300,24 +300,24 @@ export default function Uploader() {
               <h2>Files</h2>
               {files && (
                 <IconButton onClick={open}>
-                  <HiPlus />
+                  <HiPlus className="dark:fill-neutral-50" />
                 </IconButton>
               )}
             </div>
             {!files || files.length === 0 ? (
               <div
                 {...getRootProps()}
-                className={`h-20 border-2 border-dashed flex items-center justify-center p-3 transition-all cursor-pointer mb-2 rounded-xl ${
+                className={`h-20 border-2 border-dashed dark:border-neutral-700 flex items-center justify-center p-3 transition-all cursor-pointer mb-2 rounded-xl ${
                   isDragActive ? "border-indigo-500 bg-indigo-500/10" : ""
                 }`}
               >
                 <input {...getInputProps()} />
                 {isDragActive ? (
-                  <p className="text-sm text-black/50">
+                  <p className="text-sm text-black/50 dark:text-gray-200">
                     Drop the files here ...
                   </p>
                 ) : (
-                  <p className="text-xs text-black/50 text-center">
+                  <p className="text-xs text-black/50 dark:text-gray-200 text-center">
                     Drag &apos;n&apos; drop some files here, or click to select
                     files
                   </p>

@@ -60,7 +60,7 @@ const MyUploads: NextPageWithLayout = () => {
             {(data?.pages as any[])?.[0].total}
           </span>
         </div>
-        <ul className="card-solid p-0 divide-y">
+        <ul className="card-solid p-0 divide-y dark:divide-neutral-700">
           {data?.pages.map((page) =>
             (page as any)?.pools.map((pool: any) => (
               <li

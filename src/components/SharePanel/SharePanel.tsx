@@ -39,7 +39,7 @@ export default function SharePanel({ url, setStep }: SharePanelProps) {
           src={Illustration}
           alt=""
         />
-        <p className="text-center text-gray-800 text-sm">
+        <p className="text-center text-gray-800 dark:text-neutral-400 text-sm">
           Your upload successfully finished copy your link to share with the
           World.
         </p>

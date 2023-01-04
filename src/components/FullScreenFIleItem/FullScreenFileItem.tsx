@@ -56,7 +56,7 @@ export default function FullScreenFileItem({
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="w-full h-full transform overflow-hidden md:rounded-lg bg-white px-5 text-left align-middle shadow-xl transition-all flex flex-col justify-between py-5">
+              <Dialog.Panel className="w-full h-full transform overflow-hidden md:rounded-lg bg-white dark:bg-black px-5 text-left align-middle shadow-xl transition-all flex flex-col justify-between py-5">
                 <div className="flex items-center justify-between">
                   <FileInfo
                     name={getNameFromKey(file?.key)}

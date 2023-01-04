@@ -20,7 +20,7 @@ export default function IconButton({
       type: as === "button" ? "button" : undefined,
       className: `active:translate-y-0.5 transition-all p-1 rounded-md ${className} ${
         variant === "primary"
-          ? "bg-indigo-100 hover:bg-indigo-100/70"
+          ? "bg-indigo-100 dark:bg-indigo-400 hover:bg-indigo-100/70 dark:hover:bg-indigo-300"
           : "bg-gray-200 hover:bg-gray-200/60"
       }`,
       onClick,
