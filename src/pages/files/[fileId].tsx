@@ -25,6 +25,8 @@ import IconButton from "../../components/UI/Button/IconButton";
 import FullScreenFIleItem from "../../components/FullScreenFIleItem";
 import PoolStats from "../../components/PoolStats";
 import Link from "next/link";
+import { KEY_PREFIX } from "../../utils/constants";
+import decryptFile from "../../utils/crypto/decryptFile";
 
 const Files: NextPageWithLayout = () => {
   const { query } = useRouter();
@@ -72,6 +74,47 @@ const Files: NextPageWithLayout = () => {
   useEffect(() => {
     setUrl(`${window.location.origin}/files/${query.fileId}`);
   }, [query]);
+
+  const processFiles = async () => {
+    if (!data?.files) return [];
+
+    return await Promise.all(
+      data.files.map(async (f) => {
+        if (f.metadata?.["encrypted"] != "true") return f;
+
+        const response = await fetch(f.url);
+
+        if (!response.body) return;
+
+        const contentDisposition = response.headers.get("Content-Disposition");
+        const matches = /filename="(.+)"/.exec(contentDisposition || "");
+        const fileName = matches?.[1] ? matches[1] : "cuota-file";
+        const fileType = response.headers.get("Content-Type") || "";
+
+        const file = await decryptFile(
+          {
+            name: fileName,
+            type: fileType,
+            content: response.body,
+          },
+          window.location.hash.slice(KEY_PREFIX.length)
+        );
+
+        return {
+          ...f,
+          url: URL.createObjectURL(file),
+        };
+      })
+    );
+  };
+
+  useEffect(() => {
+    const process = async () => {
+      const files = await processFiles();
+      console.log(files);
+    };
+    process().catch((e) => console.log(e));
+  }, [data]);
 
   //TODO: Add skeleton loading animation
   return (

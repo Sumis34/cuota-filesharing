@@ -15,7 +15,7 @@ import SharePanel from "../SharePanel";
 import { Ring } from "@uiball/loaders";
 import useAbortController from "../../hooks/useAbortController";
 import compressImg from "../../utils/compression/compressImg";
-import { COMPRESSED_FILE_EXTENSION } from "../../utils/constants";
+import { COMPRESSED_FILE_EXTENSION, KEY_PREFIX } from "../../utils/constants";
 import getPreviewName from "../../utils/compression/getPreviewName";
 import fileIsInList from "../../utils/dropzone/fileIsInList";
 import InfoBox from "../UI/InfoBox";
@@ -98,6 +98,7 @@ export default function Uploader() {
   const getUploadUrlMutation = useMutation(["upload.requestV2"], {
     onSuccess: async (data) => {
       const { urls, uploadId } = data;
+      let secret: string | null = null;
 
       if (!files) return console.error("No file to upload");
 
@@ -105,14 +106,22 @@ export default function Uploader() {
 
       setStep("loading");
 
-      if (useE2EEncryption) uploadContent = await encryptFiles(uploadContent);
+      if (useE2EEncryption) {
+        const { files: encrypted, key } = await encryptFiles(files);
+        uploadContent = encrypted;
+        secret = key || null;
+      }
 
       const res = await uploadFiles(uploadContent, urls);
 
       if (!res.every((r) => r?.status === 200))
         console.error("upload of some files may have failed");
 
-      setDownloadUrl(`${window.location.origin}/files/${uploadId}`);
+      setDownloadUrl(
+        `${window.location.origin}/files/${uploadId}${
+          useE2EEncryption ? KEY_PREFIX + secret : ""
+        }`
+      );
       setStep("success");
       reset();
     },

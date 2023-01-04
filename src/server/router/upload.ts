@@ -56,10 +56,10 @@ const getUploadUrls = async (
 
 const getUploadUrlsV2 = async (
   poolId: string,
-  files: { type: SourceType; name: string }[]
+  files: { type: SourceType; name: string; encrypted: boolean }[]
 ) => {
   return await Promise.all(
-    files.map((f) => getUploadUrlV2(poolId, f.name, f.type))
+    files.map((f) => getUploadUrlV2(poolId, f.name, f.type, f.encrypted))
   );
 };
 
@@ -94,10 +94,12 @@ const getUploadUrl = async (
   );
 };
 
+//TODO: Look in to https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/modules/_aws_sdk_s3_presigned_post.html because Policies are possible
 const getUploadUrlV2 = async (
   poolId: string,
   name: string,
   type: SourceType,
+  encrypted?: Boolean,
   options?: UploadURLOptions
 ) => {
   const safeName = filenamify(name, { replacement: "_" });
@@ -114,6 +116,7 @@ const getUploadUrlV2 = async (
       Key: key, //filename
       Metadata: {
         poolId,
+        encrypted: encrypted ? "true" : "false",
       },
       ContentDisposition: `attachment; filename=${name}`,
       CacheControl: `max-age=${options?.maxCacheAge || 60}`,

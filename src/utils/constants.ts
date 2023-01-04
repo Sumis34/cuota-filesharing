@@ -1,2 +1,3 @@
 const COMPRESSED_FILE_EXTENSION = "_cuota-preview";
-export { COMPRESSED_FILE_EXTENSION };
+const KEY_PREFIX = "#key=";
+export { COMPRESSED_FILE_EXTENSION, KEY_PREFIX };

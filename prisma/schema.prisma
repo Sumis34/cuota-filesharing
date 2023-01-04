@@ -73,6 +73,7 @@ model Upload {
     expiresAt  DateTime?
     userId     String?
     user       User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    encrypted  Boolean   @default(false)
 
     @@unique([id])
 }
