@@ -24,6 +24,7 @@ import { getRandomLetter } from "../../utils/greece";
 import { TRPCClientError } from "@trpc/client";
 import { SourceType } from "../../server/router/upload";
 import { type } from "os";
+import { useSession } from "next-auth/react";
 
 const schema = z.object({
   message: z
@@ -53,7 +54,7 @@ export default function Uploader() {
   const [downloadUrl, setDownloadUrl] = useState("");
   const [totalUploadSize, setTotalUploadSize] = useState(0);
   const [totalUploadProgress, setTotalUploadProgress] = useState(0);
-  const [useE2EEncryption, setUseE2EEncryption] = useState(true);
+  const [useE2EEncryption, setUseE2EEncryption] = useState(false);
   const [uploadController, abortUpload] = useAbortController();
   const [rejection, setRejection] = useState<FileError | undefined>();
   const [uploadError, setUploadError] = useState<string>("");
@@ -62,6 +63,7 @@ export default function Uploader() {
   const [activeCompressions, setActiveCompressions] = useState(0);
   const [startedSubmit, setStartedSubmit] = useState(false);
   const [previews, setPreviews] = useState<File[]>([]);
+  const { data: session } = useSession();
 
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
@@ -345,6 +347,15 @@ export default function Uploader() {
               <InfoBox type="error">
                 <p>{errors?.message?.message}</p>
               </InfoBox>
+            )}
+            {session?.user?.role === "admin" && (
+              <input
+                type="checkbox"
+                name="encrypt"
+                id="encrypt"
+                checked={useE2EEncryption}
+                onChange={() => setUseE2EEncryption(!useE2EEncryption)}
+              />
             )}
             {uploadError && (
               <InfoBox type="error">
