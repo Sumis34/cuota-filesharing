@@ -88,7 +88,7 @@ export default function UploadLoadingPanel({
         </span>
       </div>
       <div className="flex items-center justify-center h-full flex-col gap-3">
-        <div className="relative shadow-xl w-24 h-24 overflow-hidden rounded-full bg-gray-200">
+        <div className="relative shadow-xl w-24 h-24 overflow-hidden rounded-full bg-gray-200 dark:bg-neutral-700">
           <div className="absolute z-10 text-white flex items-center justify-center inset-0">
             <span className="font-serif font-bold text-2xl">{progress}%</span>
           </div>

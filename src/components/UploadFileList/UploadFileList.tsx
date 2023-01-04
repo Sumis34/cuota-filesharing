@@ -14,7 +14,7 @@ export default function UploadFileList({
   return (
     <ul
       ref={parent as LegacyRef<HTMLUListElement>}
-      className="relative max-h-44 overflow-y-auto divide-y-2 scrollbar-thumb-gray-200 scrollbar-thin scrollbar-thumb-rounded-md pr-4 mb-2"
+      className="relative max-h-44 overflow-y-auto divide-y-2 divide-neutral-700 scrollbar-thumb-gray-200 dark:scrollbar-track-neutral-700 scrollbar-thin scrollbar-thumb-rounded-md pr-4 mb-2"
     >
       {files.map(({ name, type, size }, i) => (
         <UploadFileItem
