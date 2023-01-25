@@ -17,7 +17,7 @@ interface DropdownProps {
 const Dropdown: FC<DropdownProps> = ({ children, itemGroups }) => (
   <Menu as="div" className="relative inline-block text-left">
     <div>
-      <Menu.Button className="inline-flex w-full justify-center rounded-xl bg-gray-200 dark:bg-neutral-900 bg-opacity-0 dark:bg-opacity-30 transition-all px-4 py-1.5 font-sans hover:bg-opacity-30 dark:hover:bg-opacity-90 outline-none">
+      <Menu.Button className="inline-flex w-full justify-center rounded-xl bg-gray-200 dark:bg-neutral-900 bg-opacity-0 transition-all px-4 py-1.5 font-sans hover:bg-opacity-30 dark:hover:bg-neutral-800 outline-none">
         {children}
       </Menu.Button>
     </div>

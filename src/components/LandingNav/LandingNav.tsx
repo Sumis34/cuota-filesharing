@@ -8,7 +8,8 @@ import {
 } from "framer-motion";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import useTheme from "../../hooks/useTheme";
 import Badge from "../UI/Badge";
 import Button from "../UI/Button";
 import LoginButtons from "./LoginButtons";
@@ -17,6 +18,8 @@ import ProfileInfo from "./ProfileInfo";
 export default function LandingNav() {
   const { data: session, status } = useSession();
   const { scrollY } = useViewportScroll();
+  const { toggleDark, dark } = useTheme();
+  const [scrolled, setScrolled] = useState(false);
 
   const padding = useTransform(
     scrollY,
@@ -26,8 +29,16 @@ export default function LandingNav() {
     [48, 20]
   );
 
+  useEffect(() => {
+    scrollY.onChange((v) => setScrolled(v > 50));
+  }, []);
+
   return (
-    <div className="left-0 top-0 fixed z-50 flex w-screen justify-center bg-white/90 dark:bg-black/90 backdrop-blur-xl">
+    <motion.div
+      className={`left-0 top-0 fixed z-50 flex w-screen justify-center transition-all duration-400 bg-gradient-to-b from-white dark:from-black ${
+        scrolled ? "bg-white/90 dark:bg-black/90 backdrop-blur-xl" : ""
+      }`}
+    >
       <motion.nav
         className={`sm:px-20 px-5 w-full max-w-screen-2xl flex justify-between`}
         style={{
@@ -59,6 +70,6 @@ export default function LandingNav() {
           </AnimatePresence>
         </div>
       </motion.nav>
-    </div>
+    </motion.div>
   );
 }

@@ -6,6 +6,7 @@ import { router } from "@trpc/server";
 import { useRouter } from "next/router";
 import { signOut, useSession } from "next-auth/react";
 import { HiChevronDown } from "react-icons/hi";
+import useTheme from "../../hooks/useTheme";
 
 interface ProfileInfoProps {
   name?: string | null;
@@ -16,6 +17,7 @@ interface ProfileInfoProps {
 export default function ProfileInfo({ name, email, avatar }: ProfileInfoProps) {
   const router = useRouter();
   const { data: session } = useSession();
+  const { dark, toggleDark } = useTheme();
   const DROPDOWN_OPTIONS: DropdownItem[][] = [
     [
       {
@@ -31,11 +33,16 @@ export default function ProfileInfo({ name, email, avatar }: ProfileInfoProps) {
     ],
   ];
 
-  if (session?.user?.role === "admin")
+  if (session?.user?.role === "admin") {
     DROPDOWN_OPTIONS[0]?.push({
       label: "Admin",
       onClick: () => router.push("/admin"),
     });
+    DROPDOWN_OPTIONS[0]?.push({
+      label: dark ? "Light mode" : "Dark mode",
+      onClick: () => toggleDark(),
+    });
+  }
 
   return (
     <>
