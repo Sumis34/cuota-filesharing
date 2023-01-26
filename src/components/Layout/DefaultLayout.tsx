@@ -14,7 +14,7 @@ function DefaultLayout({ children }: LayoutProps) {
     <div className={`${dark && "dark"}`}>
       <LandingNav />
       <div
-        className={`flex w-screen justify-center overflow-hidden bg-white dark:bg-black`}
+        className={`flex w-screen justify-center overflow-hidden bg-white dark:bg-black  pb-24`}
       >
         <div className="w-full max-w-screen-2xl min-h-screen sm:px-20 px-5 overflow-hidden">
           {children}

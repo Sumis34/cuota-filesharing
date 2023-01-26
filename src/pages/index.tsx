@@ -49,7 +49,7 @@ const Home: NextPageWithLayout = () => {
           </div>
           <Uploader />
         </div>
-        <div className="mb-44">
+        <div className="mb-24">
           <motion.h1
             className="text-7xl text-center font-medium"
             ref={catchRef}
@@ -93,13 +93,18 @@ const Home: NextPageWithLayout = () => {
               src: "/assets/images/grad_square.webp",
             }}
           />
-          <div className="w-full h-full row-span-2 md:col-span-2 relative hidden lg:block group overflow-hidden">
+          <div className="w-full h-full row-span-2 md:col-span-2 relative hidden lg:block hover:scale-[101%] scale-100 duration-500">
             <img
               src="/assets/images/banner_3.png"
               alt=""
-              className="w-full h-full object-cover group-hover:scale-105 scale-100 duration-500"
+              className="w-full h-full object-cover z-10 relative"
             />
-            <div className="absolute inset-0 flex flex-col md:px-24 md:py-40 px-4 py-8 justify-end">
+            <img
+              src="/assets/images/grad_square.webp"
+              className="object-cover absolute inset-0 blur-3xl w-full h-full opacity-10 scale-95"
+              alt=""
+            />
+            <div className="absolute inset-0 flex flex-col md:px-24 md:py-40 px-4 py-8 justify-end z-20">
               <h2 className="text-5xl mb-5">
                 Unleash the power of global collaboration
               </h2>
@@ -122,7 +127,7 @@ const Home: NextPageWithLayout = () => {
           alt="background"
         />
       </div>
-      <div className="h-[300vh] bg-gradient-to-r from-white dark:from-black absolute inset-0 left-1/3" />
+      <div className="h-[200vh] bg-gradient-to-r from-white dark:from-black absolute inset-0 left-1/3" />
       {/* <div className="h-72 bg-gradient-to-t from-white dark:from-black absolute -bottom-2 inset-x-0" /> */}
     </>
   );
