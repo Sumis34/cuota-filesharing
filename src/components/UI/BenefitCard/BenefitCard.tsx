@@ -23,7 +23,7 @@ export default function BenefitCard({
       <img
         src={image.src}
         alt="blur"
-        className="absolute inset-0 blur-3xl object-cover translate-x-20 translate-y-24 scale-110 opacity-70"
+        className="absolute inset-0 blur-3xl object-cover translate-x-20 translate-y-24 scale-110 sm:opacity-70 opacity-20"
       />
       <img
         {...image}

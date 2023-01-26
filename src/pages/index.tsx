@@ -117,7 +117,7 @@ const Home: NextPageWithLayout = () => {
           </div>
         </div>
       </div>
-      <div className="absolute inset-0">
+      <div className="absolute inset-0 overflow-x-hidden">
         <motion.img
           style={{ y: offset, rotate: rotate }}
           src={
