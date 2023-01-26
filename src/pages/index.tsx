@@ -26,13 +26,11 @@ const Home: NextPageWithLayout = () => {
     [-50, 100]
   );
 
-  const rotate = useTransform(scrollY, [0, 800], [41, 45]);
+  const rotate = useTransform(scrollY, [0, 800], [41, 43]);
 
   const catchOpacity = useTransform(scrollY, [100, 400], [0.1, 1]);
   const catchOpacity2 = useTransform(scrollY, [200, 500], [0.1, 1]);
   const catchOpacity3 = useTransform(scrollY, [300, 600], [0.1, 1]);
-
-  const path = useTransform(scrollY, [200, 600], [0, 1]);
 
   return (
     <>
@@ -114,7 +112,7 @@ const Home: NextPageWithLayout = () => {
           </div>
         </div>
       </div>
-      <div className="absolute inset-0 overflow-hidden">
+      <div className="absolute inset-0">
         <motion.img
           style={{ y: offset, rotate: rotate }}
           src={
@@ -124,7 +122,7 @@ const Home: NextPageWithLayout = () => {
           alt="background"
         />
       </div>
-      <div className="h-screen bg-gradient-to-r from-white dark:from-black absolute inset-0 left-1/3" />
+      <div className="h-[300vh] bg-gradient-to-r from-white dark:from-black absolute inset-0 left-1/3" />
       {/* <div className="h-72 bg-gradient-to-t from-white dark:from-black absolute -bottom-2 inset-x-0" /> */}
     </>
   );
