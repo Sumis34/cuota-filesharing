@@ -21,8 +21,6 @@ const useTheme = () => {
     setDarkMode(dark);
   }, []);
 
-  console.log(darkMode !== null ? darkMode : defaultDark);
-
   return {
     dark: darkMode !== null ? darkMode : defaultDark,
     toggleDark: () => {
