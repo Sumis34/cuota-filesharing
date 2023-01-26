@@ -92,6 +92,7 @@ I have setup a job with the following configuration.
 # Inspiration
 - https://buildui.com/series/framer-motion-recipes/multistep-wizard
 - https://www.framer.com/templates/category/startup/
+- Create. Share. Earn.
 
 # Ideas
 
