@@ -89,6 +89,11 @@ I have setup a job with the following configuration.
 
 ![cron config](docs/images/cron-job-conf.png)
 
+# Inspiration
+- https://buildui.com/series/framer-motion-recipes/multistep-wizard
+- https://www.framer.com/templates/category/startup/
+- Create. Share. Earn.
+
 # Ideas
 
 - [ ] show if server is bottleneck
