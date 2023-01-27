@@ -1,18 +1,17 @@
 import { useTransform, useViewportScroll } from "framer-motion";
-import type { NextPage } from "next";
-import Head from "next/head";
-import LandingNav from "../components/LandingNav";
+import type { GetStaticProps, InferGetStaticPropsType } from "next";
 import { getDefaultLayout } from "../components/Layout/DefaultLayout";
 import Uploader from "../components/Uploader";
 import useTheme from "../hooks/useTheme";
-import { trpc } from "../utils/trpc";
 import { NextPageWithLayout } from "./_app";
 import { motion } from "framer-motion";
-import { HiLocationMarker } from "react-icons/hi";
 import BenefitCard from "../components/UI/BenefitCard";
-import { useEffect, useRef } from "react";
+import { getArticles } from "../utils/articles/getArticles";
+import { useRef } from "react";
 
-const Home: NextPageWithLayout = () => {
+const Home: NextPageWithLayout = ({
+  articles,
+}: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { dark } = useTheme();
   const catchRef = useRef<HTMLDivElement>(null);
 
@@ -31,6 +30,8 @@ const Home: NextPageWithLayout = () => {
   const catchOpacity = useTransform(scrollY, [100, 400], [0.1, 1]);
   const catchOpacity2 = useTransform(scrollY, [200, 500], [0.1, 1]);
   const catchOpacity3 = useTransform(scrollY, [300, 600], [0.1, 1]);
+
+  console.log(articles);
 
   return (
     <>
@@ -104,6 +105,7 @@ const Home: NextPageWithLayout = () => {
               className="object-cover absolute inset-0 blur-3xl w-full h-full opacity-10 sm:opacity-20 scale-90"
               alt=""
             />
+
             <div className="absolute inset-0 flex flex-col md:px-24 md:py-40 px-4 py-8 justify-end z-20">
               <h2 className="text-5xl mb-5">
                 Unleash the power of global collaboration
@@ -117,7 +119,7 @@ const Home: NextPageWithLayout = () => {
           </div>
         </div>
       </div>
-      <div className="absolute inset-0 overflow-x-hidden">
+      <div className="absolute inset-0 overflow-x-hidden 2xl:overflow-visible">
         <motion.img
           style={{ y: offset, rotate: rotate }}
           src={
@@ -131,6 +133,15 @@ const Home: NextPageWithLayout = () => {
       {/* <div className="h-72 bg-gradient-to-t from-white dark:from-black absolute -bottom-2 inset-x-0" /> */}
     </>
   );
+};
+
+export const getStaticProps: GetStaticProps = async ({ params }) => {
+  const articles = await getArticles({ includeContent: false });
+  return {
+    props: {
+      articles,
+    },
+  };
 };
 
 Home.getLayout = getDefaultLayout();

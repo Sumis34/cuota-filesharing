@@ -1,7 +1,7 @@
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import { getDefaultLayout } from "../../components/Layout/DefaultLayout";
 import { getArticleBySlug } from "../../utils/articles/getArticleBySlug";
-import getArticles from "../../utils/articles/getArticles";
+import getArticleSlugs from "../../utils/articles/getArticles";
 import { NextPageWithLayout } from "../_app";
 import Markdown from "react-markdown";
 import Image from "next/image";
@@ -40,7 +40,7 @@ const Article: NextPageWithLayout = ({
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const params = await getArticles();
+  const params = await getArticleSlugs();
   return {
     paths: params,
     fallback: false,
