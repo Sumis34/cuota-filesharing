@@ -95,13 +95,13 @@ const Home: NextPageWithLayout = () => {
           />
           <div className="w-full h-full row-span-2 md:col-span-2 relative hidden lg:block hover:scale-[101%] scale-100 duration-500">
             <img
-              src="/assets/images/banner_3.png"
+              src="/assets/images/banner_4.png"
               alt=""
               className="w-full h-full object-cover z-10 relative"
             />
             <img
               src="/assets/images/grad_square.webp"
-              className="object-cover absolute inset-0 blur-3xl w-full h-full opacity-10 scale-95"
+              className="object-cover absolute inset-0 blur-3xl w-full h-full opacity-10 sm:opacity-20 scale-90"
               alt=""
             />
             <div className="absolute inset-0 flex flex-col md:px-24 md:py-40 px-4 py-8 justify-end z-20">
