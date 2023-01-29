@@ -96,7 +96,7 @@ const Home: NextPageWithLayout = ({
           />
           <div className="w-full h-full row-span-2 md:col-span-2 relative hidden lg:block hover:scale-[101%] scale-100 duration-500">
             <img
-              src="/assets/images/banner_4.png"
+              src="/assets/images/banner_5.png"
               alt=""
               className="w-full h-full object-cover z-10 relative"
             />
