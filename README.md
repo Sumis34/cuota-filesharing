@@ -98,3 +98,5 @@ I have setup a job with the following configuration.
 
 - [ ] show if server is bottleneck
 - [ ] Showcase. Option to create showcase where you can showcase your work. Includes option for custom branding in form of a image.
+- [ ] Allow custom branding for Teams and Buisness.
+- [ ] Access controll. Allow sharing for spesific users by specifying a email.
