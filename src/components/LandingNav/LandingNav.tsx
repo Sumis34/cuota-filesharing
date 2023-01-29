@@ -35,12 +35,14 @@ export default function LandingNav() {
 
   return (
     <motion.div
-      className={`left-0 top-0 fixed z-50 flex w-screen justify-center transition-all duration-400 bg-gradient-to-b from-white dark:from-black ${
-        scrolled ? "bg-white/90 dark:bg-black/90 backdrop-blur-xl" : ""
+      className={`left-0 top-0 fixed z-50 flex w-screen justify-center transition-all duration-500 after:bg-gradient-to-b after:from-white after:dark:from-black after:inset-0 after:absolute ${
+        scrolled
+          ? "bg-white/80 dark:bg-black/60 backdrop-blur-xl"
+          : "bg-white/0 dark:bg-black/0"
       }`}
     >
       <motion.nav
-        className={`sm:px-20 px-5 w-full max-w-screen-2xl flex justify-between`}
+        className={`sm:px-20 px-5 w-full max-w-screen-2xl flex justify-between relative z-30`}
         style={{
           paddingTop: padding,
           paddingBottom: padding,
