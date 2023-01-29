@@ -17,7 +17,7 @@ interface DropdownProps {
 const Dropdown: FC<DropdownProps> = ({ children, itemGroups }) => (
   <Menu as="div" className="relative inline-block text-left">
     <div>
-      <Menu.Button className="inline-flex w-full justify-center rounded-xl bg-gray-200 bg-opacity-0 transition-all px-4 py-1.5 font-sans hover:bg-opacity-30 outline-none">
+      <Menu.Button className="inline-flex w-full justify-center rounded-xl bg-gray-200 dark:bg-neutral-900 bg-opacity-0 transition-all px-4 py-1.5 font-sans hover:bg-opacity-30 dark:hover:bg-neutral-800 outline-none">
         {children}
       </Menu.Button>
     </div>
@@ -30,7 +30,7 @@ const Dropdown: FC<DropdownProps> = ({ children, itemGroups }) => (
       leaveFrom="transform opacity-100 scale-100"
       leaveTo="transform opacity-0 scale-95"
     >
-      <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 px-3 py-1 rounded-md bg-white shadow-xl shadow-black/5 ring-1 ring-black ring-opacity-5 focus:outline-none">
+      <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 dark:divide-neutral-800 px-3 py-1 rounded-md bg-white dark:bg-neutral-900 shadow-xl shadow-black/5 ring-1 ring-black ring-opacity-5 focus:outline-none">
         {itemGroups.map((items, i) => (
           <div key={i} className="px-1 py-1">
             {items.map(({ label, onClick }, i) => (
@@ -39,7 +39,7 @@ const Dropdown: FC<DropdownProps> = ({ children, itemGroups }) => (
                   <button
                     onClick={onClick}
                     className={`${
-                      active ? "bg-gray-100" : ""
+                      active ? "bg-gray-100 dark:bg-neutral-800" : ""
                     } group flex w-full items-center rounded-md px-2 py-2 text-sm font-sans`}
                   >
                     {label}

@@ -15,13 +15,16 @@ import SharePanel from "../SharePanel";
 import { Ring } from "@uiball/loaders";
 import useAbortController from "../../hooks/useAbortController";
 import compressImg from "../../utils/compression/compressImg";
-import { COMPRESSED_FILE_EXTENSION } from "../../utils/constants";
+import { COMPRESSED_FILE_EXTENSION, KEY_PREFIX } from "../../utils/constants";
 import getPreviewName from "../../utils/compression/getPreviewName";
 import fileIsInList from "../../utils/dropzone/fileIsInList";
 import InfoBox from "../UI/InfoBox";
 import encryptFiles from "../../utils/crypto/encryptFiles";
 import { getRandomLetter } from "../../utils/greece";
 import { TRPCClientError } from "@trpc/client";
+import { SourceType } from "../../server/router/upload";
+import { type } from "os";
+import { useSession } from "next-auth/react";
 
 const schema = z.object({
   message: z
@@ -60,6 +63,7 @@ export default function Uploader() {
   const [activeCompressions, setActiveCompressions] = useState(0);
   const [startedSubmit, setStartedSubmit] = useState(false);
   const [previews, setPreviews] = useState<File[]>([]);
+  const { data: session } = useSession();
 
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
@@ -93,20 +97,33 @@ export default function Uploader() {
   //Tracks uploaded bytes of each file
   const uploadProgresses: number[] = [];
 
-  const getUploadUrlMutation = useMutation(["upload.request"], {
+  const getUploadUrlMutation = useMutation(["upload.requestV2"], {
     onSuccess: async (data) => {
       const { urls, uploadId } = data;
+      let secret: string | null = null;
 
       if (!files) return console.error("No file to upload");
 
+      let uploadContent: File[] = [...files, ...previews];
+
       setStep("loading");
 
-      const res = await uploadFiles([...files, ...previews], urls);
+      if (useE2EEncryption) {
+        const { files: encrypted, key } = await encryptFiles(files);
+        uploadContent = encrypted;
+        secret = key || null;
+      }
+
+      const res = await uploadFiles(uploadContent, urls);
 
       if (!res.every((r) => r?.status === 200))
         console.error("upload of some files may have failed");
 
-      setDownloadUrl(`${window.location.origin}/files/${uploadId}`);
+      setDownloadUrl(
+        `${window.location.origin}/files/${uploadId}${
+          useE2EEncryption ? KEY_PREFIX + secret : ""
+        }`
+      );
       setStep("success");
       reset();
     },
@@ -134,10 +151,24 @@ export default function Uploader() {
     if (activeCompressions) {
       console.log(`Waiting for compression to finish (${activeCompressions})`);
       setStartedSubmit(true);
-    } else if (useE2EEncryption) {
-      const encryptedFile = await encryptFiles(files);
-      mutateGetUploadUrls(data.message, [encryptedFile]);
-    } else mutateGetUploadUrls(data.message, [...files, ...previews]);
+      return;
+    }
+
+    const reformatedFiles = files.map((f) => ({
+      file: f,
+      encrypted: useE2EEncryption,
+    }));
+
+    const reformatedPreviews = previews.map((f) => ({
+      file: f,
+      type: "preview",
+      encrypted: useE2EEncryption,
+    }));
+
+    mutateGetUploadUrls(data.message, [
+      ...reformatedFiles,
+      ...reformatedPreviews,
+    ]);
   });
 
   //Uploads all files and tracks their progress
@@ -174,10 +205,7 @@ export default function Uploader() {
 
     if (!originalFile) return;
 
-    const previewName = getPreviewName(
-      originalFile.name,
-      COMPRESSED_FILE_EXTENSION
-    );
+    const previewName = getPreviewName(originalFile.name);
 
     const previewToRemove = tmpPreviews.find(
       ({ name }) => name === previewName
@@ -204,11 +232,17 @@ export default function Uploader() {
     reset();
   };
 
-  const mutateGetUploadUrls = (message: string, files: File[]) =>
+  const mutateGetUploadUrls = (
+    message: string,
+    files: { file: File; type?: SourceType; encrypted?: boolean }[]
+  ) =>
     getUploadUrlMutation.mutate({
-      names: files.map((file) => file.name),
+      files: files.map(({ file, type, encrypted }) => ({
+        name: file.name,
+        type: type,
+        encrypted: encrypted,
+      })),
       message: message,
-      close: true,
     });
 
   const compressImages = async (files: File[]) => {
@@ -216,7 +250,6 @@ export default function Uploader() {
       files.map(
         async (file) =>
           await compressImg(file, {
-            nameExtension: COMPRESSED_FILE_EXTENSION,
             onStart: () => setActiveCompressions((count) => count + 1),
             onSuccess: () => setActiveCompressions((count) => count - 1),
             onError: () => setActiveCompressions((count) => count - 1),
@@ -236,7 +269,15 @@ export default function Uploader() {
      * When images are uploaded thy are automatically compressed. If compressions are still in progress when user presses submit, it sets `staredSubmit` to true. As soon as all compressions are finished, it submits the form.
      */
     if (activeCompressions === 0 && startedSubmit && files) {
-      mutateGetUploadUrls(getValues("message"), [...files, ...previews]);
+      mutateGetUploadUrls(getValues("message"), [
+        ...files.map((f) => ({
+          file: f,
+        })),
+        ...previews.map((f) => ({
+          file: f,
+          type: "preview",
+        })),
+      ]);
       setStartedSubmit(false);
     }
   }, [activeCompressions, startedSubmit, files]);
@@ -259,24 +300,24 @@ export default function Uploader() {
               <h2>Files</h2>
               {files && (
                 <IconButton onClick={open}>
-                  <HiPlus />
+                  <HiPlus className="dark:fill-neutral-50" />
                 </IconButton>
               )}
             </div>
             {!files || files.length === 0 ? (
               <div
                 {...getRootProps()}
-                className={`h-20 border-2 border-dashed flex items-center justify-center p-3 transition-all cursor-pointer mb-2 rounded-xl ${
+                className={`h-20 border-2 border-dashed dark:border-neutral-700 flex items-center justify-center p-3 transition-all cursor-pointer mb-2 rounded-xl ${
                   isDragActive ? "border-indigo-500 bg-indigo-500/10" : ""
                 }`}
               >
                 <input {...getInputProps()} />
                 {isDragActive ? (
-                  <p className="text-sm text-black/50">
+                  <p className="text-sm text-black/50 dark:text-gray-200">
                     Drop the files here ...
                   </p>
                 ) : (
-                  <p className="text-xs text-black/50 text-center">
+                  <p className="text-xs text-black/50 dark:text-gray-200 text-center">
                     Drag &apos;n&apos; drop some files here, or click to select
                     files
                   </p>
@@ -306,6 +347,15 @@ export default function Uploader() {
               <InfoBox type="error">
                 <p>{errors?.message?.message}</p>
               </InfoBox>
+            )}
+            {session?.user?.role === "admin" && (
+              <input
+                type="checkbox"
+                name="encrypt"
+                id="encrypt"
+                checked={useE2EEncryption}
+                onChange={() => setUseE2EEncryption(!useE2EEncryption)}
+              />
             )}
             {uploadError && (
               <InfoBox type="error">

@@ -28,9 +28,7 @@ const Login: NextPageWithLayout<{ providers: Provider[] }> = ({
             {Object.values(providers).map((provider) =>
               provider.name === "Google" ? (
                 <GoogleButton
-                  onClick={() =>
-                    signIn(provider.id, { callbackUrl: "/" })
-                  }
+                  onClick={() => signIn(provider.id, { callbackUrl: "/" })}
                   key={provider.name}
                 />
               ) : (
@@ -43,11 +41,13 @@ const Login: NextPageWithLayout<{ providers: Provider[] }> = ({
             )}
           </div>
         </div>
-        <img
-          src="/assets/images/mesh-gradient.png"
-          className="absolute top-[20%] md:left-[70%] blur-2xl opacity-70 animate-pulse"
-          alt=""
-        />
+        <div className="absolute h-screen inset-y-0 pointer-events-none">
+          <img
+            src="/assets/shapes/grid.svg"
+            className="relative top-[-15%] left-[60%] w-[130vh] rotate-[41deg]"
+            alt="background"
+          />
+        </div>
       </main>
     </div>
   );

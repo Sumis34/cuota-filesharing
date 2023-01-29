@@ -127,16 +127,16 @@ export default function PoolStats({
       </div>
       <div className="h-32 card-solid flex flex-col">
         <h3 className="text-2xl">Message</h3>
-        <p className={`text-sm ${message ? "opacity-70" : "opacity-30"}`}>
+        <div className={`text-sm  ${message ? "opacity-70" : "opacity-30"}`}>
           {message ? <ParsedText text={message} /> : "no message"}
-        </p>
+        </div>
       </div>
       <div className="h-32 card-solid flex flex-col justify-between">
         <h3 className="text-2xl">Dates</h3>
         <div className="grid grid-cols-2">
           <div className="flex items-center gap-2">
-            <div className="bg-slate-100 p-2 w-fit rounded-lg">
-              <HiCalendar className="fill-slate-400 text-2xl" />
+            <div className="bg-slate-100 dark:bg-neutral-700 p-2 w-fit rounded-lg">
+              <HiCalendar className="fill-slate-400 dark:fill-neutral-400 text-2xl" />
             </div>
             <div className="flex flex-col">
               <time className="-mb-1">
@@ -147,12 +147,12 @@ export default function PoolStats({
           </div>
           <div className="flex items-center gap-2">
             <div
-              className={`bg-slate-100 p-2 w-fit rounded-lg ${
+              className={`bg-slate-100 dark:bg-neutral-700 p-2 w-fit rounded-lg ${
                 expiresSoon ? "bg-red-200" : ""
               }`}
             >
               <HiClock
-                className={`fill-slate-400 text-2xl ${
+                className={`fill-slate-400 dark:fill-neutral-400 text-2xl ${
                   expiresSoon ? "fill-red-500" : ""
                 }`}
               />

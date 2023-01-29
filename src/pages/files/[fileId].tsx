@@ -8,6 +8,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import downloadZip, {
   DownloadProgressEvent,
   RemoteFile,
+  RemoteFiles,
 } from "../../utils/download/downloadZip";
 import { useEffect, useState } from "react";
 import DownloadToast from "../../components/DownloadToast";
@@ -19,11 +20,14 @@ import {
 import PreviewModeButton, {
   PreviewMode,
 } from "../../components/PreviewModeButton.tsx/PreviewModeButton";
-import { HiDownload, HiQrcode } from "react-icons/hi";
+import { HiArrowLeft, HiDownload, HiQrcode } from "react-icons/hi";
 import QRPopover from "../../components/QRPopover";
 import IconButton from "../../components/UI/Button/IconButton";
 import FullScreenFIleItem from "../../components/FullScreenFIleItem";
 import PoolStats from "../../components/PoolStats";
+import Link from "next/link";
+import { KEY_PREFIX } from "../../utils/constants";
+import decryptFile from "../../utils/crypto/decryptFile";
 
 const Files: NextPageWithLayout = () => {
   const { query } = useRouter();
@@ -32,6 +36,7 @@ const Files: NextPageWithLayout = () => {
   const [fullscreenOpen, setFullscreenOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<number>(0);
   const [progress, setProgress] = useState<DownloadProgressEvent>();
+  const [files, setFiles] = useState<RemoteFile[]>([]);
 
   const { data, isLoading } = useQuery([
     "files.getAll",
@@ -41,16 +46,14 @@ const Files: NextPageWithLayout = () => {
   ]);
 
   const handleDownloadAll = async () => {
-    if (!data?.files) return;
+    if (!files) return;
     setOpen(true);
-    await downloadZip(data?.files, (progressEvent) =>
-      setProgress(progressEvent)
-    );
+    await downloadZip(files, (progressEvent) => setProgress(progressEvent));
     setProgress(undefined);
   };
 
   const handleItemClick = (remoteFile: RemoteFile) => {
-    setSelectedItem(data?.files.indexOf(remoteFile) || 0);
+    setSelectedItem(files.indexOf(remoteFile) || 0);
     setFullscreenOpen(true);
   };
 
@@ -59,9 +62,9 @@ const Files: NextPageWithLayout = () => {
         [key: string]: React.ReactNode;
       }
     | undefined = data && {
-    grid: <GridMode files={data?.files} onItemClick={handleItemClick} />,
-    gallery: <GalleryMode files={data?.files} onItemClick={handleItemClick} />,
-    list: <ListMode files={data?.files} onItemClick={handleItemClick} />,
+    grid: <GridMode files={files} onItemClick={handleItemClick} />,
+    gallery: <GalleryMode files={files} onItemClick={handleItemClick} />,
+    list: <ListMode files={files} onItemClick={handleItemClick} />,
   };
 
   const progressPercentage = progress
@@ -71,6 +74,50 @@ const Files: NextPageWithLayout = () => {
   useEffect(() => {
     setUrl(`${window.location.origin}/files/${query.fileId}`);
   }, [query]);
+
+  const processFiles = async () => {
+    if (!data?.files) return [];
+    if (!window.location.hash.slice(KEY_PREFIX.length)) return data?.files;
+
+    const processedFiles = await Promise.all(
+      data.files.map(async (f) => {
+        if (f.metadata?.["encrypted"] != "true") return f;
+
+        const response = await fetch(f.url);
+
+        if (!response.body) return;
+
+        const contentDisposition = response.headers.get("Content-Disposition");
+        const matches = /filename="(.+)"/.exec(contentDisposition || "");
+        const fileName = matches?.[1] ? matches[1] : "cuota-file";
+        const fileType = response.headers.get("Content-Type") || "";
+
+        const file = await decryptFile(
+          {
+            name: fileName,
+            type: fileType,
+            content: response.body,
+          },
+          window.location.hash.slice(KEY_PREFIX.length)
+        );
+
+        return {
+          ...f,
+          url: URL.createObjectURL(file),
+        };
+      })
+    );
+
+    return processedFiles.filter((f) => f !== undefined) as RemoteFiles;
+  };
+
+  useEffect(() => {
+    const process = async () => {
+      const files = await processFiles();
+      setFiles(files);
+    };
+    process().catch((e) => console.log(e));
+  }, [data]);
 
   //TODO: Add skeleton loading animation
   return (
@@ -84,13 +131,21 @@ const Files: NextPageWithLayout = () => {
       />
       <FullScreenFIleItem
         currentId={selectedItem}
-        file={data?.files[selectedItem]}
+        file={files[selectedItem]}
         open={fullscreenOpen}
         setOpen={setFullscreenOpen}
       />
       <div className="my-32 relative">
         <main className="relative z-10 pt-32">
           <AnimatePresence exitBeforeEnter>
+            {query.from && (
+              <Link href={query.from.toString() || "#"}>
+                <a className="flex gap-3 items-center rounded-lg px-2 py-1 group hover:bg-gray-100 dark:hover:bg-neutral-900 w-fit font-sans transition-all mb-2 cursor-pointer">
+                  <HiArrowLeft className="group-hover:translate-x-0 translate-x-1 transition-all" />{" "}
+                  <span>Back</span>
+                </a>
+              </Link>
+            )}
             {isLoading ? (
               <motion.div
                 key={"loading"}
@@ -112,7 +167,7 @@ const Files: NextPageWithLayout = () => {
                 {data && (
                   <PoolStats
                     totalSize={data.totalSize}
-                    files={data.files}
+                    files={files}
                     message={data.message}
                     createdAt={data.poolCreatedAt}
                     expiresAt={data.expiresAt}

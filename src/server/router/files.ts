@@ -14,6 +14,7 @@ import getPreview from "../../utils/preview/getPreview";
 import isAdmin from "../../utils/auth/isAdmin";
 import { TRPCError } from "@trpc/server";
 import deletePool from "../../utils/s3/deletePool";
+import path from "path";
 
 const getFiles = async (
   contents: _Object[],
@@ -56,14 +57,20 @@ const splitContents = (
   files: _Object[];
   previews: _Object[];
 } => {
-  return {
+  const res = {
     files: !contents
       ? []
-      : contents?.filter((content) => !content.Key?.includes("/preview/")),
+      : contents?.filter(
+          (content) => !path.dirname(content.Key || "").includes("/preview")
+        ),
     previews: !contents
       ? []
-      : contents?.filter((content) => content.Key?.includes("/preview/")),
+      : contents?.filter((content) =>
+          path.dirname(content.Key || "").includes("/preview")
+        ),
   };
+
+  return res;
 };
 
 export const filesRouter = createRouter()

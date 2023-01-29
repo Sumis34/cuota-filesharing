@@ -38,9 +38,9 @@ export default function UploadFileItem({
       <div className="flex items-center flex-none">
         <IconButton
           onClick={remove}
-          className="group-hover:opacity-100 opacity-0 !bg-gray-200 hover:!bg-gray-200/60"
+          className="group-hover:opacity-100 opacity-0 !bg-gray-200 hover:!bg-gray-200/60 dark:!bg-gray-200/80 dark:hover:!bg-gray-200"
         >
-          <HiMinus className="fill-gray-500" />
+          <HiMinus className="fill-gray-500 dark:fill-neutral-800" />
         </IconButton>
       </div>
     </li>

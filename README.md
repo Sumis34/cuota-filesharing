@@ -89,7 +89,14 @@ I have setup a job with the following configuration.
 
 ![cron config](docs/images/cron-job-conf.png)
 
+# Inspiration
+- https://buildui.com/series/framer-motion-recipes/multistep-wizard
+- https://www.framer.com/templates/category/startup/
+- Create. Share. Earn.
+
 # Ideas
 
 - [ ] show if server is bottleneck
 - [ ] Showcase. Option to create showcase where you can showcase your work. Includes option for custom branding in form of a image.
+- [ ] Allow custom branding for Teams and Buisness.
+- [ ] Access controll. Allow sharing for spesific users by specifying a email.
