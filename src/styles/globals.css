@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap");
 
 @tailwind base;
 @layer base {
@@ -22,9 +22,7 @@
   h2 {
     @apply text-3xl;
   }
-  button {
-    @apply font-serif;
-  }
+
   input {
     @apply focus-visible:outline-none border-2 focus-visible:border-indigo-500/70 rounded-xl bg-transparent dark:border-neutral-700 py-2 px-3;
   }
@@ -35,10 +33,10 @@
 @tailwind components;
 @layer components {
   .card {
-    @apply backdrop-blur-xl shadow-white dark:shadow-none shadow-inner bg-white/50 dark:bg-neutral-900 rounded-3xl;
+    @apply backdrop-blur-xl shadow-white dark:shadow-neutral-900 shadow-inner bg-white/50 dark:bg-neutral-900 rounded-2xl;
   }
   .card-solid {
-    @apply border rounded-xl shadow-lg p-4 dark:bg-neutral-900 dark:border-black
+    @apply border rounded-xl shadow-lg p-4 dark:bg-neutral-900 dark:border-black;
   }
 }
 @tailwind utilities;

@@ -21,7 +21,7 @@ export default function Button({
     <Link href={href}>
       <a>
         <button
-          className={`px-6 py-1 w-fit text-white font-serif rounded-2xl text-lg font-bold cursor-pointer enabled:active:translate-y-0.5 transition-all disabled:opacity-25 disabled:cursor-default ${className} ${
+          className={`px-6 py-1 w-fit text-white rounded-xl text-lg font-semibold cursor-pointer enabled:active:translate-y-0.5 transition-all disabled:opacity-25 disabled:cursor-default ${className} ${
             variant === "primary"
               ? "bg-gradient-to-t from-indigo-500 to-indigo-300"
               : variant === "secondary"
@@ -35,7 +35,7 @@ export default function Button({
     </Link>
   ) : (
     <button
-      className={`px-6 py-1 w-fit text-white font-serif rounded-xl text-lg font-bold cursor-pointer enabled:active:translate-y-0.5 transition-all disabled:opacity-25 disabled:cursor-default ${className} ${
+      className={`px-6 py-1 w-fit text-white rounded-xl text-lg font-semibold cursor-pointer enabled:active:translate-y-0.5 transition-all disabled:opacity-25 disabled:cursor-default ${className} ${
         variant === "primary"
           ? "bg-gradient-to-t from-indigo-500 to-indigo-300"
           : variant === "secondary"

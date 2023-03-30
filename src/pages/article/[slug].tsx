@@ -20,8 +20,8 @@ const Article: NextPageWithLayout = ({
           <div className="bg-white p-3 flex rounded-xl items-center gap-2 mt-4 w-fit">
             <Avatar url={meta.author.image} className="w-10 h-10" />
             <div className="flex flex-col">
-              <p className="font-bold -mb-1">{meta.author.name}</p>
-              <p className="text-xs opacity-50">{meta.author.role}</p>
+              <p className="font-bold -mb-1 dark:text-black ">{meta.author.name}</p>
+              <p className="text-xs opacity-50 dark:text-black ">{meta.author.role}</p>
             </div>
           </div>
         </div>
@@ -32,7 +32,7 @@ const Article: NextPageWithLayout = ({
       </div>
       <div className="mt-12 flex justify-center items-center">
         <div>
-          <Markdown className="prose prose-indigo">{content}</Markdown>
+          <Markdown className="prose dark:prose-invert prose-indigo">{content}</Markdown>
         </div>
       </div>
     </div>
