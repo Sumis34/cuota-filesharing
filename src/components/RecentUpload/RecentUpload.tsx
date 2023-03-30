@@ -51,7 +51,7 @@ export default function RecentUpload() {
             y: -100,
           }}
           onClick={() => router.push(uploadUrl)}
-          className="flex justify-between items-center group bg-yellow-200 py-3 sm:px-20 px-5 w-screen z-[51] relative left-0 font-mono"
+          className="flex justify-between items-center group bg-yellow-200 py-3 sm:px-20 px-5 w-screen z-[51] relative left-0 font-semibold sm:bottom-0"
         >
           <span className="dark:text-black">
             Open recently uploaded files! 🎉
