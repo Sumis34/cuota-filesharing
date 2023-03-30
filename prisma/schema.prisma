@@ -75,6 +75,7 @@ model Upload {
     userId     String?
     user       User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
     encrypted  Boolean   @default(false)
+    userAgent  String?
 
     @@unique([id])
 }

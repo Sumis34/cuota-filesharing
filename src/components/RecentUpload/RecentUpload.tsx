@@ -1,8 +1,9 @@
 import { sub } from "date-fns";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/router";
+import { userAgentFromString } from "next/server";
 import { useEffect, useState } from "react";
-import { HiArrowRight } from "react-icons/hi";
+import { HiArrowRight, HiDesktopComputer } from "react-icons/hi";
 import { useQuery } from "../../utils/trpc";
 
 const SECOND = 1000;
@@ -32,6 +33,9 @@ export default function RecentUpload() {
   );
 
   const uploadUrl = "/files/" + upload?.pools[0]?.id;
+  const agent = userAgentFromString(upload?.pools[0]?.userAgent || "");
+
+  console.log(agent);
 
   useEffect(() => {
     setIsOpen(window?.location.pathname === uploadUrl);
@@ -54,6 +58,12 @@ export default function RecentUpload() {
           className="flex justify-between items-center group bg-yellow-200 py-3 sm:px-20 px-5 w-screen z-[51] relative left-0 font-semibold sm:bottom-0"
         >
           <span className="dark:text-black">
+            {/* <span className="bg-neutral-200/70 text-black font-mono border border-neutral-400 px-2 py-0.5 rounded-md text-sm inline-flex items-center gap-2">
+              <HiDesktopComputer className="fill-black inline" />
+              {agent.device.model
+                ? agent.device.model + " " + agent.device.vendor
+                : agent.os.name + " " + agent.os.version}
+            </span> */}
             Open recently uploaded files! 🎉
           </span>
           <HiArrowRight className="group-hover:translate-x-2 transition-all dark:fill-black" />
