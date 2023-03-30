@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { FileError, useDropzone } from "react-dropzone";
 import UploadFileList from "../UploadFileList";
-import { HiPlus } from "react-icons/hi";
+import { HiPlus, HiShieldCheck } from "react-icons/hi";
 import IconButton from "../UI/Button/IconButton";
 import UploadLoadingPanel from "../UploadLoadingPanel";
 import { AnimatePresence, motion } from "framer-motion";
@@ -349,27 +349,40 @@ export default function Uploader() {
               </InfoBox>
             )}
             {session?.user?.role === "admin" && (
-              <input
-                type="checkbox"
-                name="encrypt"
-                id="encrypt"
-                checked={useE2EEncryption}
-                onChange={() => setUseE2EEncryption(!useE2EEncryption)}
-              />
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  name="encrypt"
+                  id="encrypt"
+                  className="accent-indigo-500"
+                  checked={useE2EEncryption}
+                  onChange={() => setUseE2EEncryption(!useE2EEncryption)}
+                />
+                <label htmlFor="encrypt" className="text-neutral-400 text-sm">
+                  Enable encryption
+                </label>
+              </div>
             )}
             {uploadError && (
               <InfoBox type="error">
                 <p>{uploadError}</p>
               </InfoBox>
             )}
-            <Button
-              disabled={fetchingUploadUrls}
-              variant="primary"
-              className="mt-3 flex items-center gap-3"
-            >
-              Upload
-              {fetchingUploadUrls && <Ring color="#fff" size={20} />}
-            </Button>
+            <div className="flex items-center justify-between mt-3">
+              <Button
+                disabled={fetchingUploadUrls}
+                variant="primary"
+                className="flex items-center gap-3"
+              >
+                Upload
+                {fetchingUploadUrls && <Ring color="#fff" size={20} />}
+              </Button>
+              {useE2EEncryption && (
+                <div className="flex justify-center items-center h-full">
+                  <HiShieldCheck className="text-2xl fill-indigo-100" />
+                </div>
+              )}
+            </div>
           </motion.form>
         ) : step === "loading" ? (
           <UploadLoadingPanel
