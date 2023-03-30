@@ -10,6 +10,7 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import useTheme from "../../hooks/useTheme";
+import RecentUpload from "../RecentUpload";
 import Badge from "../UI/Badge";
 import Button from "../UI/Button";
 import LoginButtons from "./LoginButtons";
@@ -34,44 +35,47 @@ export default function LandingNav() {
   }, []);
 
   return (
-    <motion.div
-      className={`left-0 top-0 fixed z-50 flex w-screen justify-center transition-all duration-500 after:bg-gradient-to-b after:from-white after:dark:from-black after:inset-0 after:absolute ${
-        scrolled
-          ? "bg-white/80 dark:bg-black/60 backdrop-blur-xl"
-          : "bg-white/0 dark:bg-black/0"
-      }`}
-    >
-      <motion.nav
-        className={`sm:px-20 px-5 w-full max-w-screen-2xl flex justify-between relative z-30`}
-        style={{
-          paddingTop: padding,
-          paddingBottom: padding,
-        }}
+    <div className="left-0 top-0 fixed w-screen z-50">
+      <RecentUpload />
+      <motion.div
+        className={`flex justify-center transition-all duration-500 after:bg-gradient-to-b after:from-white after:dark:from-black after:inset-0 after:absolute ${
+          scrolled
+            ? "bg-white/80 dark:bg-black/60 backdrop-blur-xl"
+            : "bg-white/0 dark:bg-black/0"
+        }`}
       >
-        <Link href="/">
-          <a className="flex items-center gap-2">
-            <h2>cuota.</h2>
-            {process.env.NEXT_PUBLIC_SITE_STATE === "beta" ? (
-              <Badge>Beta</Badge>
-            ) : process.env.NEXT_PUBLIC_SITE_STATE === "dev" ? (
-              <Badge variant="warning">Dev</Badge>
-            ) : null}
-          </a>
-        </Link>
-        <div>
-          <AnimatePresence>
-            {session ? (
-              <ProfileInfo
-                name={session.user?.name}
-                avatar={session.user?.image}
-                email={session.user?.email}
-              />
-            ) : (
-              <LoginButtons />
-            )}
-          </AnimatePresence>
-        </div>
-      </motion.nav>
-    </motion.div>
+        <motion.nav
+          className={`sm:px-20 px-5 w-full max-w-screen-2xl flex justify-between relative z-30`}
+          style={{
+            paddingTop: padding,
+            paddingBottom: padding,
+          }}
+        >
+          <Link href="/">
+            <a className="flex items-center gap-2">
+              <h2>cuota.</h2>
+              {process.env.NEXT_PUBLIC_SITE_STATE === "beta" ? (
+                <Badge>Beta</Badge>
+              ) : process.env.NEXT_PUBLIC_SITE_STATE === "dev" ? (
+                <Badge variant="warning">Dev</Badge>
+              ) : null}
+            </a>
+          </Link>
+          <div>
+            <AnimatePresence>
+              {session ? (
+                <ProfileInfo
+                  name={session.user?.name}
+                  avatar={session.user?.image}
+                  email={session.user?.email}
+                />
+              ) : (
+                <LoginButtons />
+              )}
+            </AnimatePresence>
+          </div>
+        </motion.nav>
+      </motion.div>
+    </div>
   );
 }

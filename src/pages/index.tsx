@@ -8,6 +8,8 @@ import { motion } from "framer-motion";
 import BenefitCard from "../components/UI/BenefitCard";
 import { getArticles } from "../utils/articles/getArticles";
 import { useRef } from "react";
+import * as Portal from "@radix-ui/react-portal";
+import RecentUpload from "../components/RecentUpload";
 
 const Home: NextPageWithLayout = ({
   articles,
@@ -39,7 +41,9 @@ const Home: NextPageWithLayout = ({
         <div className="md:items-center justify-center items-center flex md:flex-row flex-col gap-10 h-[110vh] md:justify-between z-10 relative">
           <div className="flex flex-col gap-2 text-center md:text-left">
             <h1 className="font-serif font-light md:text-8xl text-4xl">
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 to-indigo-500 font-bold italic">Share</span>{" "}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 to-indigo-500 font-bold italic">
+                Share
+              </span>{" "}
               your art
               <br /> with the world.
             </h1>
