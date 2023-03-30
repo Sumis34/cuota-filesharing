@@ -51,10 +51,12 @@ export default function RecentUpload() {
             y: -100,
           }}
           onClick={() => router.push(uploadUrl)}
-          className="flex justify-between items-center group bg-yellow-200 py-3 sm:px-20 px-5 w-screen z-[51] relative left-0 dark:text-black font-mono"
+          className="flex justify-between items-center group bg-yellow-200 py-3 sm:px-20 px-5 w-screen z-[51] relative left-0 font-mono"
         >
-          <span>Open recently uploaded files! 🎉</span>
-          <HiArrowRight className="group-hover:translate-x-2 transition-all" />
+          <span className="dark:text-black">
+            Open recently uploaded files! 🎉
+          </span>
+          <HiArrowRight className="group-hover:translate-x-2 transition-all dark:fill-black" />
         </motion.button>
       )}
     </AnimatePresence>
