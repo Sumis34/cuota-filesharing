@@ -54,6 +54,7 @@ model User {
     accounts      Account[]
     sessions      Session[]
     Upload        Upload[]
+    Bin           Bin[]
 }
 
 model VerificationToken {
@@ -74,8 +75,18 @@ model Upload {
     userId     String?
     user       User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
     encrypted  Boolean   @default(false)
+    userAgent  String?
 
     @@unique([id])
+}
+
+model Bin {
+    id         String    @id @default(cuid())
+    userId     String?
+    user       User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    uploadTime DateTime  @default(now())
+    expiresAt  DateTime?
+    encrypted  Boolean   @default(false)
 }
 
 model TransferAmount {

@@ -9,6 +9,7 @@ module.exports = {
       fontFamily: {
         sans: ["Poppins", ...defaultTheme.fontFamily.sans],
         serif: ["Lora", ...defaultTheme.fontFamily.serif],
+        space: ["Space Grotesk"]
       },
     },
   },

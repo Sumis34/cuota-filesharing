@@ -1,10 +1,9 @@
-import { GetServerSideProps } from "next";
+import { GetServerSideProps, GetStaticProps } from "next";
 import { Provider } from "next-auth/providers";
 import { getProviders, signIn, signOut, useSession } from "next-auth/react";
 import { useEffect } from "react";
 import GoogleButton from "../../components/GoogleButton";
 import { getDefaultLayout } from "../../components/Layout/DefaultLayout";
-import Button from "../../components/UI/Button";
 import { NextPageWithLayout } from "../_app";
 
 const Login: NextPageWithLayout<{ providers: Provider[] }> = ({
@@ -53,8 +52,22 @@ const Login: NextPageWithLayout<{ providers: Provider[] }> = ({
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const providers = await getProviders();
+export const getStaticProps: GetStaticProps = async (context) => {
+  // const providers = await getProviders();
+
+  const baseUrl =
+    process.env.NEXTAUTH_URL || `https://${process.env.VERCEL_URL}`;
+
+  const providers = {
+    google: {
+      id: "google",
+      name: "Google",
+      type: "oauth",
+      signinUrl: new URL(`/api/signin/google`, baseUrl).href,
+      callbackUrl: new URL(`/api/callback/google`, baseUrl).href,
+    },
+  };
+
   return {
     props: { providers },
   };

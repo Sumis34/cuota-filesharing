@@ -1,11 +1,12 @@
 import { FC } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { Fragment, useEffect, useRef, useState } from "react";
-import { HiChevronDown } from "react-icons/hi";
+import { HiAcademicCap, HiChevronDown } from "react-icons/hi";
 import { item } from "../FileViewer/FileItem/FileItem";
 
 export interface DropdownItem {
   label: React.ReactNode;
+  icon?: React.ReactNode;
   onClick: () => void;
 }
 
@@ -33,15 +34,16 @@ const Dropdown: FC<DropdownProps> = ({ children, itemGroups }) => (
       <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 dark:divide-neutral-800 px-3 py-1 rounded-md bg-white dark:bg-neutral-900 shadow-xl shadow-black/5 ring-1 ring-black ring-opacity-5 focus:outline-none">
         {itemGroups.map((items, i) => (
           <div key={i} className="px-1 py-1">
-            {items.map(({ label, onClick }, i) => (
+            {items.map(({ label, onClick, icon }, i) => (
               <Menu.Item key={i}>
                 {({ active }) => (
                   <button
                     onClick={onClick}
                     className={`${
                       active ? "bg-gray-100 dark:bg-neutral-800" : ""
-                    } group flex w-full items-center rounded-md px-2 py-2 text-sm font-sans`}
+                    } group flex gap-2 w-full items-center rounded-md px-2 py-2 text-sm font-sans`}
                   >
+                    {icon}
                     {label}
                   </button>
                 )}

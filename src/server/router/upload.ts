@@ -9,6 +9,7 @@ import * as trpc from "@trpc/server";
 import { FIVE_MINUTES, SEVEN_DAYS } from "../../utils/timeInSeconds";
 import { isPreview } from "../../utils/preview/isPreview";
 import path from "path";
+import { userAgent, userAgentFromString } from "next/server";
 
 interface UploadURLOptions {
   maxCacheAge: number;
@@ -178,6 +179,7 @@ export const exampleRouter = createRouter()
 
       const upload = await prisma.upload.create({
         data: {
+          userAgent: ctx.req?.headers["user-agent"],
           message: input.message,
           expiresAt: new Date(Date.now() + SEVEN_DAYS * 1000),
           ...(session && {
