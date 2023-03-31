@@ -13,12 +13,12 @@ export default function RecentUpload() {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
 
-  const idleTimer = useIdleTimer({
-    timeout: SECOND * 60,
+  const { isIdle } = useIdleTimer({
+    timeout: SECOND * 30,
+    onActive: () => refetch(),
   });
-
   //in idle request every 7 seconds else every two seconds to save bandwidth
-  const { data: upload } = useQuery(
+  const { data: upload, refetch } = useQuery(
     [
       "pools.getUserPools",
       {
@@ -26,9 +26,9 @@ export default function RecentUpload() {
       },
     ],
     {
-      refetchInterval: idleTimer.isIdle() ? SECOND * 7 : SECOND * 2,
+      refetchInterval: isIdle() ? SECOND * 7 : SECOND * 3,
       enabled: !isNew,
-      onSettled() {
+      onSettled: () => {
         setIsNew(
           new Date().getTime() -
             new Date(upload?.pools[0]?.uploadTime || 0).getTime() <
@@ -38,12 +38,14 @@ export default function RecentUpload() {
     }
   );
 
-  const parser = new UAParser(upload?.pools[0]?.userAgent || ""); // you need to pass the user-agent for nodejs
+  const lastUpload = upload?.pools[0];
+
+  const parser = new UAParser(lastUpload?.userAgent || ""); // you need to pass the user-agent for nodejs
   const agent = parser.getResult();
 
   const isMobile = agent.device.type === "mobile";
 
-  const uploadUrl = "/files/" + upload?.pools[0]?.id;
+  const uploadUrl = "/files/" + lastUpload?.id;
 
   useEffect(() => {
     setIsOpen(window?.location.pathname === uploadUrl);
