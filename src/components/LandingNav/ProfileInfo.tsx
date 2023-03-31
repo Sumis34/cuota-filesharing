@@ -5,8 +5,14 @@ import { DropdownItem } from "../Dropdown/Dropdown";
 import { router } from "@trpc/server";
 import { useRouter } from "next/router";
 import { signOut, useSession } from "next-auth/react";
-import { HiChevronDown } from "react-icons/hi";
+import { HiChevronDown, HiMoon } from "react-icons/hi";
 import useTheme from "../../hooks/useTheme";
+import {
+  HiArrowRightOnRectangle,
+  HiSquare3Stack3D,
+  HiSun,
+  HiWrenchScrewdriver,
+} from "react-icons/hi2";
 
 interface ProfileInfoProps {
   name?: string | null;
@@ -22,12 +28,14 @@ export default function ProfileInfo({ name, email, avatar }: ProfileInfoProps) {
     [
       {
         label: "My uploads",
+        icon: <HiSquare3Stack3D className="text-lg" />,
         onClick: () => router.push("/my-uploads"),
       },
     ],
     [
       {
         label: "Sign out",
+        icon: <HiArrowRightOnRectangle className="text-lg" />,
         onClick: () => signOut(),
       },
     ],
@@ -36,10 +44,16 @@ export default function ProfileInfo({ name, email, avatar }: ProfileInfoProps) {
   if (session?.user?.role === "admin") {
     DROPDOWN_OPTIONS[0]?.push({
       label: "Admin",
+      icon: <HiWrenchScrewdriver className="text-lg" />,
       onClick: () => router.push("/admin"),
     });
     DROPDOWN_OPTIONS[0]?.push({
       label: dark ? "Light mode" : "Dark mode",
+      icon: dark ? (
+        <HiSun className="text-lg" />
+      ) : (
+        <HiMoon className="text-lg" />
+      ),
       onClick: () => toggleDark(),
     });
   }
