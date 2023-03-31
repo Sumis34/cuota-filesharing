@@ -54,6 +54,12 @@ const Login: NextPageWithLayout<{ providers: Provider[] }> = ({
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const providers = await getProviders();
+
+  if (!providers)
+    return {
+      props: {},
+    };
+    
   return {
     props: { providers },
   };
