@@ -1,10 +1,9 @@
-import { GetServerSideProps } from "next";
+import { GetServerSideProps, GetStaticProps } from "next";
 import { Provider } from "next-auth/providers";
 import { getProviders, signIn, signOut, useSession } from "next-auth/react";
 import { useEffect } from "react";
 import GoogleButton from "../../components/GoogleButton";
 import { getDefaultLayout } from "../../components/Layout/DefaultLayout";
-import Button from "../../components/UI/Button";
 import { NextPageWithLayout } from "../_app";
 
 const Login: NextPageWithLayout<{ providers: Provider[] }> = ({
@@ -53,7 +52,7 @@ const Login: NextPageWithLayout<{ providers: Provider[] }> = ({
   );
 };
 
-export const getStaticProps: GetServerSideProps = async (context) => {
+export const getStaticProps: GetStaticProps = async (context) => {
   const providers = await getProviders();
   return {
     props: { providers },
