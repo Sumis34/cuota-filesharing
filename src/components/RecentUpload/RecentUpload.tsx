@@ -1,9 +1,7 @@
-import { sub } from "date-fns";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/router";
-import { userAgentFromString } from "next/server";
 import { useEffect, useState } from "react";
-import { HiArrowRight, HiDesktopComputer } from "react-icons/hi";
+import { HiArrowRight } from "react-icons/hi";
 import { useQuery } from "../../utils/trpc";
 import { UAParser } from "ua-parser-js";
 
