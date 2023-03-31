@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { HiArrowRight } from "react-icons/hi";
 import { useQuery } from "../../utils/trpc";
 import { UAParser } from "ua-parser-js";
+import { useIdleTimer } from "react-idle-timer";
 
 const SECOND = 1000;
 
@@ -11,6 +12,12 @@ export default function RecentUpload() {
   const [isNew, setIsNew] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
+
+  const idleTimer = useIdleTimer({
+    timeout: SECOND * 60,
+  });
+
+  //in idle request every 7 seconds else every two seconds to save bandwidth
   const { data: upload } = useQuery(
     [
       "pools.getUserPools",
@@ -19,7 +26,7 @@ export default function RecentUpload() {
       },
     ],
     {
-      refetchInterval: 5000,
+      refetchInterval: idleTimer.isIdle() ? SECOND * 7 : SECOND * 2,
       enabled: !isNew,
       onSettled() {
         setIsNew(
@@ -35,6 +42,8 @@ export default function RecentUpload() {
   const agent = parser.getResult();
 
   const uploadUrl = "/files/" + upload?.pools[0]?.id;
+
+  console.log(idleTimer.getRemainingTime());
 
   useEffect(() => {
     setIsOpen(window?.location.pathname === uploadUrl);
