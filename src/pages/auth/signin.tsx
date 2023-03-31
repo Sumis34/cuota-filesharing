@@ -53,7 +53,7 @@ const Login: NextPageWithLayout<{ providers: Provider[] }> = ({
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getStaticProps: GetServerSideProps = async (context) => {
   const providers = await getProviders();
   return {
     props: { providers },
