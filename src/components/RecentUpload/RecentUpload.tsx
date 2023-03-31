@@ -38,7 +38,7 @@ export default function RecentUpload() {
 
   useEffect(() => {
     setIsOpen(window?.location.pathname === uploadUrl);
-  }, [router]);
+  }, [router, uploadUrl]);
 
   return (
     <AnimatePresence>
