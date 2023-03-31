@@ -53,13 +53,21 @@ const Login: NextPageWithLayout<{ providers: Provider[] }> = ({
 };
 
 export const getStaticProps: GetStaticProps = async (context) => {
-  const providers = await getProviders();
+  // const providers = await getProviders();
 
-  if (!providers)
-    return {
-      props: {},
-    };
-    
+  const baseUrl =
+    process.env.NEXTAUTH_URL || `https://${process.env.VERCEL_URL}`;
+
+  const providers = {
+    google: {
+      id: "google",
+      name: "Google",
+      type: "oauth",
+      signinUrl: new URL(`/api/signin/google`, baseUrl).href,
+      callbackUrl: new URL(`/api/callback/google`, baseUrl).href,
+    },
+  };
+
   return {
     props: { providers },
   };
