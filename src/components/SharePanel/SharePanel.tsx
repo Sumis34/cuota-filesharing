@@ -49,7 +49,7 @@ export default function SharePanel({ url, setStep }: SharePanelProps) {
         <QRPopover url={url}>
           <IconButton
             as="div"
-            className="h-full aspect-square px-2 group hidden sm:flex items-center justify-center"
+            className="h-full aspect-square px-2 group flex items-center justify-center"
           >
             <HiQrcode className="text-2xl group-hover:text-indigo-500 transition-all text-indigo-800" />
           </IconButton>
