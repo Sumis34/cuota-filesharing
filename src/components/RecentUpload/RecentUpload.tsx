@@ -5,6 +5,7 @@ import { userAgentFromString } from "next/server";
 import { useEffect, useState } from "react";
 import { HiArrowRight, HiDesktopComputer } from "react-icons/hi";
 import { useQuery } from "../../utils/trpc";
+import { UAParser } from "ua-parser-js";
 
 const SECOND = 1000;
 
@@ -32,10 +33,10 @@ export default function RecentUpload() {
     }
   );
 
-  const uploadUrl = "/files/" + upload?.pools[0]?.id;
-  const agent = userAgentFromString(upload?.pools[0]?.userAgent || "");
+  const parser = new UAParser(upload?.pools[0]?.userAgent || ""); // you need to pass the user-agent for nodejs
+  const agent = parser.getResult();
 
-  console.log(agent);
+  const uploadUrl = "/files/" + upload?.pools[0]?.id;
 
   useEffect(() => {
     setIsOpen(window?.location.pathname === uploadUrl);
