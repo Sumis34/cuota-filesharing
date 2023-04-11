@@ -34,7 +34,7 @@ export default function RecentUpload() {
       },
     ],
     {
-      refetchInterval: isIdle() ? SECOND * 7 : SECOND * 3,
+      refetchInterval: isIdle() ? SECOND * 10 : SECOND * 3,
       onSettled: () => {
         setIsNew(
           new Date().getTime() -
