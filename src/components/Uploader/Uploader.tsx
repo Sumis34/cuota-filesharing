@@ -25,6 +25,8 @@ import { TRPCClientError } from "@trpc/client";
 import { SourceType } from "../../server/router/upload";
 import { type } from "os";
 import { useSession } from "next-auth/react";
+import { Checkbox } from "../UI/Checkbox/Checkbox";
+import { Label } from "../UI/Checkbox/Lable";
 
 const schema = z.object({
   message: z
@@ -350,17 +352,15 @@ export default function Uploader() {
             )}
             {session?.user?.role === "admin" && (
               <div className="flex items-center gap-2">
-                <input
-                  type="checkbox"
+                <Checkbox
                   name="encrypt"
                   id="encrypt"
-                  className="accent-indigo-500"
                   checked={useE2EEncryption}
-                  onChange={() => setUseE2EEncryption(!useE2EEncryption)}
+                  onClick={() => setUseE2EEncryption(!useE2EEncryption)}
                 />
-                <label htmlFor="encrypt" className="text-neutral-400 text-sm">
+                <Label htmlFor="encrypt" className="text-neutral-400 text-sm">
                   Enable encryption
-                </label>
+                </Label>
               </div>
             )}
             {uploadError && (
