@@ -1,4 +1,5 @@
 const SEVEN_DAYS = 60 * 60 * 24 * 7;
+const ONE_MONTH = 4 * SEVEN_DAYS;
 const FIVE_MINUTES = 60 * 5;
 
-export { SEVEN_DAYS, FIVE_MINUTES };
+export { SEVEN_DAYS, FIVE_MINUTES, ONE_MONTH };

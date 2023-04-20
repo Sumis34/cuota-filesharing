@@ -1,9 +1,12 @@
 const { withSentryConfig } = require("@sentry/nextjs");
 /** @type {import('next').NextConfig} */
 
-const moduleExports = {
+const removeImports = require("next-remove-imports")();
+const moduleExports = removeImports({
   reactStrictMode: true,
-};
+  experimental: { esmExternals: true },
+});
+
 const sentryWebpackPluginOptions = {
   // Additional config options for the Sentry Webpack plugin. Keep in mind that
   // the following options are set automatically, and overriding them is not
