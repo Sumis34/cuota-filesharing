@@ -19,6 +19,7 @@ const Bin: NextPageWithLayout = () => {
       <div className="max-w-screen-lg w-full">
         {data?.files.map((file) => (
           <FileViewer
+            key={file.key}
             name={file.filename}
             url={file.url}
             id={file.key || ""}
