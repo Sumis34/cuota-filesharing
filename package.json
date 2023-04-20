@@ -43,6 +43,7 @@
     "filenamify": "^5.1.1",
     "framer-motion": "^6.4.2",
     "gray-matter": "^4.0.3",
+    "html-to-image": "^1.11.11",
     "imgproxy": "^1.0.0",
     "jszip": "^3.10.0",
     "lucide-react": "^0.139.0",

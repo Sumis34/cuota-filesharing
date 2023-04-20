@@ -6,22 +6,48 @@ import { NextPageWithLayout } from "../_app";
 import "@uiw/react-textarea-code-editor/dist.css";
 import { useMutation } from "../../utils/trpc";
 import Button from "../../components/UI/Button";
+import { uploadFile } from "../../utils/s3/uploadPresignedPost";
+import { PresignedPost } from "@aws-sdk/s3-presigned-post";
+import mime from "mime-types";
+import Code from "../../components/UI/code";
+import { useRouter } from "next/dist/client/router";
 
 const CodeEditor = dynamic(
   () => import("@uiw/react-textarea-code-editor").then((mod) => mod.default),
   { ssr: false }
 );
 
+const uploadFiles = async (files: File[], presignedData: PresignedPost[]) => {
+  const promises = files.map(async (file, index) => {
+    const reqData = presignedData[index];
+    if (!reqData) return;
+
+    return await uploadFile(file, reqData);
+  });
+  return await Promise.all(promises);
+};
+
 const Bins: NextPageWithLayout = () => {
   const { data: session } = useSession();
+  const router = useRouter();
 
   const [code, setCode] = useState(`function add(a, b) {\n  return a + b;\n}`);
 
   const [filename, setFilename] = useState("");
 
   const mutation = useMutation(["bin.requestUpload"], {
-    onSuccess: (r) => {
+    onSuccess: async (r) => {
       console.log(r);
+
+      const f = new File([code], filename, {
+        type: mime.lookup(filename) || "text/plain",
+      });
+
+      console.log(f);
+
+      await uploadFiles([f], r.urls);
+
+      router.push("/bin/" + r.binId);
     },
   });
 
@@ -44,25 +70,16 @@ const Bins: NextPageWithLayout = () => {
               onChange={(e) => setFilename(e.target.value)}
             />
           </div>
-          <CodeEditor
-            value={code}
+          <Code
+            code={code}
             language={filename.split(".").at(-1)}
-            placeholder="start typing here"
-            onChange={(evn) => setCode(evn.target.value)}
-            padding={15}
-            data-color-mode="dark"
-            className=""
-            style={{
-              fontSize: 13,
-              backgroundColor: "#171717",
-              minHeight: "30vh",
-              fontFamily:
-                "ui-monospace,SFMono-Regular,SF Mono,Consolas, monospace",
-            }}
+            onChange={(c) => setCode(c)}
           />
         </div>
-        <Button onClick={() => mutation.mutate({ files: [{ name: "test" }] })}>
-          Test
+        <Button
+          onClick={() => mutation.mutate({ files: [{ name: filename }] })}
+        >
+          Save
         </Button>
       </div>
     </div>
