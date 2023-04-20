@@ -10,7 +10,8 @@ interface CodeProps {
 }
 
 const CodeEditor = dynamic(
-  () => import("@uiw/react-textarea-code-editor").then((mod) => mod.default), // eslint-disable-line
+// eslint-disable-line
+  () => import("@uiw/react-textarea-code-editor").then((mod) => mod.default),
   { ssr: false }
 );
 
