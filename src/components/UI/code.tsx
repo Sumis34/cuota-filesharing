@@ -10,7 +10,7 @@ interface CodeProps {
 }
 
 const CodeEditor = dynamic(
-// eslint-disable-next-line
+  // @ts-ignore
   () => import("@uiw/react-textarea-code-editor").then((mod) => mod.default),
   { ssr: false }
 );
@@ -24,10 +24,13 @@ export default function Code({
 }: CodeProps) {
   return (
     <CodeEditor
+      // @ts-ignore
       disabled={!editable}
       value={code}
+      // @ts-ignore
       language={language}
       placeholder="start typing here"
+      // @ts-ignore
       onChange={(e) => {
         if (onChange) onChange(e.target.value);
       }}

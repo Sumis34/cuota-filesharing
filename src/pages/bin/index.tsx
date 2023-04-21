@@ -12,11 +12,6 @@ import mime from "mime-types";
 import Code from "../../components/UI/code";
 import { useRouter } from "next/dist/client/router";
 
-const CodeEditor = dynamic(
-  () => import("@uiw/react-textarea-code-editor").then((mod) => mod.default),
-  { ssr: false }
-);
-
 const uploadFiles = async (files: File[], presignedData: PresignedPost[]) => {
   const promises = files.map(async (file, index) => {
     const reqData = presignedData[index];
