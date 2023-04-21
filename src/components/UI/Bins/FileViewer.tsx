@@ -7,13 +7,26 @@ import Button from "../Button";
 import CodeToImageRenderer from "./CodeToImageRenderer";
 import "@uiw/react-textarea-code-editor/dist.css";
 import InfoBox from "../InfoBox";
-import { HiOutlineCamera, HiOutlineClipboard } from "react-icons/hi2";
+import {
+  HiCheck,
+  HiOutlineCamera,
+  HiOutlineClipboard,
+  HiOutlineShare,
+  HiPlus,
+  HiQrCode,
+  HiShare,
+} from "react-icons/hi2";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "../tooltip";
+import useTimeoutToggle from "../../../hooks/useTimeoutToggle";
+import QRPopover from "../../QRPopover";
+import { useRouter } from "next/dist/client/router";
+import { Popover, PopoverContent, PopoverTrigger } from "../popover";
+import TextCopy from "../../TextCopy";
 
 interface FileViewerProps {
   id: string;
@@ -40,6 +53,8 @@ export default function FileViewer({ id, name, url }: FileViewerProps) {
   const hasNonePrintableChars = name?.match(NONE_PRINTABLE_ASCII_CHARS);
 
   const ref = useRef<HTMLDivElement>(null);
+  const [copied, setCopied] = useTimeoutToggle({ ms: 1000 });
+  const router = useRouter();
 
   const snap = useCallback(async () => {
     if (!ref.current) return;
@@ -57,11 +72,12 @@ export default function FileViewer({ id, name, url }: FileViewerProps) {
 
   const copy = () => {
     navigator.clipboard.writeText(data);
+    setCopied(true);
   };
 
   const ACTIONS = [
     {
-      icon: <HiOutlineClipboard />,
+      icon: copied ? <HiCheck /> : <HiOutlineClipboard />,
       action: copy,
       tooltip: "Copy to clipboard",
     },
@@ -74,7 +90,7 @@ export default function FileViewer({ id, name, url }: FileViewerProps) {
 
   return (
     <div className="p-5">
-      <div className="relative scroll-m-32" id={name}>
+      <div className="relative scroll-m-32 mb-2" id={name}>
         <div
           key={id}
           className="relative z-10 rounded-lg border-neutral-700 border bg-neutral-900"
@@ -113,6 +129,7 @@ export default function FileViewer({ id, name, url }: FileViewerProps) {
         </div>
         <div className="absolute inset-0 bg-white/30 blur-3xl m-12 pointer-events-none" />
       </div>
+      <Button onClick={() => router.push("/bin")}>New bin</Button>
       <CodeToImageRenderer
         lang={name?.split(".").at(-1)}
         ref={ref}
