@@ -11,6 +11,7 @@ import { PresignedPost } from "@aws-sdk/s3-presigned-post";
 import mime from "mime-types";
 import Code from "../../components/UI/code";
 import { useRouter } from "next/dist/client/router";
+import { Ring } from "@uiball/loaders";
 
 const uploadFiles = async (files: File[], presignedData: PresignedPost[]) => {
   const promises = files.map(async (file, index) => {
@@ -26,7 +27,7 @@ const Bins: NextPageWithLayout = () => {
   const { data: session } = useSession();
   const router = useRouter();
 
-  const [code, setCode] = useState(`function add(a, b) {\n  return a + b;\n}`);
+  const [code, setCode] = useState(``);
 
   const [filename, setFilename] = useState("");
 
@@ -66,7 +67,7 @@ const Bins: NextPageWithLayout = () => {
             Notes or Code Snippets with yourself or others.
           </p>
         </div>
-        <div className="rounded-lg border-neutral-700 border overflow-hidden bg-neutral-900">
+        <div className="rounded-lg border-neutral-700 border overflow-hidden bg-neutral-900 mb-2">
           <div className="px-4 py-3 border-b border-neutral-700">
             <input
               type="text"
@@ -83,11 +84,15 @@ const Bins: NextPageWithLayout = () => {
           />
         </div>
         <Button
+          disabled={mutation.isLoading}
+          variant="primary"
+          className="flex items-center gap-3"
           onClick={() => mutation.mutate({ files: [{ name: filename }] })}
         >
           Save
+          {mutation.isLoading && <Ring color="#fff" size={20} />}
         </Button>
-        <Button onClick={paste}>Paste</Button>
+        {/* <Button onClick={paste}>Paste</Button> */}
       </div>
     </div>
   );
