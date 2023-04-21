@@ -56,9 +56,9 @@ const Bins: NextPageWithLayout = () => {
               Bin.
             </span>
           </h1>
-          <p className="max-w-md">
-            The new and polished sharing option for text based files. Easily
-            share your Notes or Code Snippets with yourself or others.
+          <p className="max-w-md font-medium opacity-80">
+            The clean sharing option for text based files. Easily share your
+            Notes or Code Snippets with yourself or others.
           </p>
         </div>
         <div className="rounded-lg border-neutral-700 border overflow-hidden bg-neutral-900">

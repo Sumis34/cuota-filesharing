@@ -1,14 +1,15 @@
 import axios from "axios";
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useQuery } from "react-query";
 import Code from "../code";
 import { toPng } from "html-to-image";
 import Button from "../Button";
 import CodeToImageRenderer from "./CodeToImageRenderer";
+import InfoBox from "../InfoBox";
 
 interface FileViewerProps {
   id: string;
-  name?: string;
+  name: string;
   url: string;
 }
 
@@ -27,8 +28,6 @@ export default function FileViewer({ id, name, url }: FileViewerProps) {
       return data;
     },
   });
-
-  const language = name?.split(".").at(-1);
 
   const hasNonePrintableChars = name?.match(NONE_PRINTABLE_ASCII_CHARS);
 
@@ -50,22 +49,40 @@ export default function FileViewer({ id, name, url }: FileViewerProps) {
 
   return (
     <div className="p-5">
-      <div
-        key={id}
-        className="rounded-lg border-neutral-700 border overflow-hidden bg-neutral-900 shadow-2xl"
-      >
-        <div className="px-4 py-3 border-b border-neutral-700">
-          <input
-            type="text"
-            placeholder="Filename including extension"
-            className="border rounded-lg w-60"
-            value={name}
-            disabled
-          />
+      <div className="relative">
+        <div
+          key={id}
+          className="relative z-10 rounded-lg border-neutral-700 border bg-neutral-900"
+        >
+          <div className="px-4 py-3 border-b border-neutral-700">
+            <input
+              type="text"
+              placeholder="Filename including extension"
+              className="border rounded-lg w-60"
+              value={name}
+              disabled
+            />
+          </div>
+          {name ? (
+            <Code
+              editable={false}
+              code={data}
+              language={name?.split(".").at(-1)}
+              className={"rounded-b-lg"}
+            />
+          ) : (
+            <div className="p-5">
+              <InfoBox type="error">Unable to load document.</InfoBox>
+            </div>
+          )}
         </div>
-        <Code editable={false} code={data} language={language} />
+        <div className="absolute inset-0 bg-white/30 blur-3xl m-12 pointer-events-none" />
       </div>
-      <CodeToImageRenderer lang={language} ref={ref} code={data} />
+      <CodeToImageRenderer
+        lang={name?.split(".").at(-1)}
+        ref={ref}
+        code={data}
+      />
       <Button onClick={onButtonClick}>Snap</Button>
     </div>
   );

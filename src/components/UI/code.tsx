@@ -7,6 +7,7 @@ interface CodeProps {
   onChange?: (code: string) => void;
   editable?: boolean;
   style?: CSSProperties;
+  className?: string;
 }
 
 const CodeEditor = dynamic(
@@ -20,6 +21,7 @@ export default function Code({
   language,
   onChange,
   style,
+  className,
   editable = true,
 }: CodeProps) {
   return (
@@ -36,7 +38,7 @@ export default function Code({
       }}
       padding={15}
       data-color-mode="dark"
-      className=""
+      className={className}
       style={{
         fontSize: 13,
         backgroundColor: "#171717",

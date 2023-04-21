@@ -20,7 +20,7 @@ const Bin: NextPageWithLayout = () => {
         {data?.files.map((file) => (
           <FileViewer
             key={file.key}
-            name={file.filename}
+            name={file.filename || ""}
             url={file.url}
             id={file.key || ""}
           />

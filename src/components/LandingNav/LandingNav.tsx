@@ -64,9 +64,11 @@ export default function LandingNav() {
           <div className="flex items-center gap-5">
             <div className="flex items-center gap-2">
               <Link href="/bin">
-                <a className="flex items-center gap-2 font-bold text-lg hover:bg-neutral-900/80 active:bg-neutral-900 px-3 py-2 rounded-md transition-all">
+                <a className="flex items-center gap-2 font-bold text-lg dark:hover:bg-neutral-900/80 dark:active:bg-neutral-900 hover:bg-neutral-100 active:bg-neutral-200 px-3 py-2 rounded-md transition-all">
                   <p>Bins</p>
-                  <span className="text-xs bg-red-500 rounded-md px-1 py-0.5 -translate-y-1">New</span>
+                  <span className="text-xs bg-red-500 rounded-md px-1 py-0.5 -translate-y-1">
+                    New
+                  </span>
                 </a>
               </Link>
             </div>
