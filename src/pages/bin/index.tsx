@@ -46,6 +46,11 @@ const Bins: NextPageWithLayout = () => {
     },
   });
 
+  const paste = async () => {
+    const text = await navigator.clipboard.readText();
+    setCode(text);
+  };
+
   return (
     <div className="relative w-full my-52 flex justify-center">
       <div className="max-w-screen-lg w-full">
@@ -82,6 +87,7 @@ const Bins: NextPageWithLayout = () => {
         >
           Save
         </Button>
+        <Button onClick={paste}>Paste</Button>
       </div>
     </div>
   );

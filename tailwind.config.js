@@ -9,9 +9,13 @@ module.exports = {
       fontFamily: {
         sans: ["Poppins", ...defaultTheme.fontFamily.sans],
         serif: ["Lora", ...defaultTheme.fontFamily.serif],
-        space: ["Space Grotesk"]
+        space: ["Space Grotesk"],
       },
     },
   },
-  plugins: [require("tailwind-scrollbar"), require("@tailwindcss/typography")],
+  plugins: [
+    require("tailwind-scrollbar"),
+    require("@tailwindcss/typography"),
+    require("tailwindcss-animate"),
+  ],
 };

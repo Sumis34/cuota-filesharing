@@ -5,7 +5,15 @@ import Code from "../code";
 import { toPng } from "html-to-image";
 import Button from "../Button";
 import CodeToImageRenderer from "./CodeToImageRenderer";
+import "@uiw/react-textarea-code-editor/dist.css";
 import InfoBox from "../InfoBox";
+import { HiOutlineCamera, HiOutlineClipboard } from "react-icons/hi2";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../tooltip";
 
 interface FileViewerProps {
   id: string;
@@ -33,7 +41,7 @@ export default function FileViewer({ id, name, url }: FileViewerProps) {
 
   const ref = useRef<HTMLDivElement>(null);
 
-  const onButtonClick = useCallback(async () => {
+  const snap = useCallback(async () => {
     if (!ref.current) return;
     const url = await toPng(ref.current, { cacheBust: true, pixelRatio: 3 });
     const link = document.createElement("a");
@@ -47,34 +55,61 @@ export default function FileViewer({ id, name, url }: FileViewerProps) {
     link.click();
   }, [ref]);
 
+  const copy = () => {
+    navigator.clipboard.writeText(data);
+  };
+
+  const ACTIONS = [
+    {
+      icon: <HiOutlineClipboard />,
+      action: copy,
+      tooltip: "Copy to clipboard",
+    },
+    {
+      icon: <HiOutlineCamera />,
+      action: snap,
+      tooltip: "Capture CodeSnap",
+    },
+  ];
+
   return (
     <div className="p-5">
-      <div className="relative">
+      <div className="relative scroll-m-32" id={name}>
         <div
           key={id}
           className="relative z-10 rounded-lg border-neutral-700 border bg-neutral-900"
         >
-          <div className="px-4 py-3 border-b border-neutral-700">
-            <input
-              type="text"
-              placeholder="Filename including extension"
-              className="border rounded-lg w-60"
-              value={name}
-              disabled
-            />
-          </div>
-          {name ? (
-            <Code
-              editable={false}
-              code={data}
-              language={name?.split(".").at(-1)}
-              className={"rounded-b-lg"}
-            />
-          ) : (
-            <div className="p-5">
-              <InfoBox type="error">Unable to load document.</InfoBox>
+          <div className="px-4 py-3 border-b border-neutral-700 flex justify-between items-center">
+            <div>
+              <p className="opacity-70">{name}</p>
             </div>
-          )}
+            <div className="flex gap-2">
+              {ACTIONS.map((item, i) => (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button
+                        key={i}
+                        className="border border-neutral-700 p-2 rounded-md hover:bg-neutral-800/50 active:bg-neutral-800"
+                        onClick={item.action}
+                      >
+                        {item.icon}
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>{item.tooltip}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              ))}
+            </div>
+          </div>
+          <Code
+            editable={false}
+            code={data}
+            language={name?.split(".").at(-1)}
+            className={"rounded-b-lg"}
+          />
         </div>
         <div className="absolute inset-0 bg-white/30 blur-3xl m-12 pointer-events-none" />
       </div>
@@ -83,7 +118,6 @@ export default function FileViewer({ id, name, url }: FileViewerProps) {
         ref={ref}
         code={data}
       />
-      <Button onClick={onButtonClick}>Snap</Button>
     </div>
   );
 }
