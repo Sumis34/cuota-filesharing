@@ -49,12 +49,18 @@ const Bins: NextPageWithLayout = () => {
   return (
     <div className="relative w-full my-52 flex justify-center">
       <div className="max-w-screen-lg w-full">
-        <h1 className="mb-4">
-          Cuota{" "}
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 to-indigo-500">
-            Bin.
-          </span>
-        </h1>
+        <div className="mb-4 text-center flex flex-col items-center">
+          <h1 className="text-7xl">
+            Cuota{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 to-indigo-500">
+              Bin.
+            </span>
+          </h1>
+          <p className="max-w-md">
+            The new and polished sharing option for text based files. Easily
+            share your Notes or Code Snippets with yourself or others.
+          </p>
+        </div>
         <div className="rounded-lg border-neutral-700 border overflow-hidden bg-neutral-900">
           <div className="px-4 py-3 border-b border-neutral-700">
             <input
