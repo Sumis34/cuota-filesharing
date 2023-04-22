@@ -17,7 +17,7 @@ interface UploadURLOptions {
 
 const types = ["original", "preview"] as const;
 
-export type SourceType = typeof types[number];
+export type SourceType = (typeof types)[number];
 
 const Files = z.array(
   z.object({
@@ -181,6 +181,7 @@ export const exampleRouter = createRouter()
         data: {
           userAgent: ctx.req?.headers["user-agent"],
           message: input.message,
+          encrypted: input.files.some((f) => f.encrypted),
           expiresAt: new Date(Date.now() + SEVEN_DAYS * 1000),
           ...(session && {
             user: {

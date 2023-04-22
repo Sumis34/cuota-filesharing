@@ -17,7 +17,7 @@ const ParsedText: FC<ParsedTextProps> = ({ text }) => (
         href={match.startsWith("www") ? "http://" + match : match}
         target={"_blank"}
         rel={"noreferrer"}
-        className="hover:text-indigo-500 transition-all"
+        className="hover:text-indigo-500 dark:hover:text-indigo-500 dark:text-indigo-300 transition-all d"
       >
         {match}
       </a>

@@ -28,6 +28,7 @@ import PoolStats from "../../components/PoolStats";
 import Link from "next/link";
 import { KEY_PREFIX } from "../../utils/constants";
 import decryptFile from "../../utils/crypto/decryptFile";
+import { NoKeyAlert } from "../../components/NoKeyAlert/NoKeyAlert";
 
 const Files: NextPageWithLayout = () => {
   const { query } = useRouter();
@@ -37,6 +38,7 @@ const Files: NextPageWithLayout = () => {
   const [selectedItem, setSelectedItem] = useState<number>(0);
   const [progress, setProgress] = useState<DownloadProgressEvent>();
   const [files, setFiles] = useState<RemoteFile[]>([]);
+  const router = useRouter();
 
   const { data, isLoading } = useQuery([
     "files.getAll",
@@ -135,6 +137,15 @@ const Files: NextPageWithLayout = () => {
         open={fullscreenOpen}
         setOpen={setFullscreenOpen}
       />
+      {/* <NoKeyAlert
+        open={
+          !!data?.encrypted &&
+          (!window.location.hash.slice(KEY_PREFIX.length) || false)
+        }
+        onAction={(k) => {
+          router.push({ hash: k });
+        }}
+      /> */}
       <div className="my-32 relative">
         <main className="relative z-10 pt-32">
           <AnimatePresence exitBeforeEnter>

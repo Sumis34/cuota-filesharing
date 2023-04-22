@@ -15,10 +15,10 @@ import {
   HiClock,
   HiOutlineCalendar,
   HiOutlineClock,
+  HiOutlineLockClosed,
 } from "react-icons/hi";
 import Link from "next/link";
 import { format, formatDistanceToNow, isPast } from "date-fns";
-
 const MyUploads: NextPageWithLayout = () => {
   const { data: session } = useSession();
   const ref = useRef(null);
@@ -80,6 +80,12 @@ const MyUploads: NextPageWithLayout = () => {
                     </div>
                     <div className="flex gap-4">
                       <div className="flex gap-3 opacity-60">
+                        {pool.encrypted && (
+                          <div className="flex text-sm items-center gap-1">
+                            <HiOutlineLockClosed className={`text-lg`} />{" "}
+                            Encrypted
+                          </div>
+                        )}
                         <time className="flex gap-1 items-center text-sm">
                           <HiOutlineClock className={`text-lg`} />
                           Expires in
