@@ -4,7 +4,7 @@ import Head from "next/head";
 import LandingNav from "../components/LandingNav";
 import { getDefaultLayout } from "../components/Layout/DefaultLayout";
 import Uploader from "../components/Uploader";
-import { trpc, useInfiniteQuery } from "../utils/trpc";
+import { trpc, useInfiniteQuery, useQuery } from "../utils/trpc";
 import { NextPageWithLayout } from "./_app";
 import { useInView } from "framer-motion";
 import { useEffect, useRef } from "react";
@@ -36,7 +36,12 @@ const MyUploads: NextPageWithLayout = () => {
     }
   );
 
-  console.log(data);
+  const { data: visitor } = useQuery([
+    "pools.visitors",
+    {
+      poolId: "clgs1ynds01005gvzzphlix47",
+    },
+  ]);
 
   useEffect(() => {
     if (isInView) {
