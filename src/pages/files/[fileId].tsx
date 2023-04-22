@@ -29,6 +29,7 @@ import Link from "next/link";
 import { KEY_PREFIX } from "../../utils/constants";
 import decryptFile from "../../utils/crypto/decryptFile";
 import { NoKeyAlert } from "../../components/NoKeyAlert/NoKeyAlert";
+import getFingerprint from "../../utils/pools/generateFingerprint";
 
 const Files: NextPageWithLayout = () => {
   const { query } = useRouter();
@@ -38,14 +39,21 @@ const Files: NextPageWithLayout = () => {
   const [selectedItem, setSelectedItem] = useState<number>(0);
   const [progress, setProgress] = useState<DownloadProgressEvent>();
   const [files, setFiles] = useState<RemoteFile[]>([]);
+  const [fp, setFp] = useState<string>("");
   const router = useRouter();
 
-  const { data, isLoading } = useQuery([
-    "files.getAll",
+  const { data, isLoading } = useQuery(
+    [
+      "files.getAll",
+      {
+        id: query.fileId as string,
+        fp: String(fp),
+      },
+    ],
     {
-      id: query.fileId as string,
-    },
-  ]);
+      enabled: !!query.fileId && !!fp,
+    }
+  );
 
   const handleDownloadAll = async () => {
     if (!files) return;
@@ -120,6 +128,13 @@ const Files: NextPageWithLayout = () => {
     };
     process().catch((e) => console.log(e));
   }, [data]);
+
+  useEffect(() => {
+    const updateFp = async () => {
+      setFp(await getFingerprint());
+    };
+    updateFp();
+  });
 
   //TODO: Add skeleton loading animation
   return (

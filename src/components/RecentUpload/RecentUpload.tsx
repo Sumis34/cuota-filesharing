@@ -5,6 +5,7 @@ import { HiArrowRight, HiDesktopComputer, HiPhone } from "react-icons/hi";
 import { useQuery } from "../../utils/trpc";
 import { UAParser } from "ua-parser-js";
 import { useIdleTimer } from "react-idle-timer";
+import { useSession } from "next-auth/react";
 
 const SECOND = 1000;
 
@@ -19,6 +20,7 @@ const hasClicked = (id: string) =>
 export default function RecentUpload() {
   const [isNew, setIsNew] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const { data: session } = useSession();
   const router = useRouter();
 
   const { isIdle } = useIdleTimer({
@@ -35,6 +37,7 @@ export default function RecentUpload() {
     ],
     {
       refetchInterval: isIdle() ? SECOND * 10 : SECOND * 3,
+      enabled: !!session?.user,
       onSettled: () => {
         setIsNew(
           new Date().getTime() -

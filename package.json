@@ -24,6 +24,7 @@
     "@radix-ui/react-popover": "^1.0.5",
     "@radix-ui/react-toast": "^1.0.0",
     "@radix-ui/react-tooltip": "^1.0.5",
+    "@rajesh896/broprint.js": "^2.1.1",
     "@sentry/nextjs": "^7.11.1",
     "@trpc/client": "^9.25.3",
     "@trpc/next": "^9.25.3",
