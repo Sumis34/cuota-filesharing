@@ -104,22 +104,26 @@ model DeletedPools {
 }
 
 model Visitor {
-    downloads Int    @default(0)
-    views     Int    @default(1)
-    userId    String
-    user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-    uploadId  String
-    upload    Upload @relation(fields: [uploadId], references: [id], onDelete: Cascade)
+    downloads  Int      @default(0)
+    views      Int      @default(1)
+    userId     String
+    user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    uploadId   String
+    upload     Upload   @relation(fields: [uploadId], references: [id], onDelete: Cascade)
+    lastVisit  DateTime @updatedAt
+    firstVisit DateTime @default(now())
 
     @@id([userId, uploadId])
 }
 
 model AnonymousVisitor {
-    id        String
-    downloads Int    @default(0)
-    views     Int    @default(1)
-    uploadId  String
-    upload    Upload @relation(fields: [uploadId], references: [id], onDelete: Cascade)
+    id         String
+    downloads  Int      @default(0)
+    views      Int      @default(1)
+    uploadId   String
+    upload     Upload   @relation(fields: [uploadId], references: [id], onDelete: Cascade)
+    lastVisit  DateTime @updatedAt
+    firstVisit DateTime @default(now())
 
     @@id([id, uploadId])
 }
