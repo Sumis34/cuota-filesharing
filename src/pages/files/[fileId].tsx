@@ -30,6 +30,9 @@ import { KEY_PREFIX } from "../../utils/constants";
 import decryptFile from "../../utils/crypto/decryptFile";
 import { NoKeyAlert } from "../../components/NoKeyAlert/NoKeyAlert";
 import getFingerprint from "../../utils/pools/generateFingerprint";
+import AvatarList from "../../components/UI/Avatar/AvatarList";
+import { useSession } from "next-auth/react";
+import PoolAnalytics from "../../components/PoolAnalytics/PoolAnalytics";
 
 const Files: NextPageWithLayout = () => {
   const { query } = useRouter();
@@ -41,6 +44,7 @@ const Files: NextPageWithLayout = () => {
   const [files, setFiles] = useState<RemoteFile[]>([]);
   const [fp, setFp] = useState<string>("");
   const router = useRouter();
+  const { data: session } = useSession();
 
   const { data, isLoading } = useQuery(
     [
@@ -190,6 +194,9 @@ const Files: NextPageWithLayout = () => {
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5 }}
               >
+                {session?.user && session.user.id === data?.owner && (
+                  <PoolAnalytics id={query.fileId as string} />
+                )}
                 {data && (
                   <PoolStats
                     totalSize={data.totalSize}
