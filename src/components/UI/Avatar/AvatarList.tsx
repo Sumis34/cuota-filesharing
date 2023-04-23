@@ -65,7 +65,10 @@ export default function AvatarList({
               <div
                 className="rounded-2xl border-neutral-900 border-4 bg-neutral-600 flex justify-center items-center w-12 aspect-square"
                 style={{
-                  marginLeft: ((users.length || 0) - 1) * -AVATAR_OFFSET,
+                  marginLeft:
+                    (users.length || 0) === 1
+                      ? -AVATAR_OFFSET
+                      : ((users.length || 0) - 1) * -AVATAR_OFFSET,
                   zIndex: users.length,
                 }}
               >
@@ -73,7 +76,10 @@ export default function AvatarList({
               </div>
             </TooltipTrigger>
             <TooltipContent>
-              <p>And {additionalUsers} anonymous users</p>
+              <p>
+                And {additionalUsers} anonymous{" "}
+                {additionalUsers > 1 ? "users" : "user"}
+              </p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
