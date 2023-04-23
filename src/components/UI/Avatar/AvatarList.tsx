@@ -13,10 +13,11 @@ interface AvatarListProps {
   maxAvatars: number;
 }
 
-interface User extends Record<string, any> {
+interface User {
   name: string | null;
   image: string | null;
   id: string;
+  tooltip: string;
 }
 
 const AVATAR_OFFSET = 15;
@@ -32,7 +33,7 @@ export default function AvatarList({
       {users.slice(0, maxAvatars).map((user, i) => {
         return (
           <li
-            key={user.userId}
+            key={user.id}
             className="relative"
             style={{
               marginLeft: i * -AVATAR_OFFSET,
@@ -42,13 +43,15 @@ export default function AvatarList({
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Avatar
-                    className="w-12 aspect-square border-neutral-900 border-4 rounded-2xl"
-                    url={user.image}
-                  />
+                  <div>
+                    <Avatar
+                      className="w-12 aspect-square border-neutral-900 border-4 rounded-2xl"
+                      url={user.image}
+                    />
+                  </div>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>asdasdasdasdasd</p>
+                  <p>{user.tooltip}</p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>

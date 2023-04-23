@@ -32,7 +32,14 @@ export default function PoolAnalytics({ id }: { id: string }) {
           showAdditionalUsers={
             ANONYMOUS_COUNT > 0 || REGISTERED_COUNT - MAX_AVATARS > 0
           }
-          users={visitors?.registered.users.map((u) => u.user) || []}
+          users={
+            visitors?.registered.users.map((u) => ({
+              ...u.user,
+              tooltip: `${u.user.name} • ${u.views} ${
+                u.views > 1 ? "views" : "view"
+              }`,
+            })) || []
+          }
         />
       </div>
     </div>
