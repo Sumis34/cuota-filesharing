@@ -98,11 +98,12 @@ export const filesRouter = createRouter()
         ? []
         : await getFiles(Contents, (s) => (totalSize += s));
 
-      await registerVisitor(prisma, {
-        uploadId: uploadInfo?.id || "",
-        userId: session?.user?.id,
-        fingerprint: input.fp,
-      });
+      if (!(session?.user?.id === uploadInfo?.userId))
+        await registerVisitor(prisma, {
+          uploadId: uploadInfo?.id || "",
+          userId: session?.user?.id,
+          fingerprint: input.fp,
+        });
 
       return {
         files,
