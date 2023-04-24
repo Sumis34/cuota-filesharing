@@ -34,8 +34,8 @@ export function NoKeyAlert({
             <AlertDialogTitle>Enter your Key</AlertDialogTitle>
             <AlertDialogDescription>
               You habe opened an encrypted share without a key present in the
-              url. This can happen if you come from "My Uploads" as we don't
-              safe your key's on the server.
+              url. This can happen if you come from {'"'}My Uploads{'"'} as we don{"'"}t
+              safe your key{"'"}s on the server.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <input

@@ -101,11 +101,10 @@ export default function FileViewer({ id, name, url }: FileViewerProps) {
             </div>
             <div className="flex gap-2">
               {ACTIONS.map((item, i) => (
-                <TooltipProvider>
+                <TooltipProvider key={i}>
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <button
-                        key={i}
                         className="border border-neutral-700 p-2 rounded-md hover:bg-neutral-800/50 active:bg-neutral-800"
                         onClick={item.action}
                       >
