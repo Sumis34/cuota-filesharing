@@ -1,24 +1,9 @@
-import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
-import Head from "next/head";
-import LandingNav from "../components/LandingNav";
 import { getDefaultLayout } from "../components/Layout/DefaultLayout";
-import Uploader from "../components/Uploader";
-import { trpc, useInfiniteQuery, useQuery } from "../utils/trpc";
+import { useInfiniteQuery } from "../utils/trpc";
 import { NextPageWithLayout } from "./_app";
 import { useInView } from "framer-motion";
 import { useEffect, useRef } from "react";
-import PoolStats from "../components/PoolStats";
-import {
-  HiCalendar,
-  HiChevronRight,
-  HiClock,
-  HiOutlineCalendar,
-  HiOutlineClock,
-  HiOutlineLockClosed,
-} from "react-icons/hi";
-import Link from "next/link";
-import { format, formatDistanceToNow, isPast } from "date-fns";
 import UploadListItem from "../components/MyUploads/UploadListItem";
 const MyUploads: NextPageWithLayout = () => {
   const { data: session } = useSession();
