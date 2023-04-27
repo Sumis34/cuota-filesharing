@@ -9,8 +9,9 @@ export default function PoolAnalytics({ id }: { id: string }) {
     },
   ]);
 
-  const ANONYMOUS_COUNT = visitors?.anonymous.users || 0;
-  const REGISTERED_COUNT = visitors?.registered.count || 0;
+  const anonymousCount = visitors?.anonymous.users || 0;
+  const registeredCount = visitors?.registered.count || 0;
+  const total = anonymousCount + registeredCount;
 
   const MAX_AVATARS = 5;
 
@@ -22,15 +23,16 @@ export default function PoolAnalytics({ id }: { id: string }) {
         </span>
         <h3 className="text-2xl">Analytics</h3>
         <label>Viewers</label>
+        {total === 0 && <p className="opacity-40">No views</p>}
         <AvatarList
           maxAvatars={MAX_AVATARS}
           additionalUsers={
-            REGISTERED_COUNT - MAX_AVATARS > 0
-              ? REGISTERED_COUNT - MAX_AVATARS + ANONYMOUS_COUNT
-              : ANONYMOUS_COUNT
+            registeredCount - MAX_AVATARS > 0
+              ? registeredCount - MAX_AVATARS + anonymousCount
+              : anonymousCount
           }
           showAdditionalUsers={
-            ANONYMOUS_COUNT > 0 || REGISTERED_COUNT - MAX_AVATARS > 0
+            anonymousCount > 0 || registeredCount - MAX_AVATARS > 0
           }
           users={
             visitors?.registered.users.map((u) => ({
