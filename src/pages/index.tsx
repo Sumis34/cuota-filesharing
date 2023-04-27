@@ -8,8 +8,6 @@ import { motion } from "framer-motion";
 import BenefitCard from "../components/UI/BenefitCard";
 import { getArticles } from "../utils/articles/getArticles";
 import { useRef } from "react";
-import * as Portal from "@radix-ui/react-portal";
-import RecentUpload from "../components/RecentUpload";
 
 const Home: NextPageWithLayout = ({
   articles,
