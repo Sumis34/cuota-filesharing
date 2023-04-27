@@ -46,7 +46,7 @@ export default function UploadListItem({
       className="py-5 px-7 group cursor-pointer scroll-m-44"
       id={poolId}
     >
-      <Link href={`/files/${poolId}?from=/my-uploads`}>
+      <Link href={`/files/${poolId}?from=/my-uploads`} legacyBehavior>
         <a className="flex items-center justify-between">
           <div>
             <h4>Message</h4>

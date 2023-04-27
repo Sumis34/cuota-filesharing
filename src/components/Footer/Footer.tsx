@@ -31,14 +31,14 @@ export default function Footer() {
         alt="ellipse"
       /> */}
       <div className="w-full flex items-center justify-center flex-col">
-        <Link href="/">
+        <Link href="/" legacyBehavior>
           <a className="hover:opacity-80 cursor-pointer transition-all text-5xl font-serif font-bold mb-2">
             Cuota.
           </a>
         </Link>
         <p className="opacity-70 text-center leading-tight">
           Wanna learn more about{" "}
-          <Link href="/article/why-cuota">
+          <Link href="/article/why-cuota" legacyBehavior>
             <a>
               <span className="text-indigo-500 underline">Cuota</span>?
             </a>

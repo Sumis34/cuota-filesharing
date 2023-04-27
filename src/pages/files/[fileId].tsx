@@ -169,7 +169,7 @@ const Files: NextPageWithLayout = () => {
         <main className="relative z-10 pt-32">
           <AnimatePresence exitBeforeEnter>
             {query.from && (
-              <Link href={query.from.toString() || "#"}>
+              <Link href={query.from.toString() || "#"} legacyBehavior>
                 <a className="flex gap-3 items-center rounded-lg px-2 py-1 group hover:bg-gray-100 dark:hover:bg-neutral-900 w-fit font-sans transition-all mb-2 cursor-pointer">
                   <HiArrowLeft className="group-hover:translate-x-0 translate-x-1 transition-all" />{" "}
                   <span>Back</span>
