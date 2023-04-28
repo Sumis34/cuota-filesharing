@@ -39,7 +39,7 @@ export default function LandingNav() {
       <RecentUpload />
       <motion.div
         className={`flex justify-center transition-all duration-500 after:bg-gradient-to-b after:from-white after:dark:from-black after:inset-0 after:absolute ${
-          scrolled
+          scrolled || session?.user
             ? "bg-white/80 dark:bg-black/60 backdrop-blur-xl"
             : "bg-white/0 dark:bg-black/0"
         }`}
@@ -47,8 +47,8 @@ export default function LandingNav() {
         <motion.nav
           className={`sm:px-20 px-5 w-full max-w-screen-2xl flex justify-between relative z-30`}
           style={{
-            paddingTop: session?.user ? 0 : padding,
-            paddingBottom: session?.user ? 0 : padding,
+            paddingTop: session !== null ? 20 : padding,
+            paddingBottom: session !== null ? 20 : padding,
           }}
         >
           <Link href="/" legacyBehavior>
