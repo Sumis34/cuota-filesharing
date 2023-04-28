@@ -24,7 +24,7 @@
   }
 
   input {
-    @apply focus-visible:outline-none border-2 focus-visible:border-indigo-500/70 rounded-xl bg-transparent dark:border-neutral-700 py-2 px-3;
+    @apply focus-visible:outline-none border-2 focus-visible:border-indigo-500/70 rounded-xl bg-transparent dark:border-neutral-700 py-2 px-3 dark:placeholder:text-neutral-500;
   }
   textarea {
     @apply focus-visible:outline-none border-2 focus-visible:border-indigo-500/70 rounded-xl bg-transparent dark:border-neutral-700 py-2 px-3;

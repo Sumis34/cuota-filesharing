@@ -28,6 +28,11 @@ import PoolStats from "../../components/PoolStats";
 import Link from "next/link";
 import { KEY_PREFIX } from "../../utils/constants";
 import decryptFile from "../../utils/crypto/decryptFile";
+import { NoKeyAlert } from "../../components/NoKeyAlert/NoKeyAlert";
+import getFingerprint from "../../utils/pools/generateFingerprint";
+import AvatarList from "../../components/UI/Avatar/AvatarList";
+import { useSession } from "next-auth/react";
+import PoolAnalytics from "../../components/PoolAnalytics/PoolAnalytics";
 
 const Files: NextPageWithLayout = () => {
   const { query } = useRouter();
@@ -37,13 +42,22 @@ const Files: NextPageWithLayout = () => {
   const [selectedItem, setSelectedItem] = useState<number>(0);
   const [progress, setProgress] = useState<DownloadProgressEvent>();
   const [files, setFiles] = useState<RemoteFile[]>([]);
+  const [fp, setFp] = useState<string>("");
+  const router = useRouter();
+  const { data: session } = useSession();
 
-  const { data, isLoading } = useQuery([
-    "files.getAll",
+  const { data, isLoading } = useQuery(
+    [
+      "files.getAll",
+      {
+        id: query.fileId as string,
+        fp: String(fp),
+      },
+    ],
     {
-      id: query.fileId as string,
-    },
-  ]);
+      enabled: !!query.fileId && !!fp,
+    }
+  );
 
   const handleDownloadAll = async () => {
     if (!files) return;
@@ -119,6 +133,13 @@ const Files: NextPageWithLayout = () => {
     process().catch((e) => console.log(e));
   }, [data]);
 
+  useEffect(() => {
+    const updateFp = async () => {
+      setFp(await getFingerprint());
+    };
+    updateFp();
+  });
+
   //TODO: Add skeleton loading animation
   return (
     <>
@@ -135,11 +156,20 @@ const Files: NextPageWithLayout = () => {
         open={fullscreenOpen}
         setOpen={setFullscreenOpen}
       />
+      {/* <NoKeyAlert
+        open={
+          !!data?.encrypted &&
+          (!window.location.hash.slice(KEY_PREFIX.length) || false)
+        }
+        onAction={(k) => {
+          router.push({ hash: k });
+        }}
+      /> */}
       <div className="my-32 relative">
         <main className="relative z-10 pt-32">
           <AnimatePresence exitBeforeEnter>
             {query.from && (
-              <Link href={query.from.toString() || "#"}>
+              <Link href={query.from.toString() || "#"} legacyBehavior>
                 <a className="flex gap-3 items-center rounded-lg px-2 py-1 group hover:bg-gray-100 dark:hover:bg-neutral-900 w-fit font-sans transition-all mb-2 cursor-pointer">
                   <HiArrowLeft className="group-hover:translate-x-0 translate-x-1 transition-all" />{" "}
                   <span>Back</span>
@@ -164,6 +194,9 @@ const Files: NextPageWithLayout = () => {
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5 }}
               >
+                {session?.user && session.user.id === data?.owner && (
+                  <PoolAnalytics id={query.fileId as string} />
+                )}
                 {data && (
                   <PoolStats
                     totalSize={data.totalSize}

@@ -19,19 +19,17 @@ export default function Button({
 }: ButtonProps) {
   return href ? (
     <Link href={href}>
-      <a>
-        <button
-          className={`px-6 py-1 w-fit text-white rounded-xl text-lg font-semibold cursor-pointer enabled:active:translate-y-0.5 transition-all disabled:opacity-25 disabled:cursor-default ${className} ${
-            variant === "primary"
-              ? "bg-gradient-to-t from-indigo-500 to-indigo-300"
-              : variant === "secondary"
-              ? "text-indigo-600 border-2 box- border-indigo-500 dark:text-indigo-300"
-              : ""
-          }`}
-        >
-          {children}
-        </button>
-      </a>
+      <button
+        className={`px-6 py-1 w-fit text-white rounded-xl text-lg font-semibold cursor-pointer enabled:active:translate-y-0.5 transition-all disabled:opacity-25 disabled:cursor-default ${className} ${
+          variant === "primary"
+            ? "bg-gradient-to-t from-indigo-500 to-indigo-300"
+            : variant === "secondary"
+            ? "text-indigo-600 border-2 box- border-indigo-500 dark:text-indigo-300"
+            : ""
+        }`}
+      >
+        {children}
+      </button>
     </Link>
   ) : (
     <button

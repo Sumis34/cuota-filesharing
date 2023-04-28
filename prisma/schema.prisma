@@ -2,14 +2,13 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-    provider        = "prisma-client-js"
-    previewFeatures = ["referentialIntegrity"]
+    provider = "prisma-client-js"
 }
 
 datasource db {
-    provider             = "mysql"
-    url                  = env("DATABASE_URL")
-    referentialIntegrity = "prisma"
+    provider     = "mysql"
+    url          = env("DATABASE_URL")
+    relationMode = "prisma"
 }
 
 model Example {
@@ -55,6 +54,7 @@ model User {
     sessions      Session[]
     Upload        Upload[]
     Bin           Bin[]
+    Visitor       Visitor[]
 }
 
 model VerificationToken {
@@ -66,16 +66,18 @@ model VerificationToken {
 }
 
 model Upload {
-    id         String    @id @default(cuid())
-    url        String?
-    uploadTime DateTime  @default(now())
-    closed     Boolean   @default(false)
-    message    String?
-    expiresAt  DateTime?
-    userId     String?
-    user       User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
-    encrypted  Boolean   @default(false)
-    userAgent  String?
+    id               String             @id @default(cuid())
+    url              String?
+    uploadTime       DateTime           @default(now())
+    closed           Boolean            @default(false)
+    message          String?
+    expiresAt        DateTime?
+    userId           String?
+    user             User?              @relation(fields: [userId], references: [id], onDelete: Cascade)
+    encrypted        Boolean            @default(false)
+    userAgent        String?
+    Visitor          Visitor[]
+    AnonymousVisitor AnonymousVisitor[]
 
     @@unique([id])
 }
@@ -98,4 +100,29 @@ model DeletedPools {
     time      DateTime @unique @default(now())
     amount    Int      @default(0)
     fileCount Int      @default(0)
+}
+
+model Visitor {
+    downloads  Int      @default(0)
+    views      Int      @default(1)
+    userId     String
+    user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    uploadId   String
+    upload     Upload   @relation(fields: [uploadId], references: [id], onDelete: Cascade)
+    lastVisit  DateTime @updatedAt
+    firstVisit DateTime @default(now())
+
+    @@id([userId, uploadId])
+}
+
+model AnonymousVisitor {
+    id         String
+    downloads  Int      @default(0)
+    views      Int      @default(1)
+    uploadId   String
+    upload     Upload   @relation(fields: [uploadId], references: [id], onDelete: Cascade)
+    lastVisit  DateTime @updatedAt
+    firstVisit DateTime @default(now())
+
+    @@id([id, uploadId])
 }

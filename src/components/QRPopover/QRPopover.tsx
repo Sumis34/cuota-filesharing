@@ -18,18 +18,16 @@ export default function QRPopover({
       </Popover.Trigger>
       <Popover.Content alignOffset={5} forceMount asChild>
         {open && (
-          <>
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 10 }}
-              transition={{ ease: "easeInOut", duration: 0.2 }}
-              className="p-5 bg-white shadow-lg rounded-xl z-[500]"
-            >
-              <QRCodeSVG value={url} fgColor={"#34393d"} />
-              <Popover.Arrow className="fill-white" />
-            </motion.div>
-          </>
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            transition={{ ease: "easeInOut", duration: 0.2 }}
+            className="p-5 bg-white shadow-lg rounded-xl z-[500] relative"
+          >
+            <QRCodeSVG value={url} fgColor={"#34393d"} />
+            <Popover.Arrow className="fill-white" />
+          </motion.div>
         )}
       </Popover.Content>
     </Popover.Root>

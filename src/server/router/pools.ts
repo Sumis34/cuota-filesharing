@@ -1,6 +1,7 @@
 import { createRouter } from "./context";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
+import getVisitorSummary from "../../utils/pools/getVisitorSummary";
 
 const DEFAULT_RETURN_COUNT = 15;
 const MAX_RETURN_COUNT = 100;
@@ -43,5 +44,17 @@ export const poolRouter = createRouter()
         total: totalUserPoolsCount,
         truncated: totalUserPoolsCount !== userPools.length,
       };
+    },
+  })
+  .query("visitors", {
+    input: z.object({
+      poolId: z.string().cuid(),
+    }),
+    resolve: async ({ input, ctx }) => {
+      const { prisma } = ctx;
+
+      const summary = await getVisitorSummary(prisma, input.poolId);
+
+      return summary;
     },
   });

@@ -15,6 +15,7 @@ import isAdmin from "../../utils/auth/isAdmin";
 import { TRPCError } from "@trpc/server";
 import deletePool from "../../utils/s3/deletePool";
 import path from "path";
+import registerVisitor from "../../utils/pools/registerVisitor";
 
 const getFiles = async (
   contents: _Object[],
@@ -77,9 +78,10 @@ export const filesRouter = createRouter()
   .query("getAll", {
     input: z.object({
       id: z.string().cuid(),
+      fp: z.string().max(30).min(10),
     }),
     async resolve({ input, ctx }) {
-      const { prisma } = ctx;
+      const { prisma, session } = ctx;
       let totalSize = 0;
       const command = new ListObjectsCommand({
         Bucket: process.env.S3_BUCKET,
@@ -96,6 +98,13 @@ export const filesRouter = createRouter()
         ? []
         : await getFiles(Contents, (s) => (totalSize += s));
 
+      if (!(session?.user?.id === uploadInfo?.userId))
+        await registerVisitor(prisma, {
+          uploadId: uploadInfo?.id || "",
+          userId: session?.user?.id,
+          fingerprint: input.fp,
+        });
+
       return {
         files,
         totalSize,
@@ -107,6 +116,7 @@ export const filesRouter = createRouter()
         allowsUploads: !uploadInfo?.closed,
         poolCreatedAt: uploadInfo?.uploadTime,
         expiresAt: uploadInfo?.expiresAt,
+        encrypted: uploadInfo?.encrypted,
       };
     },
   })

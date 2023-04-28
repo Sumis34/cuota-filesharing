@@ -2,7 +2,6 @@ import React, { ReactElement, useState } from "react";
 import useTheme from "../../hooks/useTheme";
 import Footer from "../Footer";
 import LandingNav from "../LandingNav";
-import RecentUpload from "../RecentUpload";
 
 interface LayoutProps {
   children: React.ReactNode;
