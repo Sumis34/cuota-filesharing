@@ -29,6 +29,14 @@
   textarea {
     @apply focus-visible:outline-none border-2 focus-visible:border-indigo-500/70 rounded-xl bg-transparent dark:border-neutral-700 py-2 px-3;
   }
+
+  input,
+  textarea,
+  button,
+  select,
+  a {
+    -webkit-tap-highlight-color: transparent;
+  }
 }
 @tailwind components;
 @layer components {
