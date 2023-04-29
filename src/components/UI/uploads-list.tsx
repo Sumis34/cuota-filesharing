@@ -29,7 +29,7 @@ export default function UploadsList({ fetchPath }: { fetchPath: string }) {
 
   return (
     <>
-      <ul className="card-solid p-0 divide-y dark:divide-neutral-700">
+      <ul className="card-solid border-0 p-0 divide-y dark:divide-neutral-700 overflow-hidden">
         {data?.pages.map((page) =>
           (page as any)?.pools.map((pool: any) => (
             <UploadListItem

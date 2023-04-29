@@ -12,6 +12,7 @@ export default function Dashboard() {
   const triggers: Tab[] = [
     { id: "upload", name: "Upload", content: <Upload /> },
     { id: "my-uploads", name: "My Uploads", content: <MyUploads /> },
+    { id: "shared-with-me", name: "Shared With Me", content: <>for me</> },
   ];
 
   return (

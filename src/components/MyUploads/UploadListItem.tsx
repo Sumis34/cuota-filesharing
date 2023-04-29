@@ -44,7 +44,7 @@ export default function UploadListItem({
   return (
     <li
       key={poolId}
-      className="py-5 px-7 group cursor-pointer scroll-m-44"
+      className="py-5 px-7 group cursor-pointer scroll-m-44 hover:bg-neutral-800/40"
       id={poolId}
     >
       <Link

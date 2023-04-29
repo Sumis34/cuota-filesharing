@@ -42,7 +42,7 @@ export default function TabsView({
             value={id}
             className={`rounded-xl bg-neutral-900 px-3 py-2 font-semibold hover:bg-neutral-800 transition-all ${
               current === id &&
-              "bg-violet-300 hover:bg-violet-300 text-black font-bold"
+              "bg-violet-300 hover:bg-violet-300 text-black"
             }`}
           >
             {name}

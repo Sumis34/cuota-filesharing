@@ -1,3 +1,9 @@
+import Uploader from "../Uploader";
+
 export default function Upload() {
-  return <>Upload</>;
+  return (
+    <div className="bg-neutral-900 rounded-xl p-5 flex justify-center">
+      <Uploader />
+    </div>
+  );
 }
