@@ -48,7 +48,7 @@ export default function UploadListItem({
       id={poolId}
     >
       <Link
-        href={`/files/${poolId}?from=/my-uploads`}
+        href={encrypted ? "#my-uploads" : `/files/${poolId}?from=/my-uploads`}
         className="flex items-center justify-between"
       >
         <div>
