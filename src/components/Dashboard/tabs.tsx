@@ -19,7 +19,7 @@ export default function TabsView({
 
   const handleTabChange = (value: string) => {
     setCurrent(value);
-    router.push("#" + value);
+    // router.push("#" + value);
   };
 
   const router = useRouter();
@@ -49,11 +49,13 @@ export default function TabsView({
           </Tabs.Trigger>
         ))}
       </Tabs.List>
-      {tabs.map(({ id, content }) => (
-        <Tabs.Content value={id} key={id}>
-          {content}
-        </Tabs.Content>
-      ))}
+      <div className="mt-2">
+        {tabs.map(({ id, content }) => (
+          <Tabs.Content value={id} key={id}>
+            {content}
+          </Tabs.Content>
+        ))}
+      </div>
     </Tabs.Root>
   );
 }
