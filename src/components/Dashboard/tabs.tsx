@@ -31,7 +31,7 @@ export default function TabsView({
 
   return (
     <Tabs.Root
-      defaultValue={current}
+      defaultValue={current || defaultTab}
       value={current}
       onValueChange={handleTabChange}
     >
