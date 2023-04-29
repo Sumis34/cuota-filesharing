@@ -1,5 +1,6 @@
 import { useSession } from "next-auth/react";
 import TabsView, { Tab } from "./tabs";
+import Upload from "./upload";
 
 const DEFAULT_TAB = "upload";
 
@@ -7,8 +8,8 @@ export default function Dashboard() {
   const { data: session } = useSession();
 
   const triggers: Tab[] = [
-    { id: "upload", name: "Upload", content: <></> },
-    { id: "my-uploads", name: "My Uploads", content: <></> },
+    { id: "upload", name: "Upload", content: <Upload /> },
+    { id: "my-uploads", name: "My Uploads", content: <>my uploads</> },
   ];
 
   return (

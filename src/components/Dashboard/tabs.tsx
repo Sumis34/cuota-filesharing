@@ -26,7 +26,7 @@ export default function TabsView({
 
   useEffect(() => {
     const currentTab = router.asPath.split("#").at(-1) || "";
-    setCurrent(currentTab !== "/" ? currentTab : defaultTab);   
+    setCurrent(currentTab !== "/" ? currentTab : defaultTab);
   }, [router]);
 
   return (
@@ -49,12 +49,11 @@ export default function TabsView({
           </Tabs.Trigger>
         ))}
       </Tabs.List>
-      <Tabs.Content value="upload">
-        <div>upload</div>
-      </Tabs.Content>
-      <Tabs.Content value="my-uploads">
-        <div>my uploads</div>
-      </Tabs.Content>
+      {tabs.map(({ id, content }) => (
+        <Tabs.Content value={id} key={id}>
+          {content}
+        </Tabs.Content>
+      ))}
     </Tabs.Root>
   );
 }
