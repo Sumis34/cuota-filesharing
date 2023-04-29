@@ -26,12 +26,12 @@ export default function TabsView({
 
   useEffect(() => {
     const currentTab = router.asPath.split("#").at(-1) || "";
-    setCurrent(currentTab);
+    setCurrent(currentTab !== "/" ? currentTab : defaultTab);   
   }, [router]);
 
   return (
     <Tabs.Root
-      defaultValue={current || defaultTab}
+      defaultValue={current}
       value={current}
       onValueChange={handleTabChange}
     >
