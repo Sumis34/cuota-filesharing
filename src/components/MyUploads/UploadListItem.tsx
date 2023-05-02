@@ -84,7 +84,10 @@ export default function UploadListItem({
             {pills.map(
               ({ icon, label, visible }) =>
                 visible && (
-                  <div className="flex gap-1 items-center text-sm dark:bg-neutral-700 px-3 py-1 rounded-xl">
+                  <div
+                    key={label}
+                    className="flex gap-1 items-center text-sm dark:bg-neutral-700 px-3 py-1 rounded-xl"
+                  >
                     {icon}
                     {label}
                   </div>
