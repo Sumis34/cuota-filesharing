@@ -67,11 +67,11 @@ export default function ProfileInfo({ name, email, avatar }: ProfileInfoProps) {
           className="flex items-center gap-2"
         >
           <div className="">
-            <HiChevronDown className="text-xl" />
-            {/* <p className="-mb-1">{name}</p> */}
-            {/* <p className="text-xs opacity-40">{email}</p> */}
+            <HiChevronDown className="sm:text-xl" />
+            {/* <p className="-mb-1">{name}</p>
+            <p className="text-xs opacity-40">{email}</p> */}
           </div>
-          <Avatar className="w-10" url={avatar || ""} />
+          <Avatar className="sm:w-10 w-8 rounded-lg sm:rounded-xl" url={avatar || ""} />
         </motion.div>
       </Dropdown>
     </>

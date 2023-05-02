@@ -35,14 +35,13 @@ export default function TabsView({
       value={current}
       onValueChange={handleTabChange}
     >
-      <Tabs.List className="flex gap-2">
+      <Tabs.List className="flex gap-2 overflow-x-auto snap-x snap-start snap-mandatory">
         {tabs.map(({ id, name }) => (
           <Tabs.Trigger
             key={id}
             value={id}
-            className={`rounded-xl bg-neutral-900 px-3 py-2 font-semibold hover:bg-neutral-800 transition-all ${
-              current === id &&
-              "bg-violet-300 hover:bg-violet-300 text-black"
+            className={`rounded-xl flex-shrink-0 bg-neutral-900 px-3 py-2 font-semibold hover:bg-neutral-800 transition-all ${
+              current === id && "bg-violet-300 hover:bg-violet-300 text-black"
             }`}
           >
             {name}

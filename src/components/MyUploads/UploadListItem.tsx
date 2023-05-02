@@ -38,8 +38,32 @@ export default function UploadListItem({
     },
   ]);
 
-  const ANONYMOUS_COUNT = visitors?.anonymous.users || 0;
-  const REGISTERED_COUNT = visitors?.registered.count || 0;
+  const pills = [
+    {
+      label: "Encrypted",
+      visible: encrypted,
+      icon: <HiOutlineLockClosed />,
+    },
+    {
+      label: `Expires in ${
+        expiresAt
+          ? !isPast(expiresAt)
+            ? formatDistanceToNow(expiresAt)
+            : "in 1 minute"
+          : "never"
+      }`,
+      visible: true,
+      icon: <HiOutlineClock />,
+    },
+    {
+      label: `Uploaded on ${format(
+        new Date(uploadTime) || new Date(),
+        "dd.MM.yyyy"
+      )}`,
+      visible: true,
+      icon: <HiOutlineCalendar />,
+    },
+  ];
 
   return (
     <li
@@ -52,32 +76,23 @@ export default function UploadListItem({
         className="flex items-center justify-between"
       >
         <div>
-          <h4>Message</h4>
-          <p>{message || <span className="opacity-30">no message</span>}</p>
+          <div className="mb-2">
+            <h4>Message</h4>
+            <p>{message || <span className="opacity-30">no message</span>}</p>
+          </div>
+          <div className="flex gap-3 opacity-60 flex-wrap">
+            {pills.map(
+              ({ icon, label, visible }) =>
+                visible && (
+                  <div className="flex gap-1 items-center text-sm dark:bg-neutral-700 px-3 py-1 rounded-xl">
+                    {icon}
+                    {label}
+                  </div>
+                )
+            )}
+          </div>
         </div>
         <div className="flex gap-4">
-          <div className="flex gap-3 opacity-60">
-            {encrypted && (
-              <div className="flex text-sm items-center gap-1">
-                <HiOutlineLockClosed className={`text-lg`} /> Encrypted
-              </div>
-            )}
-            <time className="flex gap-1 items-center text-sm">
-              <HiOutlineClock className={`text-lg`} />
-              Expires in
-              {" " +
-                (expiresAt
-                  ? !isPast(expiresAt)
-                    ? formatDistanceToNow(expiresAt)
-                    : "in 1 minute"
-                  : "never")}
-            </time>
-            <time className="flex gap-1 items-center text-sm">
-              <HiOutlineCalendar className={`text-lg`} />
-              Uploaded on
-              {" " + format(new Date(uploadTime) || new Date(), "dd.MM.yyyy")}
-            </time>
-          </div>
           {encrypted ? (
             <HiOutlineLockClosed className="text-2xl group-hover:opacity-75 opacity-0 -translate-x-3 group-hover:translate-x-0 transition-all" />
           ) : (

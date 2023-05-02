@@ -16,7 +16,7 @@ export default function Dashboard() {
   ];
 
   return (
-    <div className="mt-52">
+    <div className="sm:mt-52 mt-28">
       <div className="mb-8">
         <h1>Hello👋, {session?.user?.name}!</h1>
         <p className="mt-2">Welcome to your personal space.</p>

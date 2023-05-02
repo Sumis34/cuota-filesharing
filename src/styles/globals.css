@@ -17,10 +17,10 @@
     @apply w-screen overflow-x-hidden scroll-smooth bg-white;
   }
   h1 {
-    @apply text-5xl;
+    @apply sm:text-5xl text-3xl;
   }
   h2 {
-    @apply text-3xl;
+    @apply sm:text-3xl text-2xl;
   }
 
   input {

@@ -45,10 +45,12 @@ export default function LandingNav() {
         }`}
       >
         <motion.nav
-          className={`sm:px-20 px-5 w-full max-w-screen-2xl flex justify-between relative z-30`}
+          className={`sm:px-20 sm:py-4 py-2 px-5 w-full max-w-screen-2xl flex justify-between relative z-30`}
           style={{
-            paddingTop: session !== null ? 20 : padding,
-            paddingBottom: session !== null ? 20 : padding,
+            ...(session === null && {
+              paddingTop: padding,
+              paddingBottom: padding,
+            }),
           }}
         >
           <Link href="/" legacyBehavior>
