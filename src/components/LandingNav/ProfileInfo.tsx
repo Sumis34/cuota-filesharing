@@ -9,6 +9,7 @@ import { HiChevronDown, HiMoon } from "react-icons/hi";
 import useTheme from "../../hooks/useTheme";
 import {
   HiArrowRightOnRectangle,
+  HiCodeBracketSquare,
   HiDocumentPlus,
   HiInboxStack,
   HiPaperAirplane,
@@ -42,6 +43,11 @@ export default function ProfileInfo({ name, email, avatar }: ProfileInfoProps) {
         icon: <HiSquare3Stack3D className="text-lg" />,
         onClick: () => router.push("/#my-uploads"),
       },
+      // {
+      //   label: "My bins",
+      //   icon: <HiCodeBracketSquare className="text-lg" />,
+      //   onClick: () => router.push("/#my-bins"),
+      // },
       {
         label: "Shared with me",
         icon: <HiPaperAirplane className="text-lg" />,
