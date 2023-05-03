@@ -8,7 +8,7 @@ import {
   HiOutlineLockClosed,
   HiOutlineUser,
 } from "react-icons/hi2";
-import { formatDistanceToNow, isPast, format } from "date-fns/esm";
+import { formatDistanceToNow, isPast, format } from "date-fns";
 
 export default function SharedWithMe() {
   const ref = useRef(null);
