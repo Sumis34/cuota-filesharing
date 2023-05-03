@@ -8,63 +8,26 @@ import {
   HiOutlineLockClosed,
 } from "react-icons/hi2";
 import { useQuery } from "../../utils/trpc";
-import Avatar from "../UI/Avatar/Avatar";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "../UI/tooltip";
+
+export interface Pill {
+  label: string;
+  visible: boolean;
+  icon: React.ReactNode;
+}
 
 interface UploadListItemProps {
   poolId: string;
   message: string;
-  expiresAt: Date;
-  uploadTime: Date;
   encrypted: boolean;
+  pills: Pill[];
 }
 
 export default function UploadListItem({
   encrypted,
-  expiresAt,
   message,
   poolId,
-  uploadTime,
+  pills,
 }: UploadListItemProps) {
-  const { data: visitors } = useQuery([
-    "pools.visitors",
-    {
-      poolId,
-    },
-  ]);
-
-  const pills = [
-    {
-      label: "Encrypted",
-      visible: encrypted,
-      icon: <HiOutlineLockClosed />,
-    },
-    {
-      label: `Expires in ${
-        expiresAt
-          ? !isPast(expiresAt)
-            ? formatDistanceToNow(expiresAt)
-            : "in 1 minute"
-          : "never"
-      }`,
-      visible: true,
-      icon: <HiOutlineClock />,
-    },
-    {
-      label: `Uploaded on ${format(
-        new Date(uploadTime) || new Date(),
-        "dd.MM.yyyy"
-      )}`,
-      visible: true,
-      icon: <HiOutlineCalendar />,
-    },
-  ];
-
   return (
     <li
       key={poolId}

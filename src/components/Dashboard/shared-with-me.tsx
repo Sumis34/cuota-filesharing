@@ -1,25 +1,24 @@
-import { useSession } from "next-auth/react";
-import UploadListItem from "../MyUploads/UploadListItem";
-import { useEffect, useRef } from "react";
 import { useInView } from "framer-motion";
+import { useEffect, useRef } from "react";
 import { useInfiniteQuery } from "../../utils/trpc";
+import UploadListItem from "../MyUploads/UploadListItem";
 import {
   HiOutlineCalendar,
   HiOutlineClock,
   HiOutlineLockClosed,
+  HiOutlineUser,
 } from "react-icons/hi2";
-import { format, formatDistanceToNow, isPast } from "date-fns";
+import { formatDistanceToNow, isPast, format } from "date-fns/esm";
 
-export default function UploadsList({ fetchPath }: { fetchPath: string }) {
-  const { data: session } = useSession();
+export default function SharedWithMe() {
   const ref = useRef(null);
   const isInView = useInView(ref);
 
   const { data, fetchNextPage, hasNextPage } = useInfiniteQuery(
     [
-      fetchPath as never,
+      "pools.visited",
       {
-        take: 30 as never,
+        take: 30,
       },
     ],
     {
@@ -32,28 +31,31 @@ export default function UploadsList({ fetchPath }: { fetchPath: string }) {
       fetchNextPage();
     }
   }, [isInView]);
-
   return (
     <>
       <ul className="card-solid border-0 p-0 divide-y dark:divide-neutral-700 overflow-hidden">
         {data?.pages.map((page) =>
-          (page as any)?.pools.map((pool: any) => (
+          page.pools.map((visited) => (
             <UploadListItem
-              encrypted={pool.encrypted}
-              message={pool.message}
-              poolId={pool.id}
-              key={pool.id}
+              poolId={visited.uploadId}
+              encrypted={visited.upload.encrypted}
+              message={visited.upload.message || ""}
               pills={[
                 {
+                  icon: <HiOutlineUser />,
+                  label: visited.upload.user?.name || "Anonymous User",
+                  visible: true,
+                },
+                {
                   label: "Encrypted",
-                  visible: pool.encrypted,
+                  visible: visited.upload.encrypted,
                   icon: <HiOutlineLockClosed />,
                 },
                 {
                   label: `Expires in ${
-                    pool.expiresAt
-                      ? !isPast(pool.expiresAt)
-                        ? formatDistanceToNow(pool.expiresAt)
+                    visited.upload.expiresAt
+                      ? !isPast(visited.upload.expiresAt)
+                        ? formatDistanceToNow(visited.upload.expiresAt)
                         : "in 1 minute"
                       : "never"
                   }`,
@@ -62,13 +64,14 @@ export default function UploadsList({ fetchPath }: { fetchPath: string }) {
                 },
                 {
                   label: `Uploaded on ${format(
-                    new Date(pool.uploadTime) || new Date(),
+                    new Date(visited.upload.uploadTime) || new Date(),
                     "dd.MM.yyyy"
                   )}`,
                   visible: true,
                   icon: <HiOutlineCalendar />,
                 },
               ]}
+              key={visited.uploadId}
             />
           ))
         )}

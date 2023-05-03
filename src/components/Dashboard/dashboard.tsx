@@ -3,6 +3,7 @@ import TabsView, { Tab } from "./tabs";
 import Upload from "./upload";
 import UploadsList from "../UI/uploads-list";
 import MyUploads from "./my-uploads";
+import SharedWithMe from "./shared-with-me";
 
 const DEFAULT_TAB = "upload";
 
@@ -13,7 +14,7 @@ export default function Dashboard() {
     { id: "upload", name: "Upload", content: <Upload /> },
     { id: "my-uploads", name: "My Uploads", content: <MyUploads /> },
     // { id: "my-bins", name: "My Bins", content: <>My Bins</> },
-    { id: "shared-with-me", name: "Shared With Me", content: <>for me</> },
+    { id: "shared-with-me", name: "Shared With Me", content: <SharedWithMe /> },
   ];
 
   return (
