@@ -19,6 +19,7 @@ interface UploadListItemProps {
   poolId: string;
   message: string;
   encrypted: boolean;
+  backToPath?: string;
   pills: Pill[];
 }
 
@@ -27,6 +28,7 @@ export default function UploadListItem({
   message,
   poolId,
   pills,
+  backToPath,
 }: UploadListItemProps) {
   return (
     <li
@@ -35,7 +37,13 @@ export default function UploadListItem({
       id={poolId}
     >
       <Link
-        href={encrypted ? "#my-uploads" : `/files/${poolId}?from=/my-uploads`}
+        href={
+          encrypted
+            ? "#my-uploads"
+            : `/files/${poolId}?from=${
+                backToPath || window.location.pathname + window.location.hash
+              }`
+        }
         className="flex items-center justify-between"
       >
         <div>

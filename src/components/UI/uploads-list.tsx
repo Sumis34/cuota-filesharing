@@ -42,6 +42,7 @@ export default function UploadsList({ fetchPath }: { fetchPath: string }) {
               encrypted={pool.encrypted}
               message={pool.message}
               poolId={pool.id}
+              backToPath={encodeURIComponent("/#my-uploads")}
               key={pool.id}
               pills={[
                 {

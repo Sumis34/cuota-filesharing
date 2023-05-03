@@ -3,6 +3,7 @@ import { useEffect, useRef } from "react";
 import { useInfiniteQuery } from "../../utils/trpc";
 import UploadListItem from "../MyUploads/UploadListItem";
 import {
+  HiCursorArrowRipple,
   HiOutlineCalendar,
   HiOutlineClock,
   HiOutlineLockClosed,
@@ -40,10 +41,19 @@ export default function SharedWithMe() {
               poolId={visited.uploadId}
               encrypted={visited.upload.encrypted}
               message={visited.upload.message || ""}
+              backToPath={encodeURIComponent("/#shared-with-me")}
               pills={[
                 {
                   icon: <HiOutlineUser />,
                   label: visited.upload.user?.name || "Anonymous User",
+                  visible: true,
+                },
+                {
+                  icon: <HiCursorArrowRipple />,
+                  label: `First opened on ${format(
+                    new Date(visited.firstVisit) || new Date(),
+                    "dd.MM.yyyy"
+                  )}`,
                   visible: true,
                 },
                 {
