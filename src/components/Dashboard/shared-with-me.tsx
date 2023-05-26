@@ -10,12 +10,11 @@ import {
   HiOutlineUser,
 } from "react-icons/hi2";
 import { formatDistanceToNow, isPast, format } from "date-fns";
-import useTheme from "../../hooks/useTheme";
+import Empty from "./empty";
 
 export default function SharedWithMe() {
   const ref = useRef(null);
   const isInView = useInView(ref);
-  const theme = useTheme();
 
   const { data, fetchNextPage, hasNextPage } = useInfiniteQuery(
     [
@@ -88,23 +87,8 @@ export default function SharedWithMe() {
           ))
         )}
       </ul>
-      {data?.pages.length === 0 && (
-        <div className="w-full flex justify-center">
-          <div>
-            <img
-              src={
-                theme.dark
-                  ? "/assets/images/international-philanthropy-day-dark.svg"
-                  : "/assets/images/international-philanthropy-day-1.svg"
-              }
-              className="w-96 block"
-              alt="illustration"
-            />
-            <p className="dark:text-neutral-400 text-center">
-              Nothing shared with you!
-            </p>
-          </div>
-        </div>
+      {data?.pages[0]?.total === 0 && (
+        <Empty message="Nothing shared with you!" />
       )}
       <div ref={ref}></div>
     </>

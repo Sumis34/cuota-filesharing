@@ -9,17 +9,18 @@ import {
   HiOutlineLockClosed,
 } from "react-icons/hi2";
 import { format, formatDistanceToNow, isPast } from "date-fns";
+import Empty from "../Dashboard/empty";
 
-export default function UploadsList({ fetchPath }: { fetchPath: string }) {
+export default function UploadsList() {
   const { data: session } = useSession();
   const ref = useRef(null);
   const isInView = useInView(ref);
 
   const { data, fetchNextPage, hasNextPage } = useInfiniteQuery(
     [
-      fetchPath as never,
+      "pools.getUserPools",
       {
-        take: 30 as never,
+        take: 30,
       },
     ],
     {
@@ -74,6 +75,9 @@ export default function UploadsList({ fetchPath }: { fetchPath: string }) {
           ))
         )}
       </ul>
+      {data?.pages[0]?.total === 0 && (
+        <Empty message="You have not shared anything yet!" />
+      )}
       <div ref={ref}></div>
     </>
   );
