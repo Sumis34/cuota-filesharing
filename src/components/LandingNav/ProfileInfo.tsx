@@ -34,14 +34,14 @@ export default function ProfileInfo({ name, email, avatar }: ProfileInfoProps) {
       {
         label: "Upload",
         icon: <HiDocumentPlus className="text-lg" />,
-        onClick: () => router.push("/#upload"),
+        onClick: () => router.push("/app/#upload"),
       },
     ],
     [
       {
         label: "My uploads",
         icon: <HiSquare3Stack3D className="text-lg" />,
-        onClick: () => router.push("/#my-uploads"),
+        onClick: () => router.push("/app/#my-uploads"),
       },
       // {
       //   label: "My bins",
@@ -51,7 +51,7 @@ export default function ProfileInfo({ name, email, avatar }: ProfileInfoProps) {
       {
         label: "Shared with me",
         icon: <HiPaperAirplane className="text-lg" />,
-        onClick: () => router.push("/#shared-with-me"),
+        onClick: () => router.push("/app/#shared-with-me"),
       },
     ],
     [
