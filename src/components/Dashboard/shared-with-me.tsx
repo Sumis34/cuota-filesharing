@@ -33,6 +33,9 @@ export default function SharedWithMe() {
       fetchNextPage();
     }
   }, [isInView]);
+
+  const total = data?.pages.reduce((total, item) => total + item.total, 0);
+
   return (
     <>
       <ul className="card-solid border-0 p-0 divide-y dark:divide-neutral-700 overflow-hidden">
@@ -87,9 +90,7 @@ export default function SharedWithMe() {
           ))
         )}
       </ul>
-      {data?.pages[0]?.total === 0 && (
-        <Empty message="Nothing shared with you!" />
-      )}
+      {total === 0 && <Empty message="Nothing shared with you!" />}
       <div ref={ref}></div>
     </>
   );

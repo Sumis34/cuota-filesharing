@@ -111,8 +111,8 @@ export const poolRouter = createRouter()
 
       const totalUserPoolsCount = await prisma.upload.count({
         where: {
-          user: {
-            id: session?.user?.id,
+          NOT: {
+            userId: session?.user?.id,
           },
         },
       });
