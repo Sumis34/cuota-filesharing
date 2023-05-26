@@ -26,7 +26,7 @@ export default function TabsView({
 
   useEffect(() => {
     const currentTab = router.asPath.split("#").at(-1) || "";
-    setCurrent(currentTab !== "/" ? currentTab : defaultTab);
+    setCurrent(currentTab !== "/app" ? currentTab : defaultTab);
   }, [router]);
 
   return (

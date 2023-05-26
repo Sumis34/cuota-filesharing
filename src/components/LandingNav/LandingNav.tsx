@@ -53,7 +53,7 @@ export default function LandingNav() {
             }),
           }}
         >
-          <Link href="/" legacyBehavior>
+          <Link href={session ? "/app" : "/"} legacyBehavior>
             <a className="flex items-center gap-2">
               <h2>cuota.</h2>
               {process.env.NEXT_PUBLIC_SITE_STATE === "beta" ? (
