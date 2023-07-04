@@ -54,13 +54,9 @@ export default function UploadFileItem({
         )}
       </div>
       <div className="flex items-center flex-none">
-        <IconButtonWithTooltip
-          onClick={() => remove()}
-          className="!p-1"
-          tooltip="Remove file"
-        >
+        <IconButton variant="secondary" onClick={remove} className="!p-1">
           <HiMinus className="stroke-current" />
-        </IconButtonWithTooltip>
+        </IconButton>
       </div>
     </li>
   );
