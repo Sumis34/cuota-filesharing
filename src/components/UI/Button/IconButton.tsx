@@ -1,4 +1,16 @@
-import { createElement } from "react";
+import { ButtonHTMLAttributes, createElement } from "react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../tooltip";
+
+interface IconButtonWithTooltipProps
+  extends ButtonHTMLAttributes<HTMLButtonElement> {
+  tooltip: string;
+  children: React.ReactNode;
+}
 
 interface IconButtonProps {
   onClick?: () => void;
@@ -26,5 +38,30 @@ export default function IconButton({
       onClick,
     },
     children
+  );
+}
+
+export function IconButtonWithTooltip({
+  tooltip,
+  children,
+  className,
+  ...props
+}: IconButtonWithTooltipProps) {
+  return (
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <button
+            className={`border border-neutral-700 p-2 rounded-md hover:bg-neutral-800/50 active:bg-neutral-800 ${className}`}
+            {...props}
+          >
+            {children}
+          </button>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>{tooltip}</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   );
 }
