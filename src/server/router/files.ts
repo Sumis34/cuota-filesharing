@@ -117,6 +117,7 @@ export const filesRouter = createRouter()
         poolCreatedAt: uploadInfo?.uploadTime,
         expiresAt: uploadInfo?.expiresAt,
         encrypted: uploadInfo?.encrypted,
+        viewDetails: uploadInfo?.viewDetails,
       };
     },
   })

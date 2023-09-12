@@ -76,6 +76,7 @@ model Upload {
     user             User?              @relation(fields: [userId], references: [id], onDelete: Cascade)
     encrypted        Boolean            @default(false)
     userAgent        String?
+    viewDetails      UploadViewOption   @default(minimal)
     Visitor          Visitor[]
     AnonymousVisitor AnonymousVisitor[]
 
@@ -125,4 +126,10 @@ model AnonymousVisitor {
     firstVisit DateTime @default(now())
 
     @@id([id, uploadId])
+}
+
+enum UploadViewOption {
+    minimal
+    default
+    detailed
 }

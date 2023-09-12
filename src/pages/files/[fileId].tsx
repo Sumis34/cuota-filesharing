@@ -33,6 +33,7 @@ import getFingerprint from "../../utils/pools/generateFingerprint";
 import AvatarList from "../../components/UI/Avatar/AvatarList";
 import { useSession } from "next-auth/react";
 import PoolAnalytics from "../../components/PoolAnalytics/PoolAnalytics";
+import SmallPoolStats from "../../components/SmallPoolStats/SmallPoolStats";
 
 const Files: NextPageWithLayout = () => {
   const { query } = useRouter();
@@ -165,7 +166,7 @@ const Files: NextPageWithLayout = () => {
           router.push({ hash: k });
         }}
       /> */}
-      <div className="my-32 relative">
+      <div className="md:my-24 relative">
         <main className="relative z-10 pt-32">
           <AnimatePresence exitBeforeEnter>
             {query.from && (
@@ -197,15 +198,24 @@ const Files: NextPageWithLayout = () => {
                 {session?.user && session.user.id === data?.owner && (
                   <PoolAnalytics id={query.fileId as string} />
                 )}
-                {data && (
-                  <PoolStats
-                    totalSize={data.totalSize}
-                    files={files}
-                    message={data.message}
-                    createdAt={data.poolCreatedAt}
-                    expiresAt={data.expiresAt}
-                  />
-                )}
+                {data &&
+                  (data.viewDetails !== "minimal" ? (
+                    <PoolStats
+                      totalSize={data.totalSize}
+                      files={files}
+                      message={data.message}
+                      createdAt={data.poolCreatedAt}
+                      expiresAt={data.expiresAt}
+                    />
+                  ) : (
+                    <SmallPoolStats
+                      totalSize={data.totalSize}
+                      files={files}
+                      message={data.message}
+                      createdAt={data.poolCreatedAt}
+                      expiresAt={data.expiresAt}
+                    />
+                  ))}
                 {query.controls !== "false" && (
                   <motion.div
                     className="flex justify-between mb-3 sticky top-0"
