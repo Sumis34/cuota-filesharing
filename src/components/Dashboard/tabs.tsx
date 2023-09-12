@@ -28,7 +28,6 @@ export default function TabsView({
     const currentTab = router.asPath.split("#").at(-1) || "";
     setCurrent(currentTab !== "/app" ? currentTab : defaultTab);
   }, [router]);
-
   return (
     <Tabs.Root
       defaultValue={current}
@@ -40,8 +39,8 @@ export default function TabsView({
           <Tabs.Trigger
             key={id}
             value={id}
-            className={`rounded-md flex-shrink-0 bg-neutral-900 px-3 py-1 font-semibold hover:bg-neutral-800 transition-all ${
-              current === id && "bg-indigo-300 hover:bg-indigo-300 text-black"
+            className={`rounded-md flex-shrink-0 px-3 py-1 font-semibold hover:bg-neutral-800 transition-all ${
+              current === id && "!bg-indigo-300 hover:bg-indigo-300 text-black"
             }`}
           >
             {name}
