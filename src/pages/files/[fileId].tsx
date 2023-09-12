@@ -222,13 +222,12 @@ const Files: NextPageWithLayout = () => {
                           <HiQrcode className="text-2xl group-hover:text-indigo-500 transition-all text-indigo-800" />
                         </IconButton>
                       </QRPopover>
-                      <Button
-                        title="Download all files as zip"
+                      <IconButton
                         className="flex items-center gap-2 !px-3"
                         onClick={() => handleDownloadAll()}
                       >
                         <HiDownload />
-                      </Button>
+                      </IconButton>
                     </div>
                   </motion.div>
                 )}
