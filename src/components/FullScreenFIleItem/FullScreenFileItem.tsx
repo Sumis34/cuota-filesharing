@@ -10,6 +10,7 @@ import getNameFromKey from "../../utils/getNameFromKey";
 import DisplayImgMeta from "./DisplayImgMeta";
 import Previewer from "../FileViewer/Previewer";
 import IconButton from "../UI/Button/IconButton";
+import { HiXMark } from "react-icons/hi2";
 
 export default function FullScreenFileItem({
   open,
@@ -65,11 +66,11 @@ export default function FullScreenFileItem({
                     key={file?.key}
                   />
                   <IconButton
-                    className="!px-3  flex items-center gap-2 ml-auto"
+                    className="!px-3  flex items-center gap-2 ml-auto focus-visible:outline-none"
                     variant="tertiary"
                     onClick={closeModal}
                   >
-                    <HiX className="text-xl text-gray-500" />
+                    <HiXMark className="text-xl text-gray-500" />
                   </IconButton>
                 </div>
                 <div className="min-h-0 my-5">

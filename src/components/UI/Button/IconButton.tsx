@@ -35,7 +35,7 @@ export default function IconButton({
           ? "bg-indigo-100 dark:bg-indigo-400 hover:bg-indigo-100/70 dark:hover:bg-indigo-300"
           : variant === "secondary"
           ? "border border-neutral-700 p-2 rounded-md hover:bg-neutral-800/50 active:bg-neutral-800"
-          : "bg-gray-200 hover:bg-gray-200/60"
+          : "hover:text-black dark:hover:text-white"
       }`,
       onClick,
     },
