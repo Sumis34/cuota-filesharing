@@ -22,9 +22,9 @@ export default function Button({
       <button
         className={`px-6 py-1 w-fit rounded-xl text-lg font-semibold cursor-pointer enabled:active:translate-y-0.5 transition-all disabled:opacity-25 disabled:cursor-default ${className} ${
           variant === "primary"
-            ? "bg-violet-300 text-black"
+            ? "bg-indigo-300 text-black"
             : variant === "secondary"
-            ? "text-violet-300 border-2 border-violet-300 dark:text-violet-200"
+            ? "text-indigo-300 border-2 border-indigo-300 dark:text-indigo-200"
             : ""
         }`}
       >
@@ -35,9 +35,9 @@ export default function Button({
     <button
       className={`px-6 py-1 w-fit rounded-xl text-lg font-semibold cursor-pointer enabled:active:translate-y-0.5 transition-all disabled:opacity-25 disabled:cursor-default ${className} ${
         variant === "primary"
-          ? "bg-violet-300 text-black"
+          ? "bg-indigo-300 text-black"
           : variant === "secondary"
-          ? "text-violet-300 border-2 border-violet-300 dark:text-violet-200"
+          ? "text-indigo-300 border-2 border-indigo-300 dark:text-indigo-200"
           : ""
       }`}
       onClick={onClick}

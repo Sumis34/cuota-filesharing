@@ -36,7 +36,8 @@ export default function LandingNav() {
 
   return (
     <div className="left-0 top-0 fixed w-screen z-50">
-      <RecentUpload />
+      {/*FIXME: improve this component in a way it dose not add bugs*/}
+      {/* <RecentUpload /> */}
       <motion.div
         className={`flex justify-center transition-all duration-500 after:bg-gradient-to-b after:from-white after:dark:from-black after:inset-0 after:absolute ${
           scrolled || session?.user
@@ -65,14 +66,16 @@ export default function LandingNav() {
           </Link>
           <div className="flex items-center gap-5">
             <div className="flex items-center gap-2">
-              <Link href="/bin" legacyBehavior>
-                <a className="flex items-center gap-2 font-bold text-lg dark:hover:bg-neutral-900/80 dark:active:bg-neutral-900 hover:bg-neutral-100 active:bg-neutral-200 px-3 py-2 rounded-md transition-all">
-                  <p>Bins</p>
-                  <span className="text-xs bg-red-500 rounded-md px-1 py-0.5 -translate-y-1">
-                    New
-                  </span>
-                </a>
-              </Link>
+              {process.env.NEXT_PUBLIC_ENABLE_BINS === "true" && (
+                <Link href="/bin" legacyBehavior>
+                  <a className="flex items-center gap-2 font-bold text-lg dark:hover:bg-neutral-900/80 dark:active:bg-neutral-900 hover:bg-neutral-100 active:bg-neutral-200 px-3 py-2 rounded-md transition-all">
+                    <p>Bins</p>
+                    <span className="text-xs bg-red-500 rounded-md px-1 py-0.5 -translate-y-1">
+                      New
+                    </span>
+                  </a>
+                </Link>
+              )}
             </div>
             <AnimatePresence>
               {session ? (
