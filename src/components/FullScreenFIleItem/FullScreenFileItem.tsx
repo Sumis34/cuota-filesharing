@@ -44,7 +44,7 @@ export default function FullScreenFileItem({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-black bg-opacity-25 cursor-zoom-out" />
+          <div className="fixed inset-0 bg-black bg-opacity-75 cursor-zoom-out" />
         </Transition.Child>
         <div className="fixed inset-0 overflow-y-auto">
           <div className="h-full max-w-screen-xl mx-auto text-center md:py-10 md:px-5">
@@ -57,7 +57,7 @@ export default function FullScreenFileItem({
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="w-full h-full transform overflow-hidden md:rounded-lg bg-white dark:bg-black px-5 text-left align-middle shadow-xl transition-all flex flex-col justify-between py-5">
+              <Dialog.Panel className="w-full h-full transform overflow-hidden md:rounded-lg bg-neutral-900 text-white px-5 text-left align-middle shadow-xl transition-all flex flex-col justify-between py-5">
                 <div className="flex items-center justify-between">
                   <FileInfo
                     name={getNameFromKey(file?.key)}
