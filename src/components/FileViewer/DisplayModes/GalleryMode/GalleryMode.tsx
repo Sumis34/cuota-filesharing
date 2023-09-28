@@ -42,7 +42,7 @@ export default function GalleryMode({ files, onItemClick }: DisplayModeProps) {
                 />
                 <a href={url || "#"}>
                   <IconButton>
-                    <HiDownload className="fill-indigo-500" />
+                    <HiDownload />
                   </IconButton>
                 </a>
               </div>
