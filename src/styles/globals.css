@@ -17,10 +17,10 @@
     @apply w-screen overflow-x-hidden scroll-smooth bg-white;
   }
   h1 {
-    @apply text-5xl;
+    @apply sm:text-5xl text-3xl;
   }
   h2 {
-    @apply text-3xl;
+    @apply sm:text-3xl text-2xl;
   }
 
   input {
@@ -28,6 +28,14 @@
   }
   textarea {
     @apply focus-visible:outline-none border-2 focus-visible:border-indigo-500/70 rounded-xl bg-transparent dark:border-neutral-700 py-2 px-3;
+  }
+
+  input,
+  textarea,
+  button,
+  select,
+  a {
+    -webkit-tap-highlight-color: transparent;
   }
 }
 @tailwind components;

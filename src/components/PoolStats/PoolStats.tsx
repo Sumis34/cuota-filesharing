@@ -16,7 +16,7 @@ import {
 import { HiCalendar, HiClock } from "react-icons/hi";
 import ParsedText from "../ParsedText";
 
-interface PoolStatsProps {
+export interface PoolStatsProps {
   totalSize: number;
   message?: string | null;
   files: RemoteFiles;

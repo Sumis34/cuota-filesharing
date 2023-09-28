@@ -9,6 +9,11 @@ import { HiChevronDown, HiMoon } from "react-icons/hi";
 import useTheme from "../../hooks/useTheme";
 import {
   HiArrowRightOnRectangle,
+  HiCodeBracketSquare,
+  HiDocumentPlus,
+  HiInboxStack,
+  HiPaperAirplane,
+  HiPlus,
   HiSquare3Stack3D,
   HiSun,
   HiWrenchScrewdriver,
@@ -27,9 +32,26 @@ export default function ProfileInfo({ name, email, avatar }: ProfileInfoProps) {
   const DROPDOWN_OPTIONS: DropdownItem[][] = [
     [
       {
+        label: "Upload",
+        icon: <HiDocumentPlus className="text-lg" />,
+        onClick: () => router.push("/app/#upload"),
+      },
+    ],
+    [
+      {
         label: "My uploads",
         icon: <HiSquare3Stack3D className="text-lg" />,
-        onClick: () => router.push("/my-uploads"),
+        onClick: () => router.push("/app/#my-uploads"),
+      },
+      // {
+      //   label: "My bins",
+      //   icon: <HiCodeBracketSquare className="text-lg" />,
+      //   onClick: () => router.push("/#my-bins"),
+      // },
+      {
+        label: "Shared with me",
+        icon: <HiPaperAirplane className="text-lg" />,
+        onClick: () => router.push("/app/#shared-with-me"),
       },
     ],
     [
@@ -42,20 +64,22 @@ export default function ProfileInfo({ name, email, avatar }: ProfileInfoProps) {
   ];
 
   if (session?.user?.role === "admin") {
-    DROPDOWN_OPTIONS[0]?.push({
-      label: "Admin",
-      icon: <HiWrenchScrewdriver className="text-lg" />,
-      onClick: () => router.push("/admin"),
-    });
-    DROPDOWN_OPTIONS[0]?.push({
-      label: dark ? "Light mode" : "Dark mode",
-      icon: dark ? (
-        <HiSun className="text-lg" />
-      ) : (
-        <HiMoon className="text-lg" />
-      ),
-      onClick: () => toggleDark(),
-    });
+    DROPDOWN_OPTIONS.push([
+      {
+        label: "Admin",
+        icon: <HiWrenchScrewdriver className="text-lg" />,
+        onClick: () => router.push("/admin"),
+      },
+      {
+        label: dark ? "Light mode" : "Dark mode",
+        icon: dark ? (
+          <HiSun className="text-lg" />
+        ) : (
+          <HiMoon className="text-lg" />
+        ),
+        onClick: () => toggleDark(),
+      },
+    ]);
   }
 
   return (
@@ -67,11 +91,14 @@ export default function ProfileInfo({ name, email, avatar }: ProfileInfoProps) {
           className="flex items-center gap-2"
         >
           <div className="">
-            <HiChevronDown className="text-xl" />
-            {/* <p className="-mb-1">{name}</p> */}
-            {/* <p className="text-xs opacity-40">{email}</p> */}
+            <HiChevronDown className="sm:text-xl" />
+            {/* <p className="-mb-1">{name}</p>
+            <p className="text-xs opacity-40">{email}</p> */}
           </div>
-          <Avatar className="w-10" url={avatar || ""} />
+          <Avatar
+            className="sm:w-10 w-8 rounded-lg sm:rounded-xl"
+            url={avatar || ""}
+          />
         </motion.div>
       </Dropdown>
     </>

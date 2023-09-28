@@ -57,4 +57,70 @@ export const poolRouter = createRouter()
 
       return summary;
     },
+  })
+  .query("visited", {
+    input: z.object({
+      cursor: z.number().optional(),
+      take: z.number().max(MAX_RETURN_COUNT).min(MIN_RETURN_COUNT).optional(),
+      asc: z.boolean().optional(),
+    }),
+    resolve: async ({ input, ctx }) => {
+      //Get all pools a user visited
+      const { prisma, session } = ctx;
+
+      const userPools = await prisma.visitor.findMany({
+        where: {
+          AND: [
+            {
+              user: {
+                id: session?.user?.id,
+              },
+            },
+            {
+              upload: {
+                NOT: {
+                  userId: session?.user?.id,
+                },
+              },
+            },
+          ],
+        },
+        skip: input.cursor,
+        take: input.take || DEFAULT_RETURN_COUNT,
+        orderBy: {
+          lastVisit: input.asc ? "asc" : "desc",
+        },
+        include: {
+          upload: {
+            select: {
+              encrypted: true,
+              uploadTime: true,
+              expiresAt: true,
+              message: true,
+              user: {
+                select: {
+                  image: true,
+                  name: true,
+                  id: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      const totalUserPoolsCount = await prisma.upload.count({
+        where: {
+          NOT: {
+            userId: session?.user?.id,
+          },
+        },
+      });
+
+      return {
+        pools: userPools,
+        total: totalUserPoolsCount,
+        truncated: totalUserPoolsCount !== userPools.length,
+      };
+    },
   });
