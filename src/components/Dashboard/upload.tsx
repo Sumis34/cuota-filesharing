@@ -1,4 +1,4 @@
-import Uploader from "../MainUploader/Uploader";
+import Uploader from "../Uploader/Uploader";
 import {
   Select,
   SelectContent,
@@ -14,7 +14,7 @@ export default function Upload() {
     <div className="bg-neutral-900 rounded-xl p-5 flex justify-center">
       {/* <Uploader /> */}
       <Uploader />
-      <div>
+      {/* <div>
         <Select>
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Select a fruit" />
@@ -30,7 +30,7 @@ export default function Upload() {
             </SelectGroup>
           </SelectContent>
         </Select>
-      </div>
+      </div> */}
     </div>
   );
 }
