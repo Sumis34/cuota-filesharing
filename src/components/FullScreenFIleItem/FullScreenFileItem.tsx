@@ -100,7 +100,7 @@ export default function FullScreenFileItem({
                       )}
                   </div>
                   <Button
-                    className="!px-3  flex items-center gap-2 ml-auto"
+                    className="!px-3 flex items-center gap-2 ml-auto !rounded-lg text-black"
                     href={file?.url}
                   >
                     <HiDownload className="text-xl" />
