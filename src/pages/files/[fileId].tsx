@@ -34,6 +34,8 @@ import AvatarList from "../../components/UI/Avatar/AvatarList";
 import { useSession } from "next-auth/react";
 import PoolAnalytics from "../../components/PoolAnalytics/PoolAnalytics";
 import SmallPoolStats from "../../components/SmallPoolStats/SmallPoolStats";
+import FullScreenFileMobile from "../../components/FullScreenFIleItem/FullScreenFileMobile";
+import { useWindowSize } from "@uidotdev/usehooks";
 
 const Files: NextPageWithLayout = () => {
   const { query } = useRouter();
@@ -44,6 +46,7 @@ const Files: NextPageWithLayout = () => {
   const [progress, setProgress] = useState<DownloadProgressEvent>();
   const [files, setFiles] = useState<RemoteFile[]>([]);
   const [fp, setFp] = useState<string>("");
+  const { width } = useWindowSize();
   const router = useRouter();
   const { data: session } = useSession();
 
@@ -141,6 +144,8 @@ const Files: NextPageWithLayout = () => {
     updateFp();
   });
 
+  console.log(width);
+
   //TODO: Add skeleton loading animation
   return (
     <>
@@ -151,12 +156,30 @@ const Files: NextPageWithLayout = () => {
         filesUploaded={progress?.uploadedFiles || 0}
         fileCount={progress?.fileCount || 0}
       />
-      <FullScreenFIleItem
-        currentId={selectedItem}
-        file={files[selectedItem]}
-        open={fullscreenOpen}
-        setOpen={setFullscreenOpen}
-      />
+      {width ? (
+        width > 640 ? (
+          <FullScreenFIleItem
+            currentId={selectedItem}
+            file={files[selectedItem]}
+            open={fullscreenOpen}
+            setOpen={setFullscreenOpen}
+          />
+        ) : (
+          <FullScreenFileMobile
+            currentId={selectedItem}
+            file={files[selectedItem]}
+            open={fullscreenOpen}
+            setOpen={setFullscreenOpen}
+          />
+        )
+      ) : (
+        <FullScreenFIleItem
+          currentId={selectedItem}
+          file={files[selectedItem]}
+          open={fullscreenOpen}
+          setOpen={setFullscreenOpen}
+        />
+      )}
       {/* <NoKeyAlert
         open={
           !!data?.encrypted &&

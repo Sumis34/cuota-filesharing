@@ -12,19 +12,21 @@ import Previewer from "../FileViewer/Previewer";
 import IconButton from "../UI/Button/IconButton";
 import { HiXMark } from "react-icons/hi2";
 
+export interface FullScreenFileItemProps {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+  file?: RemoteFile;
+  currentId: number;
+  onSetItemId?: (id: number) => void;
+}
+
 export default function FullScreenFileItem({
   open,
   file,
   setOpen,
   currentId,
   onSetItemId,
-}: {
-  open: boolean;
-  setOpen: (open: boolean) => void;
-  file?: RemoteFile;
-  currentId: number;
-  onSetItemId?: (id: number) => void;
-}) {
+}: FullScreenFileItemProps) {
   const [imgMeta, setImgMeta] = useState<any>();
 
   function closeModal() {

@@ -40,43 +40,43 @@ export default function DisplayImgMeta({
       animate={{ opacity: 1 }}
       className="flex gap-4"
     >
-      <div className="flex gap-1 flex-col">
-        <h3 className="text-xs leading-none -mb-1 opacity-50 font-sans font-semibold">
+      <div className="flex gap-1 flex-col justify-between">
+        <h3 className="text-xs leading-none -mb-1 opacity-50 font-sans font-semibold whitespace-nowrap">
           Camera
         </h3>
-        <span className="text-sm ">{camera || "unknown"}</span>
+        <span className="text-sm whitespace-nowrap">{camera || "unknown"}</span>
       </div>
-      <div className="flex gap-1 flex-col">
-        <h3 className="text-xs leading-none -mb-1 opacity-50 font-sans font-semibold">
+      <div className="flex gap-1 flex-col justify-between">
+        <h3 className="text-xs leading-none -mb-1 opacity-50 font-sans font-semibold whitespace-nowrap">
           Shutter speed
         </h3>
-        <span className="text-sm ">{shutterSpeed || "-"}</span>
+        <span className="text-sm whitespace-nowrap">{shutterSpeed || "-"}</span>
       </div>
-      <div className="flex gap-1 flex-col">
-        <h3 className="text-xs leading-none -mb-1 opacity-50 font-sans font-semibold">
+      <div className="flex gap-1 flex-col justify-between">
+        <h3 className="text-xs leading-none -mb-1 opacity-50 font-sans font-semibold whitespace-nowrap">
           Camera
         </h3>
-        <span className="text-sm ">{aperture || "-"}f</span>
+        <span className="text-sm whitespace-nowrap">{aperture || "-"}f</span>
       </div>
-      <div className="flex gap-1 flex-col">
-        <h3 className="text-xs leading-none -mb-1 opacity-50 font-sans font-semibold">
+      <div className="flex gap-1 flex-col justify-between">
+        <h3 className="text-xs leading-none -mb-1 opacity-50 font-sans font-semibold whitespace-nowrap">
           Focal length
         </h3>
-        <span className="text-sm ">{focalLength || "-"}mm</span>
+        <span className="text-sm whitespace-nowrap">{focalLength || "-"}mm</span>
       </div>
-      <div className="flex gap-1 flex-col">
-        <h3 className="text-xs leading-none -mb-1 opacity-50 font-sans font-semibold">
+      <div className="flex gap-1 flex-col justify-between">
+        <h3 className="text-xs leading-none -mb-1 opacity-50 font-sans font-semibold whitespace-nowrap">
           Size
         </h3>
         <span className="text-sm ">
           {width} x {height}
         </span>
       </div>
-      <div className="flex gap-1 flex-col">
-        <h3 className="text-xs leading-none -mb-1 opacity-50 font-sans font-semibold">
+      <div className="flex gap-1 flex-col justify-between">
+        <h3 className="text-xs leading-none -mb-1 opacity-50 font-sans font-semibold whitespace-nowrap">
           Capture date
         </h3>
-        <span className="text-sm ">
+        <span className="text-sm whitespace-nowrap">
           {time ? format(new Date(time), "dd MMM, yyyy HH:mm") : "-"}
         </span>
       </div>
